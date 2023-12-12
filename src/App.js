@@ -2,7 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import TopBarMenu from "./Components/topBar";
-import './App.css';
+import CreatePet from "./Pages/CreatePet/CreatePet";
+import Services from "./Pages/Services/Services";
+import "./App.css";
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
           <TopBarMenu></TopBarMenu>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/createPet" element={<CreatePet />} />
+            <Route path="/services" element={<Services />} />
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
         </div>
