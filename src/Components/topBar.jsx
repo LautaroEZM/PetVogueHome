@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import {
     AppBar,
     Toolbar,
-    Button,
     Menu,
     MenuItem,
     Typography,
     Avatar,
     Container,
 } from '@mui/material';
+
 import { ButtonTransparentMenu, YellowButton } from '../styledComponents';
 
 
@@ -37,10 +37,10 @@ const TopBarMenu = () => {
 
                 {/* Botones centrados */}
                 <Container>
-                    <ButtonTransparentMenu color="inherit">Inicio</ButtonTransparentMenu>
-                    <ButtonTransparentMenu color="inherit">Servicios</ButtonTransparentMenu>
-                    <ButtonTransparentMenu color="inherit">Mis turnos</ButtonTransparentMenu>
-                    <ButtonTransparentMenu color="inherit">Mis mascotas</ButtonTransparentMenu>
+                    <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
+                    <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
+                    <ButtonTransparentMenu>Mis turnos</ButtonTransparentMenu>
+                    <ButtonTransparentMenu>Mis mascotas</ButtonTransparentMenu>
                 </Container>
 
                 {/* Avatar con botón "Iniciar Sesión" y menú desplegable para login/register */}
