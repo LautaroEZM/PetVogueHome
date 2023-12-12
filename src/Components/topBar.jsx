@@ -11,8 +11,6 @@ import {
 
 import { ButtonTransparentMenu, YellowButton } from '../styledComponents';
 
-
-
 const TopBarMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
 
