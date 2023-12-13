@@ -9,7 +9,7 @@ const Services = () => {
       {/* Contenido principal */}
       <main style={{ flexGrow: 1, padding: '20px' }}>
         {/* Tu contenido principal aquí */}
-        <h1>Contenido Principal</h1>
+        <h1>Contenido de Servicios</h1>
       </main>
 
       {/* Menú a la izquierda */}
