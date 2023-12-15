@@ -1,4 +1,4 @@
-import Carousel from 'react-material-ui-carousel'
+import Carousel from 'react-material-ui-carousel';
 import CarouselItem from './CarouselItem';
 
 
@@ -20,7 +20,7 @@ function CarouselSlider() {
             description: "Hello World!",
             image: "https://i0.wp.com/cdn1.intriper.com/wp-content/uploads/2021/06/25075837/henar-langa-ZVdZw2p08y4-unsplash-1.jpg?resize=800%2C533&ssl=1"
         }
-    ]
+    ];
 
     return (
         <Carousel>

@@ -5,6 +5,9 @@ function Home() {
   return (
     <div>
       <CarouselSlider/>
+      <div>
+        
+      </div>
     </div>
   );
 }
