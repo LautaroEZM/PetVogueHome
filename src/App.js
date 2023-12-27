@@ -16,9 +16,9 @@ function App() {
           <TopBarMenu></TopBarMenu>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/createPet" element={<CreatePet />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/MyPets" element={<MyPets />} />
+            <Route path="/crearMascota" element={<CreatePet />} />
+            <Route path="/servicios" element={<Services />} />
+            <Route path="/MisMascotas" element={<MyPets />} />
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
         </div>

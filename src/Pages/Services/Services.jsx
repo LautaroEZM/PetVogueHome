@@ -1,82 +1,92 @@
 import React, { useState } from 'react';
-import styles from './Services.module.css'; // Importa tus estilos CSS
+import {
+  Checkbox,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+} from '@mui/material';
+import { Category, Pets, Extension } from '@mui/icons-material';
+import styles from './Services.module.css';
+import { YellowButton } from '../../styledComponents';
 
 const ServiciosAnimales = () => {
   const servicios = [
-    {
-      nombre: 'Castración',
-      descripcion: 'Procedimiento quirúrgico para esterilizar a mascotas, evitando la reproducción no deseada.',
-      categoria: 'Cirugía',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Corte de Pelo y Baño',
-      descripcion: 'Servicio de cuidado estético que incluye corte de pelo, baño, y cuidado de uñas.',
-      categoria: 'Peluquería y cuidado',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Vacunación Anual',
-      descripcion: 'Administración de vacunas esenciales para prevenir enfermedades comunes en mascotas.',
-      categoria: 'Servicio preventivo',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Consulta Veterinaria General',
-      descripcion: 'Examen físico y evaluación general de la salud de la mascota.',
-      categoria: 'Consulta veterinaria',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Desparasitación',
-      descripcion: 'Tratamiento para eliminar parásitos internos y externos.',
-      categoria: 'Cuidado preventivo',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Radiografías Diagnósticas',
-      descripcion: 'Realización de radiografías para diagnosticar problemas de salud específicos.',
-      categoria: 'Diagnóstico por imagen',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Cirugía Dental',
-      descripcion: 'Procedimiento para el cuidado dental, que puede incluir limpieza y extracción de dientes.',
-      categoria: 'Cirugía dental',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Hospitalización y Cuidados Intensivos',
-      descripcion: 'Servicio para el tratamiento y cuidado de mascotas que requieren hospitalización.',
-      categoria: 'Cuidado especializado',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Microchip de Identificación',
-      descripcion: 'Colocación de un microchip para identificar y localizar a la mascota en caso de pérdida.',
-      categoria: 'Identificación y seguridad',
-      precio: 'Variable'
-    },
-    {
-      nombre: 'Programa de Control de Peso',
-      descripcion: 'Plan de control de peso que incluye dieta y seguimiento regular.',
-      categoria: 'Servicio de bienestar',
-      precio: 'Variable'
-    }
+    // Tu lista de servicios
   ];
 
   const [expandedService, setExpandedService] = useState(null);
+  const [filters, setFilters] = useState({ animal: [], especialidad: [], otros: [] });
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleServiceClick = (index) => {
     if (expandedService === index) {
-      setExpandedService(null); // Contraer si se hace clic en la tarjeta expandida
+      setExpandedService(null);
     } else {
-      setExpandedService(index); // Expandir la tarjeta seleccionada
+      setExpandedService(index);
     }
+  };
+
+  const handleFilterToggle = (category, option) => {
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters };
+      const categoryFilters = newFilters[category];
+
+      if (categoryFilters.includes(option)) {
+        // Remove option if already selected
+        newFilters[category] = categoryFilters.filter((item) => item !== option);
+      } else {
+        // Add option if not selected
+        newFilters[category] = [...categoryFilters, option];
+      }
+
+      return newFilters;
+    });
+  };
+
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
   };
 
   return (
     <div className={styles.servicesContainer}>
+      <Toolbar>
+        <YellowButton onClick={toggleDrawer} sx={{
+          margin: "2px"
+        }}>Filtros</YellowButton>
+        <YellowButton sx={{
+          margin: "2px"
+        }}>Ordenar</YellowButton>
+      </Toolbar>
+
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
+        <List>
+          {[
+            { category: 'animal', icon: <Pets />, options: ['Perros', 'Gatos'] },
+            { category: 'especialidad', icon: <Category />, options: ['Cirugia', 'Radiografias', 'Analisis'] },
+            { category: 'otros', icon: <Extension />, options: ['Peluqueria', 'Vacunacion', 'Consulta'] },
+          ].map(({ category, icon, options }) => (
+            <div key={category}>
+              <ListItem>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={category.toUpperCase()} />
+              </ListItem>
+              {options.map((option, index) => (
+                <ListItem key={index}>
+                  <Checkbox
+                    checked={filters[category].includes(option)}
+                    onChange={() => handleFilterToggle(category, option)}
+                  />
+                  <ListItemText primary={option} />
+                </ListItem>
+              ))}
+            </div>
+          ))}
+        </List>
+      </Drawer>
+
       {servicios.map((servicio, index) => (
         <div
           key={index}
@@ -85,8 +95,12 @@ const ServiciosAnimales = () => {
         >
           <div className={styles.serviceHeader}>
             <h2>{servicio.nombre}</h2>
-            <p><strong>Categoría:</strong> {servicio.categoria}</p>
-            <p><strong>Precio:</strong> {servicio.precio}</p>
+            <p>
+              <strong>Categoría:</strong> {servicio.categoria}
+            </p>
+            <p>
+              <strong>Precio:</strong> {servicio.precio}
+            </p>
           </div>
           {expandedService === index && (
             <div className={styles.serviceDescription}>
