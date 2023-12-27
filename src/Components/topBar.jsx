@@ -36,7 +36,7 @@ const TopBarMenu = () => {
                 {/* Botones centrados */}
                 <Container>
                     <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
-                    <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
+                    <ButtonTransparentMenu >Servicios</ButtonTransparentMenu>
                     <ButtonTransparentMenu>Mis turnos</ButtonTransparentMenu>
                     <ButtonTransparentMenu>Mis mascotas</ButtonTransparentMenu>
                 </Container>
