@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
 import {
-  Checkbox,
   Drawer,
   Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Toolbar,
   Card,
   CardContent,
   CardHeader,
   Typography,
+  Checkbox,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
-import { Category, Pets, Extension } from '@mui/icons-material';
-import { YellowButton } from '../../styledComponents';
+import { LinkNoDeco, YellowButton } from '../../styledComponents';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchServicesRequest,
@@ -22,6 +21,7 @@ import {
   fetchServicesFailure,
 } from '../../redux/actions';
 import axios from 'axios';
+import { Pets, Category, LocalHospital, Extension } from '@mui/icons-material';
 import { Box } from '@mui/system';
 
 const ServiciosAnimales = () => {
@@ -42,23 +42,12 @@ const ServiciosAnimales = () => {
     fetchData();
   }, [dispatch]);
 
-  const [filters, setFilters] = React.useState({ animal: [], especialidad: [], otros: [] });
+  const [filters, setFilters] = React.useState({
+    mascota: ['Perros', 'Gatos'],
+    general: ['Consulta', 'Cirugias', 'Especialidades', 'Vacunacion'],
+    estetica: ['Peluqueria', 'Baños', 'Estetica general'],
+  });
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-
-  const handleFilterToggle = (category, option) => {
-    setFilters((prevFilters) => {
-      const newFilters = { ...prevFilters };
-      const categoryFilters = newFilters[category];
-
-      if (categoryFilters.includes(option)) {
-        newFilters[category] = categoryFilters.filter((item) => item !== option);
-      } else {
-        newFilters[category] = [...categoryFilters, option];
-      }
-
-      return newFilters;
-    });
-  };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -79,10 +68,34 @@ const ServiciosAnimales = () => {
           Filtros
         </YellowButton>
         <YellowButton sx={{ margin: '2px' }}>Ordenar</YellowButton>
+        <LinkNoDeco to={'/crearServicio'}><YellowButton sx={{ margin: '2px' }}>
+          Crear servicio
+        </YellowButton></LinkNoDeco>
       </Toolbar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
-        {/* ... (tu código actual) */}
+        <List>
+          {[
+            { category: 'MASCOTA', icon: <Pets />, options: filters.mascota },
+            { category: 'GENERAL', icon: <Category />, options: filters.general },
+            { category: 'ESTETICA', icon: <Extension />, options: filters.estetica },
+          ].map(({ category, icon, options }) => (
+            <div key={category}>
+              <ListItem>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={category} />
+              </ListItem>
+              {options.map((option, index) => (
+                <ListItem key={index}>
+                  <Checkbox
+                  // Aquí deberías manejar el estado de las opciones seleccionadas
+                  />
+                  <ListItemText primary={option} />
+                </ListItem>
+              ))}
+            </div>
+          ))}
+        </List>
       </Drawer>
 
       <Grid container spacing={2} justifyContent="center">
