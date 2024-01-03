@@ -27,25 +27,6 @@ export const fetchServicesRequest = () => ({
 //export default createService;
 
 //🎀Post Service:
-// export const createService = (service) => {
-//   return async(dispatch) => {
-//   try {
-//     console.log(service);
-//     await axios.post('https://petvogue.onrender.com/services/create', service);
-//     window.alert("Servicio creado con exito!");
-//     //ver lo del local Storage👀:
-//     //
-//     return  dispatch ({
-//       type: POST_SERVICE,
-//       payload: response.data,
-//     })
-//   } catch (error) {
-//     window.alert(error?.response?.data?.error);
-//     // console.error(`Error creating service: ${error}`);
-//     // alert(error.message);
-//   }
-//  }};
-//🎀
  export const createService = (service) => {
   return async(dispatch) => {
   try {
@@ -80,5 +61,13 @@ export const createPet = (pet) => {
   }};
 
  
+  // crear un usuario
+export const createUser = (userData) => {
+  return {
+    type: 'CREATE_USER',
+    payload: userData,
+  };
+};
+
 
 
