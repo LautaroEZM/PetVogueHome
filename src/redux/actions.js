@@ -45,20 +45,20 @@ export const fetchServicesRequest = () => ({
 //     // alert(error.message);
 //   }
 //  }};
-
+//🎀
  export const createService = (service) => {
   return async(dispatch) => {
   try {
   console.log(service);
   const response = await axios.post('https://petvogue.onrender.com/services/create', service);
-  window.alert("Mascota creada con exito!");
+  window.alert("Servicio creado con exito!");
   return dispatch ({
     type: POST_SERVICE,
     payload: response.data,
   })
   } catch (error) {
   window.alert(error?.response?.data?.error);
-  console.error(`Error creating Pet👀: ${error}`);
+  console.error(`Error creating service👀: ${error}`);
   }
   }};
 
