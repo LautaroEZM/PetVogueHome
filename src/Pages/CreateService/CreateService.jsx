@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import axios from 'axios';
+import { createService } from '../../redux/actions';
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"
+
 import PhotoUpload from '../../Components/photoUpload';
 
 const categories = [
@@ -25,6 +28,10 @@ function CreateService() {
     });
 
     const [photo, setPhoto] = useState(null);
+    //🎀Agregado:
+    const dispatch = useDispatch(); // Usa useDispatch para obtener la función dispatch
+    //🎀Agregado:
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,14 +45,15 @@ function CreateService() {
         e.preventDefault();
 
         try {
-            // Realiza el envío de datos incluyendo la URL de la imagen
-            const response = await axios.post('https://petvogue.onrender.com/Services', {
+             // Despatcha la acción createService
+             const newService = await dispatch(createService({
                 ...formData,
                 image: photo, // Utiliza directamente la URL de la imagen desde el estado photo
-            });
+            }));
 
-            console.log('Solicitud POST exitosa:', response.data);
+            console.log('Solicitud POST exitosa:', newService);
             // Puedes realizar alguna acción adicional después de un envío exitoso
+            navigate('/Servicios');
         } catch (error) {
             console.error('Error al enviar la solicitud POST:', error.message);
             // Puedes manejar el error de alguna manera, como mostrar un mensaje al usuario

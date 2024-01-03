@@ -122,6 +122,12 @@ const ServiciosAnimales = () => {
                 <Typography>
                   <strong>Categoría:</strong> {servicio.category}
                 </Typography>
+              {/*🎀Agregado para que se vea image, despues modificar en todo caso */}
+              <Typography>
+               <strong></strong> 
+                <img src={servicio.image} alt={servicio.name} style={{width: '100%'}}/>
+                 </Typography>
+                 {/*🎀Hasta aca*/}
                 <Typography>
                   <strong>Precio:</strong> {servicio.price}
                 </Typography>

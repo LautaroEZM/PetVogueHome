@@ -3,10 +3,13 @@ import {
     FETCH_SERVICES_REQUEST,
     FETCH_SERVICES_SUCCESS,
     FETCH_SERVICES_FAILURE,
+    POST_SERVICE,
+    POST_PET,
   } from './actions';
   
   const initialState = {
     services: [],
+    pets: [],
     loading: false,
     error: null,
   };
@@ -31,6 +34,21 @@ import {
           loading: false,
           error: action.payload,
         };
+
+      //🎀Agregado post:
+      case POST_SERVICE:
+          return {
+       ...state,
+       services: [...state.services, action.payload],
+     };
+     
+     case POST_PET:
+          return {
+       ...state,
+       pets: [...state.pets, action.payload],
+     };
+
+
       default:
         return state;
     }
