@@ -27,63 +27,28 @@ export const fetchServicesRequest = () => ({
 //export default createService;
 
 //🎀Post Service:
-export const createService = (service) => {
+ export const createService = (service) => {
   return async(dispatch) => {
   try {
-    console.log(service);
-    const response = await axios.post('https://petvogue.onrender.com/services/create', service);
-    window.alert("Servicio creado con exito!");
-    //ver lo del local Storage👀:
-    //
-    return  dispatch ({
-      type: POST_SERVICE,
-      payload: response.data,
-    })
+  console.log(service);
+  const response = await axios.post('https://petvogue.onrender.com/services/create', service);
+  window.alert("Servicio creado con exito!");
+  return dispatch ({
+    type: POST_SERVICE,
+    payload: response.data,
+  })
   } catch (error) {
-    window.alert(error?.response?.data?.error);
-    // console.error(`Error creating service: ${error}`);
-    // alert(error.message);
+  window.alert(error?.response?.data?.error);
+  console.error(`Error creating service👀: ${error}`);
   }
- }};
-
- //🎀Get Services:
-//  export const getServices = () => {
-//   return async (dispatch) => {
-//     try {
-//       const response = await axios.get(`https://petvogue.onrender.com/services`);
-
-//       return dispatch({
-//         type: GET_SERVICES,
-//         payload: response.data,
-//       });
-//     } catch (error) {
-//       alert(error.message);
-//     }
-//   };
-// };
+  }};
 
 //🎀Create Pet:
-// export const createPet = (pet) => {
-//   return async(dispatch) => {
-//   try {
-//     console.log(pet);
-//     const response = await axios.post('https://petvogue.onrender.com/services/create', pet);
-//     window.alert("Servicio creado con exito!");
-//     return dispatch ({
-//       type: POST_PET,
-//       payload: response.data,
-//     })
-//   } catch (error) {
-//     window.alert(error?.response?.data?.error);
-//     console.error(`Error creating Pet👀: ${error}`);
-//   }
-//   }};
-
 export const createPet = (pet) => {
   return async(dispatch) => {
   try {
   console.log(pet);
-  const response = await axios.post('https://petvogue.onrender.com/services/create', pet);
+  const response = await axios.post('https://petvogue.onrender.com/pets/create', pet);
   window.alert("Mascota creada con exito!");
   return dispatch ({
     type: POST_PET,
