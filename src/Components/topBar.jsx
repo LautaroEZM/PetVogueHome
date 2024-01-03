@@ -9,7 +9,7 @@ import {
     Container,
 } from '@mui/material';
 
-import { ButtonTransparentMenu, YellowButton } from '../styledComponents';
+import { ButtonTransparentMenu, LinkNoDeco, YellowButton } from '../styledComponents';
 
 const TopBarMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -35,10 +35,18 @@ const TopBarMenu = () => {
 
                 {/* Botones centrados */}
                 <Container>
+                    <LinkNoDeco to={'/'}>
                     <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
-                    <ButtonTransparentMenu >Servicios</ButtonTransparentMenu>
-                    <ButtonTransparentMenu>Mis turnos</ButtonTransparentMenu>
-                    <ButtonTransparentMenu>Mis mascotas</ButtonTransparentMenu>
+                    </LinkNoDeco>
+                    <LinkNoDeco to={'/Servicios'}>
+                    <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
+                    </LinkNoDeco>
+                    <LinkNoDeco to={'/'}>
+                    <ButtonTransparentMenu>Turnos</ButtonTransparentMenu>
+                    </LinkNoDeco>
+                    <LinkNoDeco to={'/MisMascotas'}>
+                    <ButtonTransparentMenu>Mascotas</ButtonTransparentMenu>
+                    </LinkNoDeco>
                 </Container>
 
                 {/* Avatar con botón "Iniciar Sesión" y menú desplegable para login/register */}
