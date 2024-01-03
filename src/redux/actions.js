@@ -31,7 +31,7 @@ export const createService = (service) => {
   return async(dispatch) => {
   try {
     console.log(service);
-    await axios.post('https://petvogue.onrender.com/services/create', service);
+    const response = await axios.post('https://petvogue.onrender.com/services/create', service);
     window.alert("Servicio creado con exito!");
     //ver lo del local Storage👀:
     //
@@ -96,5 +96,13 @@ export const createPet = (pet) => {
   }};
 
  
+  // crear un usuario
+export const createUser = (userData) => {
+  return {
+    type: 'CREATE_USER',
+    payload: userData,
+  };
+};
+
 
 
