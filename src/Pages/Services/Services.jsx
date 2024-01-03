@@ -129,6 +129,11 @@ const ServiciosAnimales = () => {
                   <Typography>{servicio.description}</Typography>
                 </div>
               </CardContent>
+              <LinkNoDeco to={`/editarServicio/${servicio.serviceID}`}>
+                <YellowButton>
+                  Editar
+                </YellowButton>
+              </LinkNoDeco>
             </Card>
           </Grid>
         ))}
