@@ -32,7 +32,7 @@ const ServiciosAnimales = () => {
     const fetchData = async () => {
       dispatch(fetchServicesRequest());
       try {
-        const response = await axios.get('https://petvogue.onrender.com/Services');
+        const response = await axios.post('https://petvogue.onrender.com/services/get');
         dispatch(fetchServicesSuccess(response.data));
       } catch (err) {
         dispatch(fetchServicesFailure(err.message));
