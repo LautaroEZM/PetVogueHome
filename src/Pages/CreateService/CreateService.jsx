@@ -67,6 +67,9 @@ function CreateService() {
                     label="Nombre del servicio"
                     name="name"
                     value={formData.name}
+                    inputProps={{
+                        maxLength:30
+                    }}
                     onChange={handleChange}
                     required
                 />
@@ -74,6 +77,9 @@ function CreateService() {
                     label="Descripción"
                     name="description"
                     value={formData.description}
+                    inputProps={{
+                        maxLength:250
+                    }}
                     onChange={handleChange}
                     required
                 />

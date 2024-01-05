@@ -9,6 +9,8 @@ import MyPets from "./Pages/MyPets/MyPets";
 import CreateService from "./Pages/CreateService/CreateService";
 import EditService from "./Pages/EditService/EditService";
 import UserForm from "./Pages/CreateUser/CreateUser";
+import DetailPet from "./Pages/DetailPet/DetailPet";
+import DetailService from "./Pages/DetailService/DetailService";
 
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route path="/editarServicio/:id" element={<EditService />} />
             <Route path="/servicios" element={<Services />} />
             <Route path="/MisMascotas" element={<MyPets />} />
+            <Route path="/detallesMascotas/:id" element={<DetailPet />} />
+            <Route path="/detallesServicios/:id" element={<DetailService />} />
             <Route path="/crearUsuario" element={<UserForm/>} />
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
