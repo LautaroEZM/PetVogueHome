@@ -5,7 +5,11 @@ export const FETCH_SERVICES_SUCCESS = 'FETCH_SERVICES_SUCCESS';
 export const FETCH_SERVICES_FAILURE = 'FETCH_SERVICES_FAILURE';
 //🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾Actions Type
 export const POST_SERVICE = "POST_SERVICE";
+export const GET_SERVICE_DETAIL = "GET_SERVICE_DETAIL";
+export const RESET_DETAIL_SERVICE = "RESET_DETAIL_SERVICE";
 export const POST_PET = "POST_PET";
+export const GET_ALL_PETS = "GET_ALL_PETS";
+export const GET_PET_DETAIL = "GET_PET_DETAIL";
 //export const GET_SERVICES = "GET_SERVICES";
 export const POST_USER = "POST_USER";
 const URL = "https://petvogue.onrender.com"
@@ -45,6 +49,34 @@ export const fetchServicesRequest = () => ({
   }
   }};
 
+  //🎀Detail Service:
+  export const getServiceDetail = (serviceID) => {
+    return async (dispatch) => {
+      try {
+        //dispatch(loading(true));
+        const response = await axios.post(`https://petvogue.onrender.com/services/get`, {
+          filters:{
+            serviceID_filter: serviceID,
+          },
+        });
+        return dispatch({
+          type: GET_SERVICE_DETAIL,
+          payload: response.data,
+        });
+      } catch (error) {
+        console.log("Error" + error.message);
+      } 
+      //finally {
+        //dispatch(loading(false));
+      }
+    };
+  
+
+//🎀Reset Service Detail:
+export const resetDetailService = () => {
+  return { type: RESET_DETAIL_SERVICE, payload: [] };
+};
+
 //🎀Create Pet:
 export const createPet = (pet) => {
   return async(dispatch) => {
@@ -63,8 +95,45 @@ export const createPet = (pet) => {
   }};
 
 
-  
-  // createUser
+  //🎀Get All Pets:
+  export const getAllPets = () => {
+    return async (dispatch) => {
+    try {
+    const response = await axios.post('https://petvogue.onrender.com/pets/get', {
+    filters: {}
+    });
+    return dispatch({
+    type: GET_ALL_PETS,
+    payload: response.data,
+    });
+    } catch (error) {
+    console.error(`Error getting all pets👀: ${error}`);
+    }
+    };
+   };
+
+  //🎀Detail Pet:
+  export const getPetDetail = (petID) => {
+    return async (dispatch) => {
+    try {
+     const response = await axios.post('https://petvogue.onrender.com/pets/get', {
+      filters: {
+       petID_filter: petID,
+      },
+     });
+     console.log(response.data);
+     return dispatch({
+      type: GET_PET_DETAIL,
+      payload: response.data,
+     });
+    } catch (error) {
+     console.error(`Error getting pet detail👀: ${error}`);
+    }
+    };
+   };
+
+ 
+  // crear un usuario
 export const createUser = (userData) => {
   return async (dispatch) => {
     try {
@@ -74,7 +143,7 @@ export const createUser = (userData) => {
       localStorage.setItem("user", JSON.stringify(response.data.newUser))
       return dispatch({
         type: POST_USER,
-        payload: response.data,
+    payload: response.data,
       });
     } catch (error) {
       console.error(`Error creating user: ${error}`);

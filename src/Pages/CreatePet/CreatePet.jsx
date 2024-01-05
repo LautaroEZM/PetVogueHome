@@ -25,6 +25,7 @@ const vaccinesForSpecies = {
 
 const CreatePet = () => {
     const [formData, setFormData] = useState({
+       // userID: '',
         name: '',
         birth: '',
         gender: '',
@@ -35,7 +36,7 @@ const CreatePet = () => {
         weight: 0,
         size: '',
         status: 'enabled',
-        userID: 'a2d9d673-b9eb-4276-8845-b0ab9f5017e6',
+        //userID: 'a2d9d673-b9eb-4276-8845-b0ab9f5017e6',
     });
 
     const [photo, setPhoto] = useState(null);
