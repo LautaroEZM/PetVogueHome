@@ -18,7 +18,7 @@
   height: 350px;
 }
 
-.petCard img {
+.CardImg {
   width: 250px;
   height: 150px;
   border-radius: 15%;
@@ -26,12 +26,12 @@
   margin-bottom: 10px;
 }
 
-.petCard h2 {
-  margin-bottom: 10px;
+.Cardh1 {
+  margin-bottom: 35px;
   font-size: 1.2em;
 }
 
-.petCard p {
-  margin-bottom: 8px;
+.Cardh2 {
+  margin-top: 15px;
   font-size: 0.9em;
 }

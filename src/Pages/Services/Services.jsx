@@ -24,6 +24,7 @@ import axios from 'axios';
 import { Pets, Category, LocalHospital, Extension } from '@mui/icons-material';
 import { Box } from '@mui/system';
 
+
 const ServiciosAnimales = () => {
   const dispatch = useDispatch();
   const { services } = useSelector((state) => state);
@@ -125,8 +126,11 @@ const ServiciosAnimales = () => {
               {/*🎀Agregado para que se vea image, despues modificar en todo caso */}
               <Typography>
                <strong></strong> 
+               <LinkNoDeco to={`/detallesServicios/${servicio.serviceID}`}>
                 <img src={servicio.image} alt={servicio.name} style={{width: '100%'}}/>
+                </LinkNoDeco>
                  </Typography>
+                
                  {/*🎀Hasta aca*/}
                 <Typography>
                   <strong>Precio:</strong> {servicio.price}
