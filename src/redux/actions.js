@@ -11,7 +11,9 @@ export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
 //export const GET_SERVICES = "GET_SERVICES";
-
+export const POST_USER = "POST_USER";
+const URL = "https://petvogue.onrender.com"
+/* const URL = "http://localhost:3001" */
 
 
 export const fetchServicesRequest = () => ({
@@ -92,6 +94,7 @@ export const createPet = (pet) => {
   }
   }};
 
+
   //🎀Get All Pets:
   export const getAllPets = () => {
     return async (dispatch) => {
@@ -132,9 +135,19 @@ export const createPet = (pet) => {
  
   // crear un usuario
 export const createUser = (userData) => {
-  return {
-    type: 'CREATE_USER',
-    payload: userData,
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/users`, userData);
+      console.log(response.data, "action")
+      localStorage.setItem("token", response.data.token)
+      localStorage.setItem("user", JSON.stringify(response.data.newUser))
+      return dispatch({
+        type: POST_USER,
+    payload: response.data,
+      });
+    } catch (error) {
+      console.error(`Error creating user: ${error}`);
+    }
   };
 };
 

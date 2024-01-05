@@ -9,6 +9,7 @@ import {
     RESET_DETAIL_SERVICE,
     GET_ALL_PETS,
     GET_PET_DETAIL,
+    POST_USER
   } from './actions';
   
   const initialState = {
@@ -16,6 +17,7 @@ import {
     detailServices: {},
     pets: [],
     petDetail: {},
+    users: [],
     loading: false,
     error: null,
   };
@@ -78,7 +80,11 @@ import {
         petDetail: action.payload,
       };
 
-
+     case POST_USER:
+     return {
+       ...state,
+       users: [...state.users, action.payload],
+     };
       default:
         return state;
     }
