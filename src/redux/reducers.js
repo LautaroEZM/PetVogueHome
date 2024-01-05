@@ -5,11 +5,19 @@ import {
     FETCH_SERVICES_FAILURE,
     POST_SERVICE,
     POST_PET,
+    GET_SERVICE_DETAIL,
+    RESET_DETAIL_SERVICE,
+    GET_ALL_PETS,
+    GET_PET_DETAIL,
+    POST_USER
   } from './actions';
   
   const initialState = {
     services: [],
+    detailServices: {},
     pets: [],
+    petDetail: {},
+    users: [],
     loading: false,
     error: null,
   };
@@ -41,14 +49,42 @@ import {
        ...state,
        services: [...state.services, action.payload],
      };
+
+     case GET_SERVICE_DETAIL:
+      return {
+        ...state,
+        detailServices: action.payload,
+      };
+
+      case RESET_DETAIL_SERVICE:
+       return {
+        ...state,
+       detailServices: initialState.detailServices,
+     };
      
      case POST_PET:
           return {
+           ...state,
+           pets: [...state.pets, action.payload],
+        };
+
+        case GET_ALL_PETS:
+         return {
+          ...state,
+          pets: action.payload,
+        };
+
+     case GET_PET_DETAIL:
+       return {
+        ...state,
+        petDetail: action.payload,
+      };
+
+     case POST_USER:
+     return {
        ...state,
-       pets: [...state.pets, action.payload],
+       users: [...state.users, action.payload],
      };
-
-
       default:
         return state;
     }

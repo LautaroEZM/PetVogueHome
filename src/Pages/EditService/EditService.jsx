@@ -24,7 +24,7 @@ function EditService({ match }) {
     useEffect(() => {
         const fetchServiceData = async () => {
             try {
-                const response = await axios.get(`https://petvogue.onrender.com/Services/${id}`);
+                const response = await axios.post('https://petvogue.onrender.com/services/get', { filters: { serviceID_filter: id } });
                 const serviceData = response.data;
                 setFormData(serviceData);
             } catch (error) {
