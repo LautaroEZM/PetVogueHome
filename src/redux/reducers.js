@@ -36,12 +36,14 @@ const rootReducer = (state = initialState, action) => {
         loading: false,
         error: action.payload,
       };
+
     //🎀Agregado post:
     case POST_SERVICE:
       return {
         ...state,
         services: [...state.services, action.payload],
       };
+
     case POST_PET:
       return {
         ...state,
