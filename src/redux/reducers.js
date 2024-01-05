@@ -5,11 +5,13 @@ import {
     FETCH_SERVICES_FAILURE,
     POST_SERVICE,
     POST_PET,
+    POST_USER
   } from './actions';
   
   const initialState = {
     services: [],
     pets: [],
+    users: [],
     loading: false,
     error: null,
   };
@@ -47,8 +49,11 @@ import {
        ...state,
        pets: [...state.pets, action.payload],
      };
-
-
+     case POST_USER:
+     return {
+       ...state,
+       users: [...state.users, action.payload],
+     };
       default:
         return state;
     }
