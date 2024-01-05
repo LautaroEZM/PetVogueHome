@@ -9,7 +9,7 @@ import MyPets from "./Pages/MyPets/MyPets";
 import CreateService from "./Pages/CreateService/CreateService";
 import EditService from "./Pages/EditService/EditService";
 import UserForm from "./Pages/CreateUser/CreateUser";
-
+import Login from "./Pages/LoginGoogle/LoginGoogle";
 
 function App() {
   return (
@@ -24,7 +24,9 @@ function App() {
             <Route path="/editarServicio/:id" element={<EditService />} />
             <Route path="/servicios" element={<Services />} />
             <Route path="/MisMascotas" element={<MyPets />} />
+            
             <Route path="/crearUsuario" element={<UserForm/>} />
+            <Route path="/login" element={<Login/>}/>
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
         </div>
