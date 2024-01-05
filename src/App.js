@@ -8,7 +8,7 @@ import Services from "./Pages/Services/Services";
 import MyPets from "./Pages/MyPets/MyPets";
 import CreateService from "./Pages/CreateService/CreateService";
 import EditService from "./Pages/EditService/EditService";
-import Login from "./Pages/Login/Login";
+// import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
 import Login from "./Pages/LoginGoogle/LoginGoogle";
 
