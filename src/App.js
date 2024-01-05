@@ -8,13 +8,13 @@ import Services from "./Pages/Services/Services";
 import MyPets from "./Pages/MyPets/MyPets";
 import CreateService from "./Pages/CreateService/CreateService";
 import EditService from "./Pages/EditService/EditService";
-// import Login from "./Pages/Login/Login";
+import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
 // import UserForm from "./Pages/CreateUser/CreateUser";
 import DetailPet from "./Pages/DetailPet/DetailPet";
 import DetailService from "./Pages/DetailService/DetailService";
 
-import Login from "./Pages/LoginGoogle/LoginGoogle";
+// import Login from "./Pages/LoginGoogle/LoginGoogle";
 
 function App() {
   return (
