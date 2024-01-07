@@ -34,7 +34,7 @@ const ServiciosAnimales = () => {
       dispatch(fetchServicesRequest());
       try {
         const response = await axios.post('https://petvogue.onrender.com/services/get');
-        dispatch(fetchServicesSuccess(response.data));
+        dispatch(fetchServicesSuccess(response.data.rows)); // Asegúrate de acceder correctamente a los datos
       } catch (err) {
         dispatch(fetchServicesFailure(err.message));
       }
@@ -100,10 +100,12 @@ const ServiciosAnimales = () => {
         filters: {
           animalType_filter: selectedPetTypes.length > 0 ? selectedPetTypes : undefined,
           category_filter: selectedServiceTypes.length > 0 ? selectedServiceTypes : undefined,
-          price_order: sort !=="none" ? sort : undefined,
+          price_order: sort !== "none" ? sort : undefined,
         },
+        page: 1,
+        itemsPerPage: 50,
       });
-      dispatch(fetchServicesSuccess(response.data));
+      dispatch(fetchServicesSuccess(response.data.rows));
     } catch (err) {
       dispatch(fetchServicesFailure(err.message));
     }
@@ -157,7 +159,7 @@ const ServiciosAnimales = () => {
       </Drawer>
 
       <Grid container spacing={2} justifyContent="center">
-        {services.map((servicio, index) => (
+        {services.length && services.map((servicio, index) => (
           <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
             <Card
               className="serviceCard"
