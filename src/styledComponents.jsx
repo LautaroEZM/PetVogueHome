@@ -25,6 +25,17 @@ background-color: #ffd100;
 }
 `;
 
+export const YellowButtonSmall = styled(Button)`
+color: black;
+font-weight: bold;
+border: none;
+border-radius: 50px;
+background-color: #ffd100;
+&:hover {
+    background-color: #ffbb00;
+}
+`;
+
 //----------------------- OTROS ELEMENTOS
 
 export const LinkNoDeco = styled(Link)`
