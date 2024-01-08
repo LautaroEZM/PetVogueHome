@@ -10,6 +10,7 @@ export const RESET_DETAIL_SERVICE = "RESET_DETAIL_SERVICE";
 export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
+export const UPDATE_PET = " UPDATE_PET";
 //export const GET_SERVICES = "GET_SERVICES";
 export const POST_USER = "POST_USER";
 const URL = "https://petvogue.onrender.com"
@@ -54,11 +55,13 @@ export const fetchServicesRequest = () => ({
     return async (dispatch) => {
       try {
         //dispatch(loading(true));
-        const response = await axios.post(`https://petvogue.onrender.com/services/get`, {
-          filters:{
-            serviceID_filter: serviceID,
-          },
-        });
+       const response = await axios.post('https://petvogue.onrender.com/services/get', {
+       filters: {
+        serviceID_filter: serviceID
+      },
+       page: 1,
+       itemsPerPage: 50,
+      });
         return dispatch({
           type: GET_SERVICE_DETAIL,
           payload: response.data,
@@ -100,8 +103,11 @@ export const createPet = (pet) => {
     return async (dispatch) => {
     try {
     const response = await axios.post('https://petvogue.onrender.com/pets/get', {
-    filters: {}
+    filters: {},
+    page: 1,
+        itemsPerPage: 50,
     });
+    console.log(response.data);
     return dispatch({
     type: GET_ALL_PETS,
     payload: response.data,
@@ -120,6 +126,8 @@ export const createPet = (pet) => {
       filters: {
        petID_filter: petID,
       },
+      page: 1,//ver si despues esto
+      itemsPerPage: 50,//ver si despues esto
      });
      console.log(response.data);
      return dispatch({
@@ -132,6 +140,21 @@ export const createPet = (pet) => {
     };
    };
 
+   //🎀Edit Pet:
+   export const updatePet = (petData) => {
+    return async (dispatch) => {
+      try {
+        const response = await axios.put(`https://petvogue.onrender.com/pets/update/${petData.id}`, petData);
+        console.log(response.data);
+        return dispatch({
+          type: UPDATE_PET,
+          payload: response.data,
+        });
+      } catch (error) {
+        console.error(`Error updating pet👀: ${error}`);
+      }
+    };
+   };
  
   // crear un usuario
 export const createUser = (userData) => {

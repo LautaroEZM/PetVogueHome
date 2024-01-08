@@ -36,7 +36,7 @@ const CreatePet = () => {
         weight: 0,
         size: '',
         status: 'enabled',
-        //userID: 'a2d9d673-b9eb-4276-8845-b0ab9f5017e6',
+        userID: "02ac87ae-a39c-4a55-a151-5c5abfd3388c",//->🎀Este es un usuario creado desde el back, deberia andar!!
     });
 
     const [photo, setPhoto] = useState(null);
@@ -97,7 +97,7 @@ const CreatePet = () => {
                       }}
                 />
                 <TextField
-                    label="Nacimiento"
+                    label=""
                     name="birth"
                     type="date"
                     value={formData.birth}

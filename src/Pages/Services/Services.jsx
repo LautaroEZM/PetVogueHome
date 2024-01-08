@@ -34,7 +34,7 @@ const ServiciosAnimales = () => {
       dispatch(fetchServicesRequest());
       try {
         const response = await axios.post('https://petvogue.onrender.com/services/get');
-        dispatch(fetchServicesSuccess(response.data));
+        dispatch(fetchServicesSuccess(response.data.rows)); // Asegúrate de acceder correctamente a los datos
       } catch (err) {
         dispatch(fetchServicesFailure(err.message));
       }
@@ -44,14 +44,72 @@ const ServiciosAnimales = () => {
   }, [dispatch]);
 
   const [filters, setFilters] = React.useState({
-    mascota: ['Perros', 'Gatos'],
+    mascota: ['Perro', 'Gato'],
     general: ['Consulta', 'Cirugias', 'Especialidades', 'Vacunacion'],
     estetica: ['Peluqueria', 'Baños', 'Estetica general'],
   });
+
+  const [sort, setSort] = React.useState('none');
+
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const [selectedPets, setSelectedPets] = React.useState([]);
+  const [selectedServices, setSelectedServices] = React.useState([]);
+
+  const handlePetCheckboxChange = (pet) => {
+    const newSelectedPets = [...selectedPets];
+    const petIndex = newSelectedPets.indexOf(pet);
+
+    if (petIndex === -1) {
+      newSelectedPets.push(pet);
+    } else {
+      newSelectedPets.splice(petIndex, 1);
+    }
+
+    setSelectedPets(newSelectedPets);
+    applyFilters(newSelectedPets, selectedServices);
+  };
+
+  const handleServiceCheckboxChange = (service) => {
+    const newSelectedServices = [...selectedServices];
+    const serviceIndex = newSelectedServices.indexOf(service);
+
+    if (serviceIndex === -1) {
+      newSelectedServices.push(service);
+    } else {
+      newSelectedServices.splice(serviceIndex, 1);
+    }
+
+    setSelectedServices(newSelectedServices);
+    applyFilters(selectedPets, newSelectedServices);
+  };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
+  };
+
+  const handleSort = () => {
+    setSort(sort === 'none' ? 'asc' : sort === "asc" ? 'desc' : 'none');
+    applyFilters(selectedPets, selectedServices)
+  }
+
+  const applyFilters = async (selectedPetTypes, selectedServiceTypes) => {
+
+    try {
+      const response = await axios.post('https://petvogue.onrender.com/services/get', {
+        filters: {
+          animalType_filter: selectedPetTypes.length > 0 ? selectedPetTypes : undefined,
+          category_filter: selectedServiceTypes.length > 0 ? selectedServiceTypes : undefined,
+          price_order: sort !== "none" ? sort : undefined,
+        },
+        page: 1,
+        itemsPerPage: 50,
+      });
+      dispatch(fetchServicesSuccess(response.data.rows));
+    } catch (err) {
+      dispatch(fetchServicesFailure(err.message));
+    }
+
   };
 
   return (
@@ -68,28 +126,29 @@ const ServiciosAnimales = () => {
         <YellowButton onClick={toggleDrawer} sx={{ margin: '2px' }}>
           Filtros
         </YellowButton>
-        <YellowButton sx={{ margin: '2px' }}>Ordenar</YellowButton>
-        <LinkNoDeco to={'/crearServicio'}><YellowButton sx={{ margin: '2px' }}>
-          Crear servicio
-        </YellowButton></LinkNoDeco>
+        <YellowButton onClick={handleSort} sx={{ margin: '2px' }}>Ordenar</YellowButton>
+        <LinkNoDeco to={'/crearServicio'}>
+          <YellowButton sx={{ margin: '2px' }}>Crear servicio</YellowButton>
+        </LinkNoDeco>
       </Toolbar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
         <List>
           {[
-            { category: 'MASCOTA', icon: <Pets />, options: filters.mascota },
-            { category: 'GENERAL', icon: <Category />, options: filters.general },
-            { category: 'ESTETICA', icon: <Extension />, options: filters.estetica },
-          ].map(({ category, icon, options }) => (
-            <div key={category}>
+            { group: "MASCOTA", category: 'ANIMALTYPE', icon: <Pets />, options: filters.mascota },
+            { group: "GENERAL", category: 'SERVICE', icon: <Category />, options: filters.general },
+            { group: "ESTETICA", category: 'SERVICE', icon: <Extension />, options: filters.estetica },
+          ].map(({ group, category, icon, options }) => (
+            <div key={group}>
               <ListItem>
                 <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={category} />
+                <ListItemText primary={group} />
               </ListItem>
               {options.map((option, index) => (
                 <ListItem key={index}>
                   <Checkbox
-                  // Aquí deberías manejar el estado de las opciones seleccionadas
+                    checked={category === 'SERVICE' ? selectedServices.includes(option) : selectedPets.includes(option)}
+                    onChange={() => (category === 'SERVICE' ? handleServiceCheckboxChange(option) : handlePetCheckboxChange(option))}
                   />
                   <ListItemText primary={option} />
                 </ListItem>
@@ -100,7 +159,7 @@ const ServiciosAnimales = () => {
       </Drawer>
 
       <Grid container spacing={2} justifyContent="center">
-        {services.map((servicio, index) => (
+        {services.length && services.map((servicio, index) => (
           <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
             <Card
               className="serviceCard"
@@ -123,15 +182,12 @@ const ServiciosAnimales = () => {
                 <Typography>
                   <strong>Categoría:</strong> {servicio.category}
                 </Typography>
-              {/*🎀Agregado para que se vea image, despues modificar en todo caso */}
-              <Typography>
-               <strong></strong> 
-               <LinkNoDeco to={`/detallesServicios/${servicio.serviceID}`}>
-                <img src={servicio.image} alt={servicio.name} style={{width: '100%'}}/>
-                </LinkNoDeco>
-                 </Typography>
-                
-                 {/*🎀Hasta aca*/}
+                <Typography>
+                  <strong></strong>
+                  <LinkNoDeco to={`/detallesServicios/${servicio.serviceID}`}>
+                    <img src={servicio.image} alt={servicio.name} style={{ width: '100%' }} />
+                  </LinkNoDeco>
+                </Typography>
                 <Typography>
                   <strong>Precio:</strong> {servicio.price}
                 </Typography>
