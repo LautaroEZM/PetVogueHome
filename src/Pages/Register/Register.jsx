@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography, Link } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { createUser } from "../../redux/actions";
@@ -15,11 +15,17 @@ function Register() {
     dni: "",
   });
 
+  const [touchedFields, setTouchedFields] = useState({});
   const [errors, setErrors] = useState({});
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    validateForm();
+  }, [formData, isPasswordValid, touchedFields]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,18 +33,31 @@ function Register() {
       ...prevData,
       [name]: value,
     }));
-    validateForm();
+
+    setTouchedFields((prevTouched) => ({
+      ...prevTouched,
+      [name]: true,
+    }));
+
+    if (name === "password" || name === "confirmPassword") {
+      setIsPasswordValid(
+        validations.validatePassword(formData.password) &&
+          formData.password === formData.confirmPassword
+      );
+    }
   };
 
   const validateForm = () => {
-    const emailValid = validations.validateEmail(formData.email);
-    const passwordValid = validations.validatePassword(formData.password);
+    const emailValid = touchedFields.email
+      ? validations.validateEmail(formData.email)
+      : true;
 
     setErrors({
       email: emailValid ? "" : "Formato de correo electrónico inválido",
-      password: passwordValid
-        ? ""
-        : "La contraseña debe tener entre 8 y 16 caracteres, incluyendo al menos un número y un carácter especial",
+      password:
+        touchedFields.password && !isPasswordValid
+          ? "Las contraseñas deben coincidir y cumplir con los requisitos"
+          : "",
     });
 
     setIsSubmitDisabled(
@@ -46,7 +65,7 @@ function Register() {
         formData.firstName &&
         formData.lastName &&
         emailValid &&
-        passwordValid &&
+        isPasswordValid &&
         formData.phone &&
         formData.dni
       )
@@ -84,12 +103,14 @@ function Register() {
           name="firstName"
           value={formData.firstName}
           onChange={handleChange}
+          autoComplete="off"
         />
         <TextField
           label="Apellido"
           name="lastName"
           value={formData.lastName}
           onChange={handleChange}
+          autoComplete="off"
         />
         <TextField
           label="Correo Electrónico"
@@ -97,10 +118,11 @@ function Register() {
           type="email"
           value={formData.email}
           onChange={handleChange}
-          error={!!errors.email}
+          error={touchedFields.email && !!errors.email}
+          autoComplete="off"
         />
         <Typography variant="caption" color="error">
-          {errors.email}
+          {touchedFields.email && errors.email}
         </Typography>
         <TextField
           label="Contraseña"
@@ -108,22 +130,25 @@ function Register() {
           type="password"
           value={formData.password}
           onChange={handleChange}
-          error={!!errors.password}
+          error={touchedFields.password && !!errors.password}
+          autoComplete="off"
         />
         <Typography variant="caption" color="error">
-          {errors.password}
+          {touchedFields.password && errors.password}
         </Typography>
         <TextField
           label="Teléfono"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
+          autoComplete="off"
         />
         <TextField
           label="DNI"
           name="dni"
           value={formData.dni}
           onChange={handleChange}
+          autoComplete="off"
         />
         <Button
           type="submit"
