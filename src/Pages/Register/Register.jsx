@@ -4,6 +4,10 @@ import { useDispatch } from "react-redux";
 import { createUser } from "../../redux/actions";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import validations from "./validations";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -19,6 +23,7 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,13 +43,6 @@ function Register() {
       ...prevTouched,
       [name]: true,
     }));
-
-    if (name === "password" || name === "confirmPassword") {
-      setIsPasswordValid(
-        validations.validatePassword(formData.password) &&
-          formData.password === formData.confirmPassword
-      );
-    }
   };
 
   const validateForm = () => {
@@ -52,35 +50,46 @@ function Register() {
       ? validations.validateEmail(formData.email)
       : true;
 
+    const isPasswordValid =
+      validations.validatePassword(formData.password) &&
+      formData.password === formData.confirmPassword;
+
+    const firstNameValidation = validations.validateName(formData.firstName);
+    const lastNameValidation = validations.validateName(formData.lastName);
+
     setErrors({
       email: emailValid ? "" : "Formato de correo electrónico inválido",
       password:
         touchedFields.password && !isPasswordValid
-          ? "Las contraseñas deben coincidir y cumplir con los requisitos"
+          ? "Las contraseñas deben coincidir, deben contener entre 8 y 16 caracteres, contener números y letras mayúsculas y minúsculas."
           : "",
+      firstName: firstNameValidation.message,
+      lastName: lastNameValidation.message,
     });
 
     setIsSubmitDisabled(
       !(
-        formData.firstName &&
-        formData.lastName &&
+        firstNameValidation.isValid &&
+        lastNameValidation.isValid &&
         emailValid &&
-        isPasswordValid &&
-        formData.phone &&
-        formData.dni
+        isPasswordValid
       )
     );
   };
 
+  useEffect(() => {
+    validateForm();
+  }, [formData, touchedFields]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar campos antes de enviar el formulario
     if (!isSubmitDisabled) {
       try {
         const newUser = await dispatch(createUser(formData));
         console.log("Registro exitoso:", newUser);
-        navigate("/login");
+        navigate("/");
+        window.location.reload();
       } catch (error) {
         console.error("Error al registrar usuario:", error.message);
       }
@@ -99,21 +108,29 @@ function Register() {
         }}
       >
         <TextField
-          label="Nombre"
+          label="Nombre *"
           name="firstName"
           value={formData.firstName}
           onChange={handleChange}
+          error={touchedFields.firstName && !!errors.firstName}
           autoComplete="off"
         />
+        <Typography variant="caption" color="error">
+          {touchedFields.firstName && errors.firstName}
+        </Typography>
         <TextField
-          label="Apellido"
+          label="Apellido *"
           name="lastName"
           value={formData.lastName}
           onChange={handleChange}
+          error={touchedFields.lastName && !!errors.lastName}
           autoComplete="off"
         />
+        <Typography variant="caption" color="error">
+          {touchedFields.lastName && errors.lastName}
+        </Typography>
         <TextField
-          label="Correo Electrónico"
+          label="Correo Electrónico *"
           name="email"
           type="email"
           value={formData.email}
@@ -125,10 +142,32 @@ function Register() {
           {touchedFields.email && errors.email}
         </Typography>
         <TextField
-          label="Contraseña"
+          label="Contraseña *"
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={formData.password}
+          onChange={handleChange}
+          error={touchedFields.password && !!errors.password}
+          autoComplete="off"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  edge="end"
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          label="Confirmar Contraseña *"
+          name="confirmPassword"
+          type="password"
+          value={formData.confirmPassword}
           onChange={handleChange}
           error={touchedFields.password && !!errors.password}
           autoComplete="off"
@@ -137,14 +176,14 @@ function Register() {
           {touchedFields.password && errors.password}
         </Typography>
         <TextField
-          label="Teléfono"
+          label="Teléfono (opcional)"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
           autoComplete="off"
         />
         <TextField
-          label="DNI"
+          label="DNI (opcional)"
           name="dni"
           value={formData.dni}
           onChange={handleChange}

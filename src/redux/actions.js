@@ -11,8 +11,12 @@ export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
 export const POST_USER = "POST_USER";
+export const USER_LOGIN = "USER_LOGIN";
+export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
+export const USER_LOGOUT = "USER_LOGOUT";
+export const SET_LOGGED_IN = "SET_LOGGED_IN";
 // const URL = "https://petvogue.onrender.com";
-const URL = "http://localhost:3001"
+const URL = "http://localhost:3001";
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,
@@ -145,3 +149,38 @@ export const createUser = (userData) => {
     }
   };
 };
+
+export const loginUser = (credentials) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/users/login`, credentials);
+      const { token, user } = response.data;
+
+      // Almacenar en localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      dispatch({
+        type: USER_LOGIN,
+        payload: {
+          token,
+          user,
+        },
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_LOGIN_FAILURE,
+        payload: "Error en el inicio de sesión. Verifica tus credenciales.",
+      });
+    }
+  };
+};
+
+export const logoutUser = () => ({
+  type: USER_LOGOUT,
+});
+
+export const setLoggedIn = (isLoggedIn) => ({
+  type: "SET_LOGGED_IN",
+  payload: isLoggedIn,
+});
