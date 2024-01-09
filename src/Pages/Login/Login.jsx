@@ -57,6 +57,7 @@ function Login() {
       await dispatch(loginUser({ email, password }));
       dispatch(setLoggedIn(true)); // Dispatch para actualizar el estado isLoggedIn
       navigate("/");
+      navigate(0);
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
     }
