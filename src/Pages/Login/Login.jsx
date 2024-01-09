@@ -1,6 +1,7 @@
 import { gapi } from "gapi-script";
+/* import { GoogleLogin, GoogleLogout } from 'react-google-login'; */
+import { GoogleLogin } from '@react-oauth/google';
 import { TextField, Button, Box, Link } from "@mui/material";
-import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { useEffect, useState } from "react";
 import {
   createUser,
@@ -16,6 +17,8 @@ function Login() {
   const store = useSelector((state) => state.users);
   const navigate = useNavigate();
   console.log(store, "store");
+  
+
 
   const clientId =
     "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
@@ -32,12 +35,7 @@ function Login() {
     }
   }, []);
 
-  useEffect(() => {
-    if (store.user) {
-      setIsLoggedIn(true);
-      setUser(store.user);
-    }
-  }, [store.user]);
+
 
   useEffect(() => {
     const start = () => {
@@ -48,12 +46,7 @@ function Login() {
     gapi.load("client:auth2", start);
   }, []);
 
-  useEffect(() => {
-    const userFromLocalStorage = localStorage.getItem("user");
-    if (userFromLocalStorage) {
-      setUser(JSON.parse(userFromLocalStorage));
-    }
-  }, []);
+ 
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -92,12 +85,15 @@ function Login() {
         photo: response.profileObj.imageUrl,
       };
 
-      await dispatch(loginUser(userData));
+      await dispatch(createUser(userData));
+
+      // Redirige al usuario al componente de perfil
+      navigate('/perfil');
     } catch (error) {
       console.error(`Error dispatching user data: ${error}`);
     }
   };
-
+  
   const onFailure = () => {
     console.log("Something went wrong");
   };
@@ -110,7 +106,7 @@ function Login() {
   return (
     <div className="App">
       {isLoggedIn ? (
-        // Mostrar el avatar y otra información del usuario
+        // Show user profile
         <div className="profile">
           <img src={user.imageUrl} alt="" />
           <h3>{user.firstName}</h3>
@@ -121,7 +117,7 @@ function Login() {
           </Button>
         </div>
       ) : (
-        // Mostrar el formulario de inicio de sesión
+        // Show login form
         <form>
           <Box
             sx={{
@@ -161,23 +157,7 @@ function Login() {
               cookiePolicy={"single_host_policy"}
             />
           </div>
-
-          {/* Perfil del usuario
-          <div className={user ? "profile" : "hidden"}>
-            <img src={user.imageUrl} alt="" />
-            <h3>{user.firstName}</h3>
-            <h3>{user.email}</h3>
-            <h3>{user.googleId}</h3>
-          </div> */}
-
-          {/* Botón de cierre de sesión con Google */}
-          <div>
-            <GoogleLogout
-              clientId={clientId}
-              buttonText="Logout"
-              onLogoutSuccess={handleLogout}
-            />
-          </div>
+          
         </form>
       )}
     </div>
