@@ -1,5 +1,4 @@
 import { gapi } from "gapi-script";
-/* import { GoogleLogin, GoogleLogout } from 'react-google-login'; */
 import { GoogleLogin } from '@react-oauth/google';
 import { TextField, Button, Box, Link } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -11,13 +10,14 @@ import {
 } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
+
 
 function Login() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const store = useSelector(state => state.users);
   console.log(store, "store");
-  
-
 
   const clientId = "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
   const [user, setUser] = useState({});
@@ -33,8 +33,6 @@ function Login() {
     }
   }, []);
 
-
-
   useEffect(() => {
     const start = () => {
       gapi.auth2.init({
@@ -44,7 +42,6 @@ function Login() {
     gapi.load("client:auth2", start);
   }, []);
 
- 
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -54,45 +51,52 @@ function Login() {
     setPassword(e.target.value);
   };
 
-  const handleLogin = () => {
-    // Aquí puedes implementar la lógica de inicio de sesión con email y contraseña
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+  const handleLogin = async () => {
+    try {
+      await dispatch(loginUser({ email, password }));
+      dispatch(setLoggedIn(true)); // Dispatch para actualizar el estado isLoggedIn
+      navigate("/");
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error.message);
+    }
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setIsLoggedIn(false);
+    setUser({});
+    navigate("/");
+    navigate(0);
   };
 
   const onSuccess = async (response) => {
-    setUser(response.profileObj);
-
-    // Hacer el dispatch a la base de datos con el email, el nombre y la foto
+    const decoded = jwtDecode(response.credential);
+    console.log(decoded);
     try {
       const userData = {
-        email: response.profileObj.email,
-        firstName: response.profileObj.name,
-        photo: response.profileObj.imageUrl,
+        email: decoded.email,
+        firstName: decoded.name,
+        photo: decoded.picture,
       };
-
+  
       await dispatch(createUser(userData));
-
-      // Redirige al usuario al componente de perfil
-     //🎀Descomentar luego  navigate('/perfil');
+      console.log('Usuario creado:', userData);
     } catch (error) {
       console.error(`Error dispatching user data: ${error}`);
     }
+    navigate("/");
+    window.location.reload();
   };
   
   const onFailure = () => {
     console.log("Something went wrong");
   };
 
-  const handleLogout = () => {
-    setUser({});
-    console.log('User has logged out');
-  };
 
   return (
     <div className="App">
       {isLoggedIn ? (
-        // Show user profile
         <div className="profile">
           <img src={user.imageUrl} alt="" />
           <h3>{user.firstName}</h3>
@@ -103,7 +107,6 @@ function Login() {
           </Button>
         </div>
       ) : (
-        // Show login form
         <form>
           <Box
             sx={{
@@ -136,12 +139,10 @@ function Login() {
             </Link>
           </Box>
           <div className="btn">
-            <GoogleLogin
-              clientId={clientId}
-              onSuccess={onSuccess}
-              onFailure={onFailure}
-              cookiePolicy={"single_host_policy"}
-            />
+          <GoogleLogin
+           onSuccess={onSuccess}
+             onError={() => console.log('Login Failed')}
+          />
           </div>
           
         </form>
