@@ -13,7 +13,6 @@ import Register from "./Pages/Register/Register";
 // import UserForm from "./Pages/CreateUser/CreateUser";
 import DetailPet from "./Pages/DetailPet/DetailPet";
 import DetailService from "./Pages/DetailService/DetailService";
-import Perfil from "./Pages/Perfil/Perfil";
 
 // import Login from "./Pages/LoginGoogle/LoginGoogle";
 
@@ -36,7 +35,6 @@ function App() {
             <Route path="/detallesMascotas/:id" element={<DetailPet />} />
             <Route path="/detallesServicios/:id" element={<DetailService />} />
             <Route path="/login" element={<Login/>}/>
-            <Route path="/Perfil" element={<Perfil/>}/>
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
         </div>
