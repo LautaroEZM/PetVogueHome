@@ -12,8 +12,11 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  TextField,
+  Box,
+  Container
 } from '@mui/material';
-import { LinkNoDeco, YellowButton } from '../../styledComponents';
+import { LinkNoDeco, YellowButton, YellowButtonSmall } from '../../styledComponents';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchServicesRequest,
@@ -21,9 +24,7 @@ import {
   fetchServicesFailure,
 } from '../../redux/actions';
 import axios from 'axios';
-import { Pets, Category, Extension } from '@mui/icons-material';
-import { Box } from '@mui/system';
-
+import { Pets, Category, Extension, ArrowDropDown, ArrowDropUp, SortByAlpha, AttachMoney } from '@mui/icons-material';
 
 const ServiciosAnimales = () => {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const ServiciosAnimales = () => {
       dispatch(fetchServicesRequest());
       try {
         const response = await axios.post('https://petvogue.onrender.com/services/get');
-        dispatch(fetchServicesSuccess(response.data));
+        dispatch(fetchServicesSuccess(response.data.rows)); // Asegúrate de acceder correctamente a los datos
       } catch (err) {
         dispatch(fetchServicesFailure(err.message));
       }
@@ -49,10 +50,10 @@ const ServiciosAnimales = () => {
     estetica: ['Peluqueria', 'Baños', 'Estetica general'],
   });
 
-  const [sort, setSort] = React.useState('none');
-
+  const [sortPrice, setSortPrice] = React.useState('none');
+  const [sortName, setSortName] = React.useState('none');
+  const [searchText, setSearchText] = React.useState('');
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-
   const [selectedPets, setSelectedPets] = React.useState([]);
   const [selectedServices, setSelectedServices] = React.useState([]);
 
@@ -88,26 +89,35 @@ const ServiciosAnimales = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleSort = () => {
-    setSort(sort === 'none' ? 'asc' : sort === "asc" ? 'desc' : 'none');
-    applyFilters(selectedPets, selectedServices)
+  const handleSortPrice = () => {
+    const newSortPrice = sortPrice === 'none' ? 'asc' : sortPrice === "asc" ? 'desc' : 'none';
+    setSortPrice(newSortPrice);
+    applyFilters(selectedPets, selectedServices, null, newSortPrice);
   }
 
-  const applyFilters = async (selectedPetTypes, selectedServiceTypes) => {
+  const handleSortName = () => {
+    const newSortName = sortName === 'none' ? 'asc' : sortName === "asc" ? 'desc' : 'none';
+    setSortName(newSortName);
+    applyFilters(selectedPets, selectedServices, newSortName, null);
+  }
 
+  const applyFilters = async (selectedPetTypes, selectedServiceTypes, selectedSortName, selectedSortPrice) => {
     try {
       const response = await axios.post('https://petvogue.onrender.com/services/get', {
         filters: {
           animalType_filter: selectedPetTypes.length > 0 ? selectedPetTypes : undefined,
           category_filter: selectedServiceTypes.length > 0 ? selectedServiceTypes : undefined,
-          price_order: sort !=="none" ? sort : undefined,
+          price_order: selectedSortPrice !== "none" ? selectedSortPrice : undefined,
+          name_order: selectedSortName !== "none" ? selectedSortName : undefined,
+          name_filter: searchText !== '' ? searchText : undefined, // Agrega el filtro de búsqueda
         },
+        page: 1,
+        itemsPerPage: 50,
       });
-      dispatch(fetchServicesSuccess(response.data));
+      dispatch(fetchServicesSuccess(response.data.rows));
     } catch (err) {
       dispatch(fetchServicesFailure(err.message));
     }
-
   };
 
   return (
@@ -120,15 +130,52 @@ const ServiciosAnimales = () => {
         padding: 2,
       }}
     >
-      <Toolbar>
-        <YellowButton onClick={toggleDrawer} sx={{ margin: '2px' }}>
-          Filtros
-        </YellowButton>
-        <YellowButton onClick={handleSort} sx={{ margin: '2px' }}>Ordenar</YellowButton>
-        <LinkNoDeco to={'/crearServicio'}>
-          <YellowButton sx={{ margin: '2px' }}>Crear servicio</YellowButton>
-        </LinkNoDeco>
-      </Toolbar>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <Container>
+          <Toolbar>
+            <YellowButton onClick={toggleDrawer} sx={{ margin: '2px' }}>
+              Filtros
+            </YellowButton>
+            <LinkNoDeco to={'/crearServicio'}>
+              <YellowButton sx={{ margin: '2px' }}>Crear servicio</YellowButton>
+            </LinkNoDeco>
+          </Toolbar>
+        </Container>
+
+        <Container sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <TextField
+            label="Buscar"
+            variant="outlined"
+            sx={{ marginRight: '8px' }}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <YellowButton onClick={() => applyFilters(selectedPets, selectedServices)}>
+            Buscar
+          </YellowButton>
+        </Container>
+
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <YellowButtonSmall onClick={handleSortPrice}>
+            <AttachMoney />
+            {sortPrice === 'asc' && <ArrowDropUp />} {/* Flecha hacia arriba si es ascendente */}
+            {sortPrice === 'desc' && <ArrowDropDown />} {/* Flecha hacia abajo si es descendente */}
+          </YellowButtonSmall>
+          <YellowButtonSmall onClick={handleSortName}>
+
+            <SortByAlpha /> {/* Icono de MUI para representar ordenar alfabéticamente */}
+            {sortName === 'asc' && <ArrowDropUp />} {/* Flecha hacia arriba si es ascendente */}
+            {sortName === 'desc' && <ArrowDropDown />} {/* Flecha hacia abajo si es descendente */}
+          </YellowButtonSmall>
+        </Box>
+      </Box>
+
 
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
         <List>
@@ -157,7 +204,7 @@ const ServiciosAnimales = () => {
       </Drawer>
 
       <Grid container spacing={2} justifyContent="center">
-        {services.map((servicio, index) => (
+        {services.length && services.map((servicio, index) => (
           <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
             <Card
               className="serviceCard"
@@ -171,7 +218,7 @@ const ServiciosAnimales = () => {
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                 ':hover': {
                   transform: 'translateY(-5px)',
-                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+                  boxShadow: '0 gi8px 16px rgba(0, 0, 0, 0.2)',
                 },
               }}
             >
