@@ -11,8 +11,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 function Login() {
   const dispatch = useDispatch();
-  const store = useSelector((state) => state.users);
-  const navigate = useNavigate();
+  const store = useSelector(state => state.users);
   console.log(store, "store");
   const [user, setUser] = useState({});
   const [email, setEmail] = useState("");

@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
+  Menu,
+  MenuItem,
   Typography,
+  Avatar,
   Container,
-  Button,
-  Link,
 } from "@mui/material";
 import {
   ButtonTransparentMenu,
   LinkNoDeco,
   YellowButton,
 } from "../styledComponents";
-import { Link as RouterLink } from "react-router-dom";
 
 const TopBarMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -24,9 +24,6 @@ const TopBarMenu = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
-  // Verificar el inicio de sesión al cargar el componente
-  const isLoggedIn = localStorage.getItem("user") !== null;
 
   return (
     <AppBar
@@ -44,39 +41,44 @@ const TopBarMenu = () => {
 
         {/* Botones centrados */}
         <Container>
-          <LinkNoDeco to="/">
+          <LinkNoDeco to={"/"}>
             <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
           </LinkNoDeco>
-          <LinkNoDeco to="/Servicios">
+          <LinkNoDeco to={"/Servicios"}>
             <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
           </LinkNoDeco>
-          <LinkNoDeco to="/">
+          <LinkNoDeco to={"/"}>
             <ButtonTransparentMenu>Turnos</ButtonTransparentMenu>
           </LinkNoDeco>
-          <LinkNoDeco to="/MisMascotas">
-            <ButtonTransparentMenu>Mis Mascotas</ButtonTransparentMenu>
+          <LinkNoDeco to={"/MisMascotas"}>
+            <ButtonTransparentMenu>Mascotas</ButtonTransparentMenu>
           </LinkNoDeco>
         </Container>
 
-        {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
+        {/* Avatar con botón "Iniciar Sesión" y menú desplegable para login/register */}
         <div style={{ display: "flex", alignItems: "center" }}>
-          {isLoggedIn ? (
-            <LinkNoDeco to="/login">
-              <YellowButton color="inherit" style={{ marginRight: "8px" }}>
-                Mi Perfil
-              </YellowButton>
-            </LinkNoDeco>
-          ) : (
-            <LinkNoDeco to="/login">
-              <YellowButton
-                color="inherit"
-                onClick={handleMenuOpen}
-                style={{ marginRight: "8px" }}
-              >
-                Iniciar Sesión
-              </YellowButton>
-            </LinkNoDeco>
-          )}
+          <LinkNoDeco to={"/login"}>
+            <YellowButton
+              color="inherit"
+              onClick={handleMenuOpen}
+              style={{ marginRight: "8px" }}
+            >
+              Iniciar Sesión
+            </YellowButton>
+          </LinkNoDeco>
+
+          {/* <Avatar
+                        alt="Usuario"
+                        src="/path/to/avatar.jpg"
+                    />
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem onClick={handleMenuClose}>Login</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>Registro</MenuItem>
+                    </Menu> */}
         </div>
       </Toolbar>
     </AppBar>
