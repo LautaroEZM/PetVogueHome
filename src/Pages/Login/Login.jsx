@@ -14,6 +14,7 @@ import { jwtDecode } from 'jwt-decode';
 
 
 function Login() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const store = useSelector(state => state.users);
   console.log(store, "store");
@@ -54,13 +55,19 @@ function Login() {
   const handleLogin = async () => {
     try {
       await dispatch(loginUser({ email, password }));
-      dispatch(setLoggedIn(true)); 
-     /*  navigate("/");
-      window.location.reload(); */
+      dispatch(setLoggedIn(true)); // Dispatch para actualizar el estado isLoggedIn
+      navigate("/");
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
     }
+  };
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    setIsLoggedIn(false);
+    setUser({});
+    navigate("/");
+    navigate(0);
   };
 
   const onSuccess = async (response) => {
