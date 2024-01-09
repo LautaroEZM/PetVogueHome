@@ -1,3 +1,5 @@
+import { gapi } from "gapi-script";
+import { GoogleLogin } from "@react-oauth/google";
 import { TextField, Button, Box, Link } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -8,11 +10,15 @@ import {
 } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
   const dispatch = useDispatch();
-  const store = useSelector(state => state.users);
+  const navigate = useNavigate();
+  const store = useSelector((state) => state.users);
   console.log(store, "store");
+  const clientId =
+    "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
   const [user, setUser] = useState({});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +30,15 @@ function Login() {
       setIsLoggedIn(true);
       setUser(storedUser);
     }
+  }, []);
+
+  useEffect(() => {
+    const start = () => {
+      gapi.auth2.init({
+        clientId: clientId,
+      });
+    };
+    gapi.load("client:auth2", start);
   }, []);
 
   const handleEmailChange = (e) => {
@@ -39,10 +54,29 @@ function Login() {
       await dispatch(loginUser({ email, password }));
       dispatch(setLoggedIn(true));
       navigate("/");
-      navigate(0);
+      window.location.reload();
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
     }
+  };
+
+  const onSuccess = async (response) => {
+    const decoded = jwtDecode(response.credential);
+    console.log(decoded);
+    try {
+      const userData = {
+        email: decoded.email,
+        firstName: decoded.name,
+        photo: decoded.picture,
+      };
+
+      await dispatch(createUser(userData));
+      console.log("Usuario creado:", userData);
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error.message);
+    }
+    navigate("/");
+    window.location.reload();
   };
 
   const handleLogout = () => {
@@ -97,6 +131,12 @@ function Login() {
               ¿No estás registrado? Crea una cuenta
             </Link>
           </Box>
+          <div className="btn">
+            <GoogleLogin
+              onSuccess={onSuccess}
+              onError={() => console.log("Login Failed")}
+            />
+          </div>
         </form>
       )}
     </div>
