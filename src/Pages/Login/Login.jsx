@@ -1,15 +1,21 @@
 import { gapi } from "gapi-script";
 import { TextField, Button, Box, Link, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+/* import { GoogleLogin, GoogleLogout } from 'react-google-login'; */
 import { useEffect, useState } from 'react';
 import { createUser } from "../../redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+
+
 
 function Login() {
   const dispatch = useDispatch();
   const store = useSelector(state => state.users);
   console.log(store, "store");
+  const navigate = useNavigate();
+
 
   const clientId = "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
   const [user, setUser] = useState({});
@@ -37,6 +43,7 @@ function Login() {
     // Aquí puedes implementar la lógica de inicio de sesión con email y contraseña
     console.log("Email:", email);
     console.log("Password:", password);
+    navigate('/perfil');
   };
 
   const onSuccess = async (response) => {
@@ -51,11 +58,14 @@ function Login() {
       };
 
       await dispatch(createUser(userData));
+
+      // Redirige al usuario al componente de perfil
+      navigate('/perfil');
     } catch (error) {
       console.error(`Error dispatching user data: ${error}`);
     }
   };
-
+  
   const onFailure = () => {
     console.log("Something went wrong");
   };
@@ -85,14 +95,25 @@ function Login() {
       </Box>
 
       {/* Botón de inicio de sesión con Google */}
-      <div className="btn">
+     {/*  <div className="btn">
         <GoogleLogin
           clientId={clientId}
           onSuccess={onSuccess}
           onFailure={onFailure}
           cookiePolicy={"single_host_policy"}
         />
-      </div>
+
+      </div> */}
+      <div>
+      <GoogleLogin
+  onSuccess={credentialResponse => {
+    console.log(credentialResponse);
+  }}
+  onError={() => {
+    console.log('Login Failed');
+  }}
+/>;
+      </div> 
 
       {/* Perfil del usuario */}
       <div className={user ? "profile" : "hidden"}>
@@ -103,13 +124,13 @@ function Login() {
       </div>
 
       {/* Botón de cierre de sesión con Google */}
-      <div>
+      {/* <div>
         <GoogleLogout
           clientId={clientId}
           buttonText="Logout"
           onLogoutSuccess={handleLogout}
         />
-      </div>
+      </div> */}
     </div>
   );
 }
