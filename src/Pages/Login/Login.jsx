@@ -1,6 +1,5 @@
 import { gapi } from "gapi-script";
 import { TextField, Button, Box, Link } from "@mui/material";
-import { GoogleLogin, GoogleLogout } from "react-google-login";
 import { useEffect, useState } from "react";
 import {
   createUser,
@@ -16,9 +15,6 @@ function Login() {
   const store = useSelector((state) => state.users);
   const navigate = useNavigate();
   console.log(store, "store");
-
-  const clientId =
-    "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
   const [user, setUser] = useState({});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,29 +25,6 @@ function Login() {
     if (storedUser) {
       setIsLoggedIn(true);
       setUser(storedUser);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (store.user) {
-      setIsLoggedIn(true);
-      setUser(store.user);
-    }
-  }, [store.user]);
-
-  useEffect(() => {
-    const start = () => {
-      gapi.auth2.init({
-        clientId: clientId,
-      });
-    };
-    gapi.load("client:auth2", start);
-  }, []);
-
-  useEffect(() => {
-    const userFromLocalStorage = localStorage.getItem("user");
-    if (userFromLocalStorage) {
-      setUser(JSON.parse(userFromLocalStorage));
     }
   }, []);
 
@@ -68,7 +41,7 @@ function Login() {
       await dispatch(loginUser({ email, password }));
       dispatch(setLoggedIn(true)); // Dispatch para actualizar el estado isLoggedIn
       navigate("/");
-      window.location.reload();
+      navigate(0)
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
     }
@@ -79,38 +52,12 @@ function Login() {
     setIsLoggedIn(false);
     setUser({});
     navigate("/");
-    window.location.reload();
+    navigate(0)
   };
-  const onSuccess = async (response) => {
-    setUser(response.profileObj);
-
-    // Hacer el dispatch a la base de datos con el email, el nombre y la foto
-    try {
-      const userData = {
-        email: response.profileObj.email,
-        firstName: response.profileObj.name,
-        photo: response.profileObj.imageUrl,
-      };
-
-      await dispatch(loginUser(userData));
-    } catch (error) {
-      console.error(`Error dispatching user data: ${error}`);
-    }
-  };
-
-  const onFailure = () => {
-    console.log("Something went wrong");
-  };
-
-  // const handleLogout = () => {
-  //   setUser({});
-  //   console.log("User has logged out");
-  // };
 
   return (
     <div className="App">
       {isLoggedIn ? (
-        // Mostrar el avatar y otra información del usuario
         <div className="profile">
           <img src={user.imageUrl} alt="" />
           <h3>{user.firstName}</h3>
@@ -121,7 +68,6 @@ function Login() {
           </Button>
         </div>
       ) : (
-        // Mostrar el formulario de inicio de sesión
         <form>
           <Box
             sx={{
@@ -153,31 +99,6 @@ function Login() {
               ¿No estás registrado? Crea una cuenta
             </Link>
           </Box>
-          <div className="btn">
-            <GoogleLogin
-              clientId={clientId}
-              onSuccess={onSuccess}
-              onFailure={onFailure}
-              cookiePolicy={"single_host_policy"}
-            />
-          </div>
-
-          {/* Perfil del usuario
-          <div className={user ? "profile" : "hidden"}>
-            <img src={user.imageUrl} alt="" />
-            <h3>{user.firstName}</h3>
-            <h3>{user.email}</h3>
-            <h3>{user.googleId}</h3>
-          </div> */}
-
-          {/* Botón de cierre de sesión con Google */}
-          <div>
-            <GoogleLogout
-              clientId={clientId}
-              buttonText="Logout"
-              onLogoutSuccess={handleLogout}
-            />
-          </div>
         </form>
       )}
     </div>

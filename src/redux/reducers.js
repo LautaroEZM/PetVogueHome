@@ -106,6 +106,7 @@ const rootReducer = (state = initialState, action) => {
       };
     case USER_LOGOUT:
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       return {
         ...state,
         token: null,
@@ -115,7 +116,7 @@ const rootReducer = (state = initialState, action) => {
       case SET_LOGGED_IN:
       return {
         ...state,
-        isLoggedIn: action.payload,
+        isLoggedIn: true,
       };
     default:
       return state;

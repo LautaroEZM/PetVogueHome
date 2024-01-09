@@ -43,17 +43,6 @@ const TopBarMenu = () => {
           <LinkNoDeco to="/">
             <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
           </LinkNoDeco>
-          <LinkNoDeco to="/Servicios">
-            <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
-          </LinkNoDeco>
-          <LinkNoDeco to="/">
-            <ButtonTransparentMenu>Turnos</ButtonTransparentMenu>
-          </LinkNoDeco>
-          {isLoggedIn && (
-            <LinkNoDeco to="/MisMascotas">
-              <ButtonTransparentMenu>Mis Mascotas</ButtonTransparentMenu>
-            </LinkNoDeco>
-          )}
         </Container>
 
         {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}

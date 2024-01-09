@@ -150,10 +150,10 @@ export const createUser = (userData) => {
   };
 };
 
-export const loginUser = (credentials) => {
+export const loginUser = (userData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post(`${URL}/users/login`, credentials);
+      const response = await axios.post(`${URL}/users/login`, userData);
       const { token, user } = response.data;
 
       // Almacenar en localStorage
