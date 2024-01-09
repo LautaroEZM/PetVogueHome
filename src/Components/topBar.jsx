@@ -7,7 +7,11 @@ import {
   Button,
   Link,
 } from "@mui/material";
-import { ButtonTransparentMenu, LinkNoDeco, YellowButton } from "../styledComponents";
+import {
+  ButtonTransparentMenu,
+  LinkNoDeco,
+  YellowButton,
+} from "../styledComponents";
 import { Link as RouterLink } from "react-router-dom";
 
 const TopBarMenu = () => {
@@ -42,6 +46,15 @@ const TopBarMenu = () => {
         <Container>
           <LinkNoDeco to="/">
             <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
+          </LinkNoDeco>
+          <LinkNoDeco to="/Servicios">
+            <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
+          </LinkNoDeco>
+          <LinkNoDeco to="/">
+            <ButtonTransparentMenu>Turnos</ButtonTransparentMenu>
+          </LinkNoDeco>
+          <LinkNoDeco to="/MisMascotas">
+            <ButtonTransparentMenu>Mis Mascotas</ButtonTransparentMenu>
           </LinkNoDeco>
         </Container>
 

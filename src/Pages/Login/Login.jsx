@@ -1,4 +1,3 @@
-import { gapi } from "gapi-script";
 import { TextField, Button, Box, Link } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -39,9 +38,9 @@ function Login() {
   const handleLogin = async () => {
     try {
       await dispatch(loginUser({ email, password }));
-      dispatch(setLoggedIn(true)); // Dispatch para actualizar el estado isLoggedIn
+      dispatch(setLoggedIn(true));
       navigate("/");
-      navigate(0)
+      navigate(0);
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
     }
@@ -52,7 +51,7 @@ function Login() {
     setIsLoggedIn(false);
     setUser({});
     navigate("/");
-    navigate(0)
+    navigate(0);
   };
 
   return (
