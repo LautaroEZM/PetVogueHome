@@ -25,7 +25,7 @@ const vaccinesForSpecies = {
 
 const CreatePet = () => {
     const [formData, setFormData] = useState({
-       // userID: '',
+        userID: '',
         name: '',
         birth: '',
         gender: '',
@@ -36,7 +36,7 @@ const CreatePet = () => {
         weight: 0,
         size: '',
         status: 'enabled',
-        //userID: 'a2d9d673-b9eb-4276-8845-b0ab9f5017e6',
+       
     });
 
     const [photo, setPhoto] = useState(null);
@@ -47,6 +47,8 @@ const CreatePet = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         const parsedValue = name === 'weight' ? parseInt(value, 10) : value;
+        //🎀👀
+       // const currentDate = new Date().toISOString().split('T')[0];
 
         setFormData((prevData) => ({
             ...prevData,
@@ -86,6 +88,15 @@ const CreatePet = () => {
     return (
         <form onSubmit={handleSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, margin: 'auto' }}>
+
+                <TextField
+                    label="Por el momento ingresa el id de un usuario ya creado"
+                    name="userID"
+                    value={formData.userID}
+                    onChange={handleChange}
+                    required
+                />
+
                 <TextField
                     label="Nombre de la Mascota"
                     name="name"
@@ -97,12 +108,13 @@ const CreatePet = () => {
                       }}
                 />
                 <TextField
-                    label="Nacimiento"
+                    label=""
                     name="birth"
                     type="date"
                     value={formData.birth}
                     onChange={handleChange}
                     required
+            
                 />
                 <FormControl>
                     <InputLabel id="select-pet-specie">Especie</InputLabel>

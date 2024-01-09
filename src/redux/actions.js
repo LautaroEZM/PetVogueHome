@@ -46,27 +46,29 @@ export const createService = (service) => {
   };
 };
 
-//🎀Detail Service:
-export const getServiceDetail = (serviceID) => {
-  return async (dispatch) => {
-    try {
-      //dispatch(loading(true));
-      const response = await axios.post(`${URL}/services/get`, {
-        filters: {
-          serviceID_filter: serviceID,
-        },
+  //🎀Detail Service:
+  export const getServiceDetail = (serviceID) => {
+    return async (dispatch) => {
+      try {
+        //dispatch(loading(true));
+       const response = await axios.post('https://petvogue.onrender.com/services/get', {
+       filters: {
+        serviceID_filter: serviceID
+      },
+       page: 1,
+       itemsPerPage: 50,
       });
-      return dispatch({
-        type: GET_SERVICE_DETAIL,
-        payload: response.data,
-      });
-    } catch (error) {
-      console.log("Error" + error.message);
-    }
-    //finally {
-    //dispatch(loading(false));
-  };
-};
+        return dispatch({
+          type: GET_SERVICE_DETAIL,
+          payload: response.data,
+        });
+      } catch (error) {
+        console.log("Error" + error.message);
+      } 
+      //finally {
+        //dispatch(loading(false));
+      }
+    };
 
 //🎀Reset Service Detail:
 export const resetDetailService = () => {
@@ -97,6 +99,8 @@ export const getAllPets = () => {
     try {
       const response = await axios.post(`${URL}/pets/get`, {
         filters: {},
+        page: 1,
+        itemsPerPage: 50,
       });
       return dispatch({
         type: GET_ALL_PETS,
@@ -116,6 +120,8 @@ export const getPetDetail = (petID) => {
         filters: {
           petID_filter: petID,
         },
+        page: 1,
+        itemsPerPage: 50,
       });
       console.log(response.data);
       return dispatch({
