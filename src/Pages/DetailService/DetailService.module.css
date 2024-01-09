@@ -15,5 +15,14 @@
    .description {
     font-size: 1.2em;
     line-height: 1.5;
-    font-weight: bold;
-}
+   }
+   
+   .category {
+    font-size: 1.1em;
+    color: #666;
+   }
+   
+   .price {
+    font-size: 1.5em;
+    color: #f60;
+   }

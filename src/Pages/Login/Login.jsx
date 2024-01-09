@@ -15,12 +15,10 @@ import { jwtDecode } from 'jwt-decode';
 
 function Login() {
   const dispatch = useDispatch();
-  const store = useSelector((state) => state.users);
-  const navigate = useNavigate();
+  const store = useSelector(state => state.users);
   console.log(store, "store");
 
-  const clientId =
-    "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
+  const clientId = "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
   const [user, setUser] = useState({});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,6 +50,7 @@ function Login() {
     setPassword(e.target.value);
   };
 
+
   const handleLogin = async () => {
     try {
       await dispatch(loginUser({ email, password }));
@@ -61,15 +60,9 @@ function Login() {
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
     }
+
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    setIsLoggedIn(false);
-    setUser({});
-    navigate("/");
-    window.location.reload();
-  };
   const onSuccess = async (response) => {
     const decoded = jwtDecode(response.credential);
     console.log(decoded);
@@ -92,6 +85,7 @@ function Login() {
   const onFailure = () => {
     console.log("Something went wrong");
   };
+
 
   return (
     <div className="App">
