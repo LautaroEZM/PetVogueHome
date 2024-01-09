@@ -13,6 +13,7 @@ import Register from "./Pages/Register/Register";
 // import UserForm from "./Pages/CreateUser/CreateUser";
 import DetailPet from "./Pages/DetailPet/DetailPet";
 import DetailService from "./Pages/DetailService/DetailService";
+import MarketPlace from "./Pages/MarketPlace/MarketPlace";
 
 // import Login from "./Pages/LoginGoogle/LoginGoogle";
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/editarServicio/:id" element={<EditService />} />
             <Route path="/servicios" element={<Services />} />
             <Route path="/MisMascotas" element={<MyPets />} />
+            <Route path="/MarketPlace" element ={<MarketPlace />} />
             {/* <Route path="/login" element={<Login />} /> */}
             <Route path="/register" element={<Register />} />
             <Route path="/detallesMascotas/:id" element={<DetailPet />} />

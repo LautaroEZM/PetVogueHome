@@ -9,7 +9,11 @@ import {
     RESET_DETAIL_SERVICE,
     GET_ALL_PETS,
     GET_PET_DETAIL,
-    POST_USER
+    POST_USER,
+    GET_ALL_PRODUCTS,
+    FETCH_PRODUCTS_FAILURE,
+    FETCH_PRODUCTS_SUCCESS,
+    FETCH_PRODUCTS_REQUEST
   } from './actions';
   
   const initialState = {
@@ -18,6 +22,7 @@ import {
     pets: [],
     petDetail: {},
     users: [],
+    products:[],
     loading: false,
     error: null,
   };
@@ -85,6 +90,29 @@ import {
        ...state,
        users: [...state.users, action.payload],
      };
+     case FETCH_PRODUCTS_REQUEST:
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        };
+      case FETCH_PRODUCTS_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          products: action.payload,
+        };
+      case FETCH_PRODUCTS_FAILURE:
+        return {
+          ...state,
+          loading: false,
+          error: action.payload,
+        };
+     case GET_ALL_PRODUCTS:
+         return {
+          ...state,
+          products: action.payload,
+        };
       default:
         return state;
     }

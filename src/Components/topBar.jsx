@@ -54,6 +54,9 @@ const TopBarMenu = () => {
           <LinkNoDeco to={"/MisMascotas"}>
             <ButtonTransparentMenu>Mascotas</ButtonTransparentMenu>
           </LinkNoDeco>
+          <LinkNoDeco to={"/MarketPlace"}>
+            <ButtonTransparentMenu>Tienda</ButtonTransparentMenu>
+          </LinkNoDeco>
         </Container>
 
         {/* Avatar con botón "Iniciar Sesión" y menú desplegable para login/register */}

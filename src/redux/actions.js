@@ -11,6 +11,11 @@ export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
 export const POST_USER = "POST_USER";
+
+export const FETCH_PRODUCTS_REQUEST = "FETCH_PRODUCTS_REQUEST";
+export const FETCH_PRODUCTS_SUCCESS = "FETCH_PRODUCTS_SUCCESS";
+export const FETCH_PRODUCTS_FAILURE = "FETCH_PRODUCTS_FAILURE";
+export const GET_ALL_PRODUCTS = "GET_ALL_PRODUCTS"
 // const URL = "https://petvogue.onrender.com";
 const URL = "http://localhost:3001"
 
@@ -142,6 +147,36 @@ export const createUser = (userData) => {
       });
     } catch (error) {
       console.error(`Error creating user: ${error}`);
+    }
+  };
+
+};
+
+export const fetchProductsRequest = () => ({
+  type: FETCH_PRODUCTS_REQUEST,
+});
+export const fetchProductsSuccess = (products) => ({
+  type: FETCH_PRODUCTS_SUCCESS,
+  payload: products,
+});
+
+export const fetchProductsFailure = (error) => ({
+  type: FETCH_PRODUCTS_FAILURE,
+  payload: error,
+});
+
+export const getProducts = () => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/products/get`, {
+        filters: {},
+      });
+      return dispatch({
+        type: GET_ALL_PRODUCTS,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(`Error getting all products👀: ${error}`);
     }
   };
 };
