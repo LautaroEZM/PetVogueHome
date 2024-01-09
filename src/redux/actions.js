@@ -11,12 +11,8 @@ export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
 export const POST_USER = "POST_USER";
-export const USER_LOGIN = "USER_LOGIN";
-export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
-export const USER_LOGOUT = "USER_LOGOUT";
-export const SET_LOGGED_IN = "SET_LOGGED_IN";
-const URL = "https://petvogue.onrender.com";
-// const URL = "http://localhost:3001"
+// const URL = "https://petvogue.onrender.com";
+const URL = "http://localhost:3001"
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,
@@ -55,16 +51,11 @@ export const getServiceDetail = (serviceID) => {
   return async (dispatch) => {
     try {
       //dispatch(loading(true));
-      const response = await axios.post(
-        "https://petvogue.onrender.com/services/get",
-        {
-          filters: {
-            serviceID_filter: serviceID,
-          },
-          page: 1,
-          itemsPerPage: 50,
-        }
-      );
+      const response = await axios.post(`${URL}/services/get`, {
+        filters: {
+          serviceID_filter: serviceID,
+        },
+      });
       return dispatch({
         type: GET_SERVICE_DETAIL,
         payload: response.data,
@@ -106,8 +97,6 @@ export const getAllPets = () => {
     try {
       const response = await axios.post(`${URL}/pets/get`, {
         filters: {},
-        page: 1,
-        itemsPerPage: 50,
       });
       return dispatch({
         type: GET_ALL_PETS,
@@ -127,8 +116,6 @@ export const getPetDetail = (petID) => {
         filters: {
           petID_filter: petID,
         },
-        page: 1,
-        itemsPerPage: 50,
       });
       console.log(response.data);
       return dispatch({
@@ -158,36 +145,3 @@ export const createUser = (userData) => {
     }
   };
 };
-
-export const loginUser = (userData) => {
-  return async (dispatch) => {
-    try {
-      const response = await axios.post(`${URL}/users/login`, userData);
-      const { token, user } = response.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      dispatch({
-        type: USER_LOGIN,
-        payload: {
-          token,
-          user,
-        },
-      });
-    } catch (error) {
-      dispatch({
-        type: USER_LOGIN_FAILURE,
-        payload: "Error en el inicio de sesión. Verifica tus credenciales.",
-      });
-    }
-  };
-};
-
-export const logoutUser = () => ({
-  type: USER_LOGOUT,
-});
-
-export const setLoggedIn = (isLoggedIn) => ({
-  type: "SET_LOGGED_IN",
-  payload: isLoggedIn,
-});
