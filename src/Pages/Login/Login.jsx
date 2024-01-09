@@ -14,14 +14,12 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 function Login() {
   const dispatch = useDispatch();
-  const store = useSelector((state) => state.users);
-  const navigate = useNavigate();
+  const store = useSelector(state => state.users);
   console.log(store, "store");
   
 
 
-  const clientId =
-    "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
+  const clientId = "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
   const [user, setUser] = useState({});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,24 +54,12 @@ function Login() {
     setPassword(e.target.value);
   };
 
-  const handleLogin = async () => {
-    try {
-      await dispatch(loginUser({ email, password }));
-      dispatch(setLoggedIn(true)); // Dispatch para actualizar el estado isLoggedIn
-      navigate("/");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error.message);
-    }
+  const handleLogin = () => {
+    // Aquí puedes implementar la lógica de inicio de sesión con email y contraseña
+    console.log("Email:", email);
+    console.log("Password:", password);
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    setIsLoggedIn(false);
-    setUser({});
-    navigate("/");
-    window.location.reload();
-  };
   const onSuccess = async (response) => {
     setUser(response.profileObj);
 
@@ -98,10 +84,10 @@ function Login() {
     console.log("Something went wrong");
   };
 
-  // const handleLogout = () => {
-  //   setUser({});
-  //   console.log("User has logged out");
-  // };
+  const handleLogout = () => {
+    setUser({});
+    console.log('User has logged out');
+  };
 
   return (
     <div className="App">
