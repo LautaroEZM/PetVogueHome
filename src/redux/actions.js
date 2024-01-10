@@ -10,9 +10,13 @@ export const RESET_DETAIL_SERVICE = "RESET_DETAIL_SERVICE";
 export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
+export const RESET_DETAIL_PET= "RESET_DETAIL_PET";
 export const POST_USER = "POST_USER";
-// const URL = "https://petvogue.onrender.com";
-const URL = "http://localhost:3001"
+export const GET_PRODUCTS = "GET_PRODUCTS";
+export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
+export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
+ const URL = "https://petvogue.onrender.com";
+//const URL = "http://localhost:3001"
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,
@@ -108,6 +112,53 @@ export const getAllPets = () => {
   };
 };
 
+//🎀Get All Products:
+export const getAllProducts = () => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/products/get`, {
+        filters: {},
+        page: 1,
+        itemsPerPage: 50,
+      });
+      return dispatch({
+        type: GET_PRODUCTS,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(`Error getting all products👀: ${error}`);
+    }
+  };
+};
+
+//🎀Detail Product:
+export const getProductDetail = (productID) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/products/get`, {
+        filters: {
+          productID_filter: productID,
+        },
+        page: 1,
+        itemsPerPage: 50,
+      });
+      console.log(response.data);
+      return dispatch({
+        type: GET_PRODUCT_DETAIL,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(`Error getting product detail👀: ${error}`);
+    }
+  };
+};
+
+//🎀Reset Detail Product:
+export const resetDetailProduct = () => {
+  return { type: RESET_DETAIL_PRODUCT, payload: [] };
+};
+
+
 //🎀Detail Pet:
 export const getPetDetail = (petID) => {
   return async (dispatch) => {
@@ -126,6 +177,11 @@ export const getPetDetail = (petID) => {
       console.error(`Error getting pet detail👀: ${error}`);
     }
   };
+};
+
+//🎀Reset Detail Pet:
+export const resetDetailPet = () => {
+  return { type: RESET_DETAIL_PET, payload: [] };
 };
 
 // crear un usuario

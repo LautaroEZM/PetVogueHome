@@ -9,6 +9,10 @@ import {
     RESET_DETAIL_SERVICE,
     GET_ALL_PETS,
     GET_PET_DETAIL,
+    RESET_DETAIL_PET,
+    GET_PRODUCTS,
+    GET_PRODUCT_DETAIL,
+    RESET_DETAIL_PRODUCT,
     POST_USER
   } from './actions';
   
@@ -17,6 +21,8 @@ import {
     detailServices: {},
     pets: [],
     petDetail: {},
+    products: [],
+    productDetail: {},
     users: [],
     loading: false,
     error: null,
@@ -80,6 +86,30 @@ import {
         petDetail: action.payload,
       };
 
+      case RESET_DETAIL_PET:
+        return {
+          ...state,
+          petDetail: initialState.petDetail,
+        };
+
+      case GET_PRODUCTS:
+        return {
+          ...state,
+          products: action.payload,
+        };
+      
+      case GET_PRODUCT_DETAIL:
+        return {
+          ...state,
+          productDetail: action.payload,
+        }; 
+        
+      case RESET_DETAIL_PRODUCT:
+          return {
+            ...state,
+            productDetail: initialState.productDetail,
+          };
+        
      case POST_USER:
      return {
        ...state,
