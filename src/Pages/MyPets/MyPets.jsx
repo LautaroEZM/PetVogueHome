@@ -36,9 +36,6 @@ const MyPets = () => {
                 <Typography>
                   <strong>Género:</strong> {pet.gender}
                 </Typography>
-            
-        </div>
-      ))}
     </div>
   ))}
  </div>
