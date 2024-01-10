@@ -111,8 +111,6 @@ export const getAllPets = () => {
     try {
       const response = await axios.post(`${URL}/pets/get`, {
         filters: {},
-        page: 1,
-        itemsPerPage: 50,
       });
       return dispatch({
         type: GET_ALL_PETS,
@@ -179,8 +177,6 @@ export const getPetDetail = (petID) => {
         filters: {
           petID_filter: petID,
         },
-        page: 1,
-        itemsPerPage: 50,
       });
       console.log(response.data);
       return dispatch({

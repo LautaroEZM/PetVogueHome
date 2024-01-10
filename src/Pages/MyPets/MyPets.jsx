@@ -1,20 +1,22 @@
-import React, { useEffect } from 'react';
-import styles from './MyPets.module.css';
+import React from 'react';
+import styles from './MyPets.module.css'; // Importa tus estilos CSS
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllPets } from '../../redux/actions';
 import { Typography , CardHeader,}  from '@mui/material';
 
 const MyPets = () => {
-  const dispatch = useDispatch();
-  const petsData = useSelector((state) => state.pets);
+ const dispatch = useDispatch();
+ const pets = useSelector((state) => state.pets);
 
-  useEffect(() => {
-    dispatch(getAllPets());
-  }, [dispatch]);
+ useEffect(() => {
+ dispatch(getAllPets());
+ }, [dispatch]);
 
-  //🎀.rows
-  const pets = Array.isArray(petsData.rows) ? petsData.rows : [];
+ if (!pets) {
+ return <div>Loading...</div>;
+ }
 
   return (
     <div className={styles.petCardsContainer}>
@@ -38,7 +40,9 @@ const MyPets = () => {
         </div>
       ))}
     </div>
-  );
+  ))}
+ </div>
+ );
 };
 
 export default MyPets;

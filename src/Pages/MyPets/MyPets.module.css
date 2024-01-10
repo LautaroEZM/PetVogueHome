@@ -1,3 +1,4 @@
+/* Estilos para las tarjetas de mascotas */
 .petCardsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -28,11 +29,11 @@
 }
 
 .Cardh1 {
-  margin-bottom: 15px; 
+  margin-bottom: 35px;
   font-size: 1.2em;
 }
 
 .Cardh2 {
-  margin-top: 10px; 
+  margin-top: 15px;
   font-size: 0.9em;
 }

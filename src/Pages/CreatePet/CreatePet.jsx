@@ -47,8 +47,6 @@ const CreatePet = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         const parsedValue = name === 'weight' ? parseInt(value, 10) : value;
-        //🎀👀
-       // const currentDate = new Date().toISOString().split('T')[0];
 
         setFormData((prevData) => ({
             ...prevData,
@@ -110,13 +108,12 @@ const CreatePet = () => {
                       }}
                 />
                 <TextField
-                    label=""
+                    label="Nacimiento"
                     name="birth"
                     type="date"
                     value={formData.birth}
                     onChange={handleChange}
                     required
-            
                 />
                 <FormControl>
                     <InputLabel id="select-pet-specie">Especie</InputLabel>

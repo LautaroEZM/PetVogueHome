@@ -1,9 +1,8 @@
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { getServiceDetail, resetDetailService } from "../../redux/actions";
-import styles from './DetailService.module.css';
+import { getServiceDetail, resetDetailService } from "../../redux/actions"
 
 const DetailService = () => {
   const serviceDetails = useSelector((state) => state.detailServices);

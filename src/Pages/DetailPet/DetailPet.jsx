@@ -1,4 +1,4 @@
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPetDetail, resetDetailPet } from '../../redux/actions';
@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import styles from './DetailPet.module.css';
 
 const DetailPet = () => {
- const { id } = useParams();
+ const { petID } = useParams();
  const dispatch = useDispatch();
  const petDetail = useSelector((state) => state.petDetail);
  console.log(petDetail);
