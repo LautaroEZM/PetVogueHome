@@ -53,6 +53,9 @@ const TopBarMenu = () => {
           <LinkNoDeco to="/">
             <ButtonTransparentMenu>Turnos</ButtonTransparentMenu>
           </LinkNoDeco>
+          <LinkNoDeco to={"/Productos"}>
+            <ButtonTransparentMenu>Productos</ButtonTransparentMenu>
+          </LinkNoDeco>
           {isLoggedIn && (
             <LinkNoDeco to="/MisMascotas">
               <ButtonTransparentMenu>Mis Mascotas</ButtonTransparentMenu>

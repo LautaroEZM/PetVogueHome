@@ -1,7 +1,7 @@
 //import { Link } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPetDetail } from '../../redux/actions';
+import { getPetDetail, resetDetailPet } from '../../redux/actions';
 import { useParams } from 'react-router-dom';
 import styles from './DetailPet.module.css';
 
@@ -13,13 +13,16 @@ const DetailPet = () => {
 
  useEffect(() => {
    dispatch(getPetDetail(id));
+   return () => {
+    dispatch(resetDetailPet());
+  };
  }, [id, dispatch]);
 
 
  if (!petDetail || !petDetail.rows || petDetail.rows.length === 0) {
   return (
     <div>
-      <p>Service not found</p>
+      <p>Pet not found</p>
     </div>
   );
 }
@@ -31,7 +34,10 @@ const petDetails = petDetail.rows[0];
  return (
   <div className={styles.container}>
   <h1 className={styles.title}> {petDetails.name}</h1>
-  <img src={petDetails.image} alt={petDetails.name} style={{ width: '100%' }} />
+  <img src={petDetails.image} alt={petDetails.name} style={{
+    borderRadius: 15,
+    width: '60%',
+    }} />
   <p className={styles.description}> Fecha de nacimiento: {petDetails.birth}</p>
   <p className={styles.description}>Género: {petDetails.gender}</p>
   <p className={styles.description}>Especie: {petDetails.specie}</p>

@@ -82,6 +82,9 @@ function Login() {
       };
   
       await dispatch(createUser(userData));
+
+      // Redirige al usuario al componente de perfil
+     //Descomentar luego  navigate('/perfil');
       console.log('Usuario creado:', userData);
     } catch (error) {
       console.error(`Error dispatching user data: ${error}`);
