@@ -31,10 +31,10 @@ const DetailService = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Nombre: {serviceDetail.name}</h1>
-      <img src={serviceDetail.image} alt={serviceDetail.name} style={{ width: '100%' }} />
+      <img src={serviceDetail.image} alt={serviceDetail.name} style={{ width: '50%' }} />
       <p className={styles.description}>Descripción: {serviceDetail.description}</p>
       <p className={styles.category}>Categoría: {serviceDetail.category}</p>
-      <p className={styles.price}>Precio: {serviceDetail.price}</p>
+      <p className={styles.price}>Precio: ${serviceDetail.price}</p>
     </div>
   );
 };

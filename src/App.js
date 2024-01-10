@@ -14,6 +14,8 @@ import Register from "./Pages/Register/Register";
 import DetailPet from "./Pages/DetailPet/DetailPet";
 import DetailService from "./Pages/DetailService/DetailService";
 import Perfil from "./Pages/Perfil/Perfil";
+import Products from "./Pages/Products/Products";
+import DetailProduct from "./Pages/DetailProduct/DetailProduct";
 
 // import Login from "./Pages/LoginGoogle/LoginGoogle";
 
@@ -35,6 +37,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/detallesMascotas/:id" element={<DetailPet />} />
             <Route path="/detallesServicios/:id" element={<DetailService />} />
+            <Route path="/Productos" element={<Products/>}/>
+            <Route path="/detallesProductos/:id" element={<DetailProduct/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/Perfil" element={<Perfil/>}/>
             {/* Otras rutas pueden agregarse aquí según sea necesario */}

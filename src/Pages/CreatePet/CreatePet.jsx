@@ -25,7 +25,7 @@ const vaccinesForSpecies = {
 
 const CreatePet = () => {
     const [formData, setFormData] = useState({
-        userID: '',
+        userID: "",
         name: '',
         birth: '',
         gender: '',
@@ -36,7 +36,7 @@ const CreatePet = () => {
         weight: 0,
         size: '',
         status: 'enabled',
-       
+        //userID: "5d62de1f-5fe4-4525-a002-d9bd7e98896c",
     });
 
     const [photo, setPhoto] = useState(null);
@@ -89,12 +89,14 @@ const CreatePet = () => {
         <form onSubmit={handleSubmit}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 400, margin: 'auto' }}>
 
-                <TextField
-                    label="Por el momento ingresa el id de un usuario ya creado"
+
+            <TextField
+                    label="Por el momento ingresa un id de usuario"
                     name="userID"
                     value={formData.userID}
                     onChange={handleChange}
                     required
+            
                 />
 
                 <TextField
