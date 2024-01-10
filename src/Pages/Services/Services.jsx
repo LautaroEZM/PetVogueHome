@@ -212,7 +212,8 @@ const ServiciosAnimales = () => {
                 border: '1px solid #ccc',
                 borderRadius: 8,
                 padding: 2,
-                width: 300,
+                width: 355,  // Establecer el ancho deseado
+                height: 555, // Establecer la altura deseada
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -225,16 +226,16 @@ const ServiciosAnimales = () => {
               <CardHeader title={servicio.name} />
               <CardContent>
                 <Typography>
-                  <strong>Categoría:</strong> {servicio.category}
+                  <strong>{servicio.category}</strong>
                 </Typography>
                 <Typography>
                   <strong></strong>
                   <LinkNoDeco to={`/detallesServicios/${servicio.serviceID}`}>
-                    <img src={servicio.image} alt={servicio.name} style={{ width: '100%' }} />
+                    <img src={servicio.image} alt={servicio.name} style={{ width: '80%' }} />
                   </LinkNoDeco>
                 </Typography>
                 <Typography>
-                  <strong>Precio:</strong> {servicio.price}
+                  <strong>Precio:</strong> ${servicio.price}
                 </Typography>
                 <div sx={{ paddingTop: 2 }}>
                   <Typography>{servicio.description}</Typography>
