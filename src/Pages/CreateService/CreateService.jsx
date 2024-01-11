@@ -3,7 +3,7 @@ import { TextField, Button, Box, Select, MenuItem, FormControl, InputLabel } fro
 import { createService } from '../../redux/actions';
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"
-
+import validation from './validacionesServicios';
 import PhotoUpload from '../../Components/photoUpload';
 
 const categories = [
@@ -27,6 +27,7 @@ function CreateService() {
         petType: '',
     });
 
+    const [error, setError] = useState({});
     const [photo, setPhoto] = useState(null);
     //🎀Agregado:
     const dispatch = useDispatch(); // Usa useDispatch para obtener la función dispatch
@@ -38,6 +39,11 @@ function CreateService() {
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
+        }));
+
+        setError((prevError) => ({
+            ...prevError,
+            [name]: validation(name, value)
         }));
     };
 
@@ -72,7 +78,10 @@ function CreateService() {
                     }}
                     onChange={handleChange}
                     required
-                />
+                />{error.name && (
+                    <p style={{ color: 'red' }}>{error.name}</p>
+                )}
+
                 <TextField
                     label="Descripción"
                     name="description"
@@ -82,7 +91,10 @@ function CreateService() {
                     }}
                     onChange={handleChange}
                     required
-                />
+                />{error.description && (
+                    <p style={{ color: 'red' }}>{error.description}</p>
+                )}
+
                 <FormControl>
                     <InputLabel id="select-pet-type">Tipo de mascota</InputLabel>
                     <Select
@@ -96,7 +108,10 @@ function CreateService() {
                         <MenuItem value="Perro">Perro</MenuItem>
                         <MenuItem value="Gato">Gato</MenuItem>
                     </Select>
-                </FormControl>
+                </FormControl>{error.petType && (
+                    <p style={{ color: 'red' }}>{error.petType}</p>
+                )}
+
                 <TextField
                     label="Precio"
                     name="price"
@@ -104,7 +119,10 @@ function CreateService() {
                     value={formData.price}
                     onChange={handleChange}
                     required
-                />
+                />{error.price && (
+                    <p style={{ color: 'red' }}>{error.price}</p>
+                )}
+                
                 <FormControl>
                     <InputLabel id="select-category">Categoría</InputLabel>
                     <Select
@@ -121,8 +139,15 @@ function CreateService() {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
-                <PhotoUpload photo={photo} setPhoto={setPhoto} />
+                </FormControl>{error.category && (
+                    <p style={{ color: 'red' }}>{error.category}</p>
+                )}
+
+                <PhotoUpload photo={photo} setPhoto={setPhoto} />{error.photo && (
+                    <p style={{ color: 'red' }}>{error.photo}</p>
+                )}
+                
+                
                 <Button type="submit" variant="contained" color="primary">
                     Crear Servicio
                 </Button>

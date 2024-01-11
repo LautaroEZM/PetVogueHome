@@ -255,6 +255,9 @@ const CreatePet = () => {
                 )}
 
                 <PhotoUpload photo={photo} setPhoto={setPhoto} />
+                {error.photo && (
+                    <p style={{ color: 'red' }}>{error.photo}</p>
+                )}
 
                 <Button type="submit" variant="contained" color="primary">
                     Crear 🦴

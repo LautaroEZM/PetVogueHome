@@ -21,6 +21,19 @@ const validation = (pet) => {
         error.name = "Debe agregar un nombre 👀."
     }
 
+    // Birthdate🎀
+      if (!pet.birthdate) {
+        error.birthdate = "Debe agregar una fecha de nacimiento 📅";
+    } else {
+        const birthdate = new Date(pet.birthdate);
+        const currentDate = new Date();
+
+        if (birthdate > currentDate) {
+            error.birthdate = "La fecha de nacimiento no puede ser en el futuro";
+        }
+    }
+
+
   //Gender🎀
 
   if(pet.gender && !nameRegex.test(pet.gender)) {
@@ -87,6 +100,11 @@ const validation = (pet) => {
     }
     if(pet.size && pet.size.length > 20) {
         error.size = "Máximo de caracteres alcanzado ❌"
+    }
+
+    // Image🎀
+     if (!pet.image) {
+        error.image = "Debe agregar una imagen 📷";
     }
 
 

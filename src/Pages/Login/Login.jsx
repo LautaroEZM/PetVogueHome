@@ -1,12 +1,4 @@
 import { gapi } from "gapi-script";
-<<<<<<< HEAD
-import { TextField, Button, Box, Link, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-//import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import { useEffect, useState } from 'react';
-import { createUser } from "../../redux/actions";
-import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
-=======
 import { GoogleLogin } from '@react-oauth/google';
 import { TextField, Button, Box, Link } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -20,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
 
->>>>>>> 5b50b24244076371c65a10b9066b7206bbb2071b
 
 function Login() {
   const navigate = useNavigate();
