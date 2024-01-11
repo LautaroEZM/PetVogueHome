@@ -125,15 +125,8 @@ const CreatePet = () => {
                     value={formData.birth}
                     onChange={handleChange}
                     required
-<<<<<<< HEAD
-                />{error.birth && (
-                    <p style={{ color: 'red' }}>{error.birth}</p>
-                )}
-
-=======
             
                 />
->>>>>>> 5b50b24244076371c65a10b9066b7206bbb2071b
                 <FormControl>
                     <InputLabel id="select-pet-specie">Especie</InputLabel>
                     <Select
