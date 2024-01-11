@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 import dogSil from "../../media/dogSil.png";
 import catSil from "../../media/catSil.png";
 import vetCons from "../../media/vetCons.png";
+import vetFemale from "../../media/vetFemale.png";
+import vetMale from "../../media/vetMale.png";
 import { YellowButtonNoBorderRadius } from "../../styledComponents";
 
 function Home() {
@@ -88,11 +90,11 @@ function Home() {
 
         {/* SEPARADOR */}
         <Box sx={{
-          backgroundColor: 'black', height: "20px"
+          backgroundColor: 'black', height: "20px", width: '100%'
         }}></Box>
 
         {/* Sección NUESTROS SERVICIOS */}
-        <Box id="servicesSection" sx={{ padding: "20px", backgroundColor: "#e5eeff", width: '95%' }}>
+        <Box id="servicesSection" sx={{ padding: "20px", backgroundColor: "#e5eeff", width: '95%', marginBottom: "10px" }}>
           <Typography variant="h3" sx={{ textAlign: "center", marginBottom: "30px" }}>
             NUESTROS SERVICIOS
           </Typography>
@@ -122,6 +124,61 @@ function Home() {
               </Typography>
             </div>
           </Slider>
+        </Box>
+
+        {/* SEPARADOR */}
+        <Box sx={{
+          backgroundColor: 'black', height: "20px", width: '100%'
+        }}></Box>
+
+        {/* Sección NOSOTROS */}
+        <Box id="aboutUsSection" sx={{ padding: "20px", backgroundColor: "#f5f5f5", width: '95%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Imagen a la izquierda */}
+          <Box sx={{ width: "433px", height: "433px", marginRight: "20px" }}>
+            <img src={vetMale} alt="Vet Male" style={{ width: "100%", height: "100%", borderRadius: "10px" }} />
+          </Box>
+          {/* Contenido en el medio */}
+          <Box sx={{ display: "flex", flexDirection: "column", width: "45%" }}>
+            <Typography variant="h3" sx={{ textAlign: "center", marginBottom: "30px" }}>
+              NOSOTROS
+            </Typography>
+            <Box sx={{ width: "100%" }}>
+              <Typography variant="h4" sx={{ marginBottom: "15px" }}>
+                <strong>Nuestra Historia</strong>
+              </Typography>
+              <Typography variant="body1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et lobortis tellus. Sed suscipit, risus efficitur
+                interdum ultrices, nibh risus egestas quam, eu iaculis ipsum leo aliquet massa. In finibus mauris sem, vitae
+                molestie turpis sagittis in. Nulla faucibus sapien vel augue bibendum, at imperdiet velit facilisis. Fusce ut risus.
+              </Typography>
+            </Box>
+            <Box sx={{ width: "100%" }}>
+              <Typography variant="h4" sx={{ marginBottom: "15px" }}>
+                <strong>Nuestra Misión</strong>
+              </Typography>
+              <Typography variant="body1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et lobortis tellus. Sed suscipit, risus efficitur
+                interdum ultrices, nibh risus egestas quam, eu iaculis ipsum leo aliquet massa. In finibus mauris sem, vitae
+                molestie turpis sagittis in. Nulla faucibus sapien vel augue bibendum, at imperdiet velit facilisis. Fusce ut risus.
+              </Typography>
+            </Box>
+            {/* Botón para desplazarse a esta sección */}
+            <YellowButtonNoBorderRadius
+              onClick={() => {
+                const aboutUsSection = document.getElementById("aboutUsSection");
+                if (aboutUsSection) {
+                  aboutUsSection.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              sx={{ marginTop: "20px", alignSelf: 'center' }}
+            >
+              Conoce más sobre nosotros
+            </YellowButtonNoBorderRadius>
+          </Box>
+          {/* Imagen a la derecha */}
+          <Box sx={{ width: "433px", height: "433px", marginLeft: "20px" }}>
+            <img src={vetFemale} alt="Vet Female" style={{ width: "100%", height: "100%", borderRadius: "10px" }} />
+          </Box>
         </Box>
       </Box>
     </ParallaxProvider>
