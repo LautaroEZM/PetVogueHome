@@ -25,6 +25,18 @@ background-color: #ffd100;
 }
 `;
 
+export const YellowButtonNoBorderRadius = styled(Button)`
+color: black;
+font-weight: bold;
+border: none;
+min-width: 150px;
+margin: 3px;
+background-color: #ffd100;
+&:hover {
+    background-color: #ffbb00;
+}
+`;
+
 export const YellowButtonSmall = styled(Button)`
 color: black;
 font-weight: bold;
