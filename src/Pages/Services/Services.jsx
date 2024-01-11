@@ -142,9 +142,6 @@ const ServiciosAnimales = () => {
             <YellowButton onClick={toggleDrawer} sx={{ margin: '2px' }}>
               Filtros
             </YellowButton>
-            <LinkNoDeco to={'/crearServicio'}>
-              <YellowButton sx={{ margin: '2px' }}>Crear servicio</YellowButton>
-            </LinkNoDeco>
           </Toolbar>
         </Container>
 
@@ -243,7 +240,7 @@ const ServiciosAnimales = () => {
               </CardContent>
               <LinkNoDeco to={`/editarServicio/${servicio.serviceID}`}>
                 <YellowButton>
-                  Editar
+                  Adquirir
                 </YellowButton>
               </LinkNoDeco>
             </Card>
