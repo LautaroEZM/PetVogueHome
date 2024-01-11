@@ -89,7 +89,6 @@ function Register() {
         const newUser = await dispatch(createUser(formData));
         console.log("Registro exitoso:", newUser);
         navigate("/");
-        window.location.reload();
       } catch (error) {
         console.error("Error al registrar usuario:", error.message);
       }
