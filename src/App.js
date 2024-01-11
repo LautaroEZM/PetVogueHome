@@ -16,6 +16,7 @@ import DetailService from "./Pages/DetailService/DetailService";
 import Perfil from "./Pages/Perfil/Perfil";
 import Products from "./Pages/Products/Products";
 import DetailProduct from "./Pages/DetailProduct/DetailProduct";
+import { ShopCart } from "./Pages/Shop/ShopCart";
 
 // import Login from "./Pages/LoginGoogle/LoginGoogle";
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/detallesProductos/:id" element={<DetailProduct/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/Perfil" element={<Perfil/>}/>
+            <Route path="/Shop" element={<ShopCart/>}/>
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
         </div>
