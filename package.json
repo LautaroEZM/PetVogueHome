@@ -22,13 +22,22 @@
     "mui-file-input": "^4.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
     
+>>>>>>> 5b50b24244076371c65a10b9066b7206bbb2071b
+=======
+>>>>>>> c654bf3fbaadf494ca1128d4c5646121b57d64e6
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
+    "react-scroll-parallax": "^3.4.5",
+    "react-slick": "^0.29.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
     "serve": "^14.2.1",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.1",
     "web-vitals": "^2.1.4"
   },
