@@ -10,18 +10,14 @@ export const RESET_DETAIL_SERVICE = "RESET_DETAIL_SERVICE";
 export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
-export const RESET_DETAIL_PET= "RESET_DETAIL_PET";
+export const RESET_DETAIL_PET = "RESET_DETAIL_PET";
 export const POST_USER = "POST_USER";
+export const USER_LOGOUT = "USER_LOGOUT";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
 export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
-
-export const USER_LOGIN = "USER_LOGIN";
-export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
-export const USER_LOGOUT = "USER_LOGOUT";
-export const SET_LOGGED_IN = "SET_LOGGED_IN";
-const URL = "https://petvogue.onrender.com";
-// const URL = "http://localhost:3001"
+// const URL = "https://petvogue.onrender.com";
+const URL = "http://localhost:3001";
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,
@@ -170,7 +166,6 @@ export const resetDetailProduct = () => {
   return { type: RESET_DETAIL_PRODUCT, payload: [] };
 };
 
-
 //🎀Detail Pet:
 export const getPetDetail = (petID) => {
   return async (dispatch) => {
@@ -204,8 +199,6 @@ export const createUser = (userData) => {
     try {
       const response = await axios.post(`${URL}/users/create`, userData);
       console.log(response.data, "action");
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.newUser));
       return dispatch({
         type: POST_USER,
         payload: response.data,
@@ -216,48 +209,24 @@ export const createUser = (userData) => {
   };
 };
 
-export const loginUser = (credentials) => {
+export const loginUser = (userData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post(`${URL}/users/login`, credentials);
-      const { token, user } = response.data;
-
-      // Almacenar en localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      dispatch({
-        type: USER_LOGIN,
-        payload: {
-          token,
-          user,
-        },
+      const response = await axios.post(`${URL}/users/login`, userData);
+      return dispatch({
+        type: POST_USER,
+        payload: response.data,
       });
     } catch (error) {
-      console.error("Error completo al iniciar sesión:", error);
-      if (error.response && error.response.status === 401) {
-        dispatch(
-          loginFailure(
-            "Credenciales incorrectas. Por favor, inténtalo de nuevo."
-          )
-        );
-      } else {
-        console.error("Error al iniciar sesión:", error.message);
+      return {
+        error
       }
+      console.error("Error completo al iniciar sesión:", error.response.data.error)
+      console.error(`Error al iniciar sesion: ${error}`);
     }
   };
-};  
+};
 
 export const logoutUser = () => ({
   type: USER_LOGOUT,
-});
-
-export const setLoggedIn = (isLoggedIn) => ({
-  type: SET_LOGGED_IN,
-  payload: isLoggedIn,
-});
-
-export const loginFailure = (error) => ({
-  type: USER_LOGIN_FAILURE,
-  payload: error,
 });
