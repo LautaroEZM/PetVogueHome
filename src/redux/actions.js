@@ -16,8 +16,8 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
 export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
-// const URL = "https://petvogue.onrender.com";
-const URL = "http://localhost:3001";
+const URL = "https://petvogue.onrender.com";
+//const URL = "http://localhost:3001";
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,
