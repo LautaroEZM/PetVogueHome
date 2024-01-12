@@ -10,10 +10,10 @@ import {
     Checkbox,
     ListItemText,
 } from '@mui/material';
+import validation  from './validation'
 import { createPet } from '../../redux/actions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import PhotoUpload from '../../Components/photoUpload';
 
 const size = ['Chico', 'Mediano', 'Grande'];
@@ -40,6 +40,7 @@ const CreatePet = () => {
     });
 
     const [photo, setPhoto] = useState(null);
+    const [error, setError] = useState({});
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -53,6 +54,11 @@ const CreatePet = () => {
         setFormData((prevData) => ({
             ...prevData,
             [name]: parsedValue,
+        }));
+
+        setError((prevError) => ({
+            ...prevError,
+            [name]: validation(name, value)
         }));
     };
 
@@ -108,7 +114,10 @@ const CreatePet = () => {
                     inputProps={{
                         maxLength: 20,
                       }}
-                />
+                />{error.name && (
+                    <p style={{ color: 'red' }}>{error.name}</p>
+                )}
+
                 <TextField
                     label=""
                     name="birth"
@@ -131,7 +140,10 @@ const CreatePet = () => {
                         <MenuItem value="Perro">Perro</MenuItem>
                         <MenuItem value="Gato">Gato</MenuItem>
                     </Select>
-                </FormControl>
+                </FormControl>{error.specie && (
+                    <p style={{ color: 'red' }}>{error.specie}</p>
+                )}
+
                 <FormControl>
                     <InputLabel id="select-pet-gender">Genero</InputLabel>
                     <Select
@@ -145,7 +157,10 @@ const CreatePet = () => {
                         <MenuItem value="Masculino">Masculino</MenuItem>
                         <MenuItem value="Femenino">Femenino</MenuItem>
                     </Select>
-                </FormControl>
+                </FormControl>{error.gender && (
+                    <p style={{ color: 'red' }}>{error.gender}</p>
+                )}
+
                 {formData.specie && (
                     <FormControl>
                         <InputLabel id="select-pet-vacRecord">Vacunas</InputLabel>
@@ -167,7 +182,10 @@ const CreatePet = () => {
                             ))}
                         </Select>
                     </FormControl>
+                )} {error.vacRecord && (
+                    <p style={{ color: 'red' }}>{error.vacRecord}</p>
                 )}
+
                 <TextField
                     label="Raza"
                     name="breed"
@@ -177,7 +195,10 @@ const CreatePet = () => {
                     inputProps={{
                         maxLength: 20,
                       }}
-                />
+                /> {error.breed && (
+                    <p style={{ color: 'red' }}>{error.breed}</p>
+                )}
+
                 <FormControl>
                     <InputLabel id="select-pet-castrated">Castrado:</InputLabel>
                     <Select
@@ -191,7 +212,10 @@ const CreatePet = () => {
                         <MenuItem value="SI">Si</MenuItem>
                         <MenuItem value="NO">No</MenuItem>
                     </Select>
-                </FormControl>
+                </FormControl> {error.castrated && (
+                    <p style={{ color: 'red' }}>{error.castrated}</p>
+                )}
+
                 <TextField
                     label="Peso (en kilogramos)"
                     name="weight"
@@ -199,7 +223,10 @@ const CreatePet = () => {
                     value={formData.weight}
                     onChange={handleChange}
                     required
-                />
+                /> {error.weight && (
+                    <p style={{ color: 'red' }}>{error.weight}</p>
+                )}
+
                 <FormControl>
                     <InputLabel id="select-tamaño">Tamaño</InputLabel>
                     <Select
@@ -216,11 +243,19 @@ const CreatePet = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> {error.size && (
+                    <p style={{ color: 'red' }}>{error.size}</p>
+                )}
+
                 <PhotoUpload photo={photo} setPhoto={setPhoto} />
+                {error.photo && (
+                    <p style={{ color: 'red' }}>{error.photo}</p>
+                )}
+
                 <Button type="submit" variant="contained" color="primary">
                     Crear 🦴
                 </Button>
+
             </Box>
         </form>
     );

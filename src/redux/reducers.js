@@ -14,10 +14,7 @@ import {
     GET_PRODUCT_DETAIL,
     RESET_DETAIL_PRODUCT,
     POST_USER,
-    USER_LOGIN,
-    USER_LOGIN_FAILURE,
     USER_LOGOUT,
-    SET_LOGGED_IN,
   } from './actions';
   
   const initialState = {
@@ -28,9 +25,6 @@ import {
     products: [],
     productDetail: {},
     users: [],
-    token: localStorage.getItem("token") || null,
-    user: null,
-    isLoggedIn: localStorage.getItem("user") !== null,
     loading: false,
     error: null,
   };
@@ -122,32 +116,12 @@ import {
         ...state,
         users: [...state.users, action.payload],
       };
-    case USER_LOGIN:
-      return {
-        ...state,
-        token: action.payload.token,
-        user: action.payload.user,
-        isLoggedIn: true,
-        error: null,
-      };
-    case USER_LOGIN_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-      };
-    case USER_LOGOUT:
+      case USER_LOGOUT:
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       return {
         ...state,
-        token: null,
-        user: null,
-        isLoggedIn: false,
-      };
-    case SET_LOGGED_IN:
-      return {
-        ...state,
-        isLoggedIn: action.payload,
+        users: [],
       };
     default:
       return state;
