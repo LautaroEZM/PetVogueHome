@@ -11,6 +11,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { validateEmail, validateNonEmpty } from "./validations";
+import toast, { Toaster } from "react-hot-toast";
 import Perfil from "../Perfil/Perfil";
 
 function Login() {
@@ -26,6 +27,9 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [emailValidation, setEmailValidation] = useState(true);
   const [passwordValidation, setPasswordValidation] = useState(true);
+  const users = useSelector((state) => state.users);
+  const isLoggedIn = users.length > 0 ? true : false;
+  console.log(isLoggedIn);
 
   useEffect(() => {
     const start = () => {
@@ -48,10 +52,10 @@ function Login() {
     const response = await dispatch(loginUser({ email, password }));
     try {
       if (response.error && response.error.response.status !== 200) {
-        alert(response.error.response.data.error);
+        toast.error(response.error.response.data.error);
       } else {
-        console.log("Successful login response:", response);
-        navigate("/");
+        console.log("inicio de sesion exitoso");
+        toast.success("inicio de sesion exitoso");
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -70,7 +74,7 @@ function Login() {
       };
       await dispatch(createUser(userData));
       navigate("/");
-
+      toast.success("Successfully toasted!");
       console.log("Usuario creado:", userData);
     } catch (error) {
       console.error(`Error dispatching user data: ${error}`);
@@ -83,88 +87,93 @@ function Login() {
 
   return (
     <div className="App">
-      <form>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            maxWidth: 400,
-            margin: "auto",
-          }}
-        >
-          <TextField
-            label="Correo electronico"
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            error={!validateEmail(email)}
-            helperText={
-              !validateEmail(email)
-                ? "Por favor, ingrese un correo electrónico válido."
-                : ""
-            }
-            onBlur={() =>
-              setEmailValidation(
-                validateEmail(email) && validateNonEmpty(email)
-              )
-            }
-          />
-          <TextField
-            label="Contraseña"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => {
-              handlePasswordChange(e);
-              setPasswordValidation(
-                validateNonEmpty(e.target.value) && e.target.value.length >= 8
-              );
+      <Toaster position="top-center" />
+      {isLoggedIn ? (
+        <div>Ya has iniciado sesion</div>
+      ) : (
+        <form>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              maxWidth: 400,
+              margin: "auto",
             }}
-            error={!validateNonEmpty(password) || password.length < 8}
-            helperText={
-              !validateNonEmpty(password)
-                ? "Por favor, ingrese una contraseña."
-                : password.length < 8
-                ? "La contraseña debe tener al menos 8 caracteres."
-                : ""
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    edge="end"
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleLogin}
-          disabled={!emailValidation || !passwordValidation}
-        >
-          Iniciar Sesión
-        </Button>
-        <Box mt={2} mb={2}>
-          <Link component={RouterLink} to="/register" variant="body2">
-            ¿No estás registrado? Crea una cuenta
-          </Link>
-        </Box>
-        <div className="btn">
-          O bien, inicia sesion con tu cuenta de Google
-          <GoogleLogin
-            onSuccess={onSuccess}
-            onError={() => console.log("Login Failed")}
-          />
-        </div>
-      </form>
+          >
+            <TextField
+              label="Correo electronico"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              error={!validateEmail(email)}
+              helperText={
+                !validateEmail(email)
+                  ? "Por favor, ingrese un correo electrónico válido."
+                  : ""
+              }
+              onBlur={() =>
+                setEmailValidation(
+                  validateEmail(email) && validateNonEmpty(email)
+                )
+              }
+            />
+            <TextField
+              label="Contraseña"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => {
+                handlePasswordChange(e);
+                setPasswordValidation(
+                  validateNonEmpty(e.target.value) && e.target.value.length >= 8
+                );
+              }}
+              error={!validateNonEmpty(password) || password.length < 8}
+              helperText={
+                !validateNonEmpty(password)
+                  ? "Por favor, ingrese una contraseña."
+                  : password.length < 8
+                  ? "La contraseña debe tener al menos 8 caracteres."
+                  : ""
+              }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleLogin}
+              disabled={!emailValidation || !passwordValidation}
+            >
+              Iniciar Sesión
+            </Button>
+          </Box>
+          <Box mt={2} mb={2}>
+            <Link component={RouterLink} to="/register" variant="body2">
+              ¿No estás registrado? Crea una cuenta
+            </Link>
+            <div className="btn">
+              O bien, inicia sesion con tu cuenta de Google
+              <GoogleLogin
+                onSuccess={onSuccess}
+                onError={() => console.log("Login Failed")}
+              />
+            </div>
+          </Box>
+        </form>
+      )}
     </div>
   );
 }
