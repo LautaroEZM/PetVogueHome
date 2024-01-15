@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocalStorage } from "../../Hooks/useLocalStorage";
+import { Card, Box, CardMedia } from "@mui/material";
 
 
 export const ShopCart = () =>{
@@ -56,5 +57,42 @@ export const ShopCart = () =>{
 //           setproductsCart(updatedCart);
 //         }
 //       };
+return (
+  <div>
+    <h1 style={{color: "Black", textAlign: "center"}}>Shop Cart</h1>
 
-}
+    {/* Productos */}
+    {/* {productsCart && productsCart.length > 0
+      ? productsCart.map((product, i) => ( */}
+          {/* <div key={i}>
+            <div>
+              <Card sx={{ display: 'flex', backgroundColor:"white", border:"orange 2px solid"}}>
+
+              <Box sx={{ width: "90%", marginBottom: "40px", display:"flex",flexDirection:"row" }}>
+                <CardMedia
+                component="img"
+                sx={{ width: 151 }}
+                image={product.image}
+                style={{
+                  color: "#fff",
+                  fontStyle: "italic",
+                  fontSize: "14px",
+                }}
+                />
+              <h3>{product.name}</h3>
+                <h3>{product.price} US$</h3>
+            <button style={{
+              marginTop:"70px",
+              width: "50px",
+              height: "50px",
+            }}
+              >
+            </button >
+            </Box>
+            </Card>
+            </div>
+          </div>
+        {/* )) */}
+  </div>
+);
+} 
