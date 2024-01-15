@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import {
   LinkNoDeco,
+  ButtonTransparentMenu,
   YellowButton,
 } from "../../styledComponents";
 
@@ -29,6 +30,9 @@ const Perfil = () => {
           <h3>{userData.firstName}</h3>
           <h3>{userData.lastName}</h3>
           <h3>{userData.email}</h3>
+          <LinkNoDeco to="/Shop" >
+          <ButtonTransparentMenu>Carrito</ButtonTransparentMenu>
+          </LinkNoDeco>
           <Button variant="contained" color="secondary" onClick={handleLogout}>
             Cerrar Sesión
           </Button>
