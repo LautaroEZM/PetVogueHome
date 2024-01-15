@@ -3,19 +3,21 @@ import { useLocalStorage } from "../../Hooks/useLocalStorage";
 
 
 export const ShopCart = () =>{
-    const [productsCart, setproductsCart] = useLocalStorage("product", []);
+
+
+    // const [productsCart, setproductsCart] = useLocalStorage("product", []);
     
-    const [total, setTotal] = useState(
-        productsCart.reduce((acc, p) => acc + p.price * p.quantity, 0) 
-      );
+    // const [total, setTotal] = useState(
+    //     productsCart.reduce((acc, p) => acc + p.price * p.quantity, 0) 
+    //   );
       
 
 
-      useEffect(() => {
-        setTotal(
-          productsCart.reduce((acc, p) => acc + p.price * p.quantity, 0) 
-        );
-      }, [productsCart]);
+    //   useEffect(() => {
+    //     setTotal(
+    //       productsCart.reduce((acc, p) => acc + p.price * p.quantity, 0) 
+    //     );
+    //   }, [productsCart]);
 
 
 //       const handleAddToCartWithQuantity = (item, quantity, i) => {
@@ -54,4 +56,5 @@ export const ShopCart = () =>{
 //           setproductsCart(updatedCart);
 //         }
 //       };
- }
+
+}
