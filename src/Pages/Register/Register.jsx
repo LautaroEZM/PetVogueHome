@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography, Link } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { createUser } from "../../redux/actions";
+import { createUser, registerUser } from "../../redux/actions";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import validations from "./validations";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import toast, { Toaster } from "react-hot-toast";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -85,10 +86,14 @@ function Register() {
     e.preventDefault();
 
     if (!isSubmitDisabled) {
+      const response = await dispatch(registerUser(formData));
       try {
-        const newUser = await dispatch(createUser(formData));
-        console.log("Registro exitoso:", newUser);
-        navigate("/");
+        if (response.error && response.error.response.status !== 200) {
+          toast.error(response.error.response.data.error);
+        } else {
+          toast.success("Registro de usuario exitoso");
+          navigate("/");
+        }
       } catch (error) {
         console.error("Error al registrar usuario:", error.message);
       }
@@ -97,6 +102,7 @@ function Register() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Toaster position="top-center" />
       <Box
         sx={{
           display: "flex",

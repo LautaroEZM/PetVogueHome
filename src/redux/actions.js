@@ -17,7 +17,7 @@ export const GET_PRODUCTS = "GET_PRODUCTS";
 export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
 export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
 const URL = "https://petvogue.onrender.com";
-//const URL = "http://localhost:3001";
+// const URL = "http://localhost:3001";
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,
@@ -221,8 +221,6 @@ export const loginUser = (userData) => {
       return {
         error
       }
-      console.error("Error completo al iniciar sesión:", error.response.data.error)
-      console.error(`Error al iniciar sesion: ${error}`);
     }
   };
 };
@@ -230,3 +228,19 @@ export const loginUser = (userData) => {
 export const logoutUser = () => ({
   type: USER_LOGOUT,
 });
+
+export const registerUser = (userData) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/users/register`, userData);
+      return dispatch({
+        type: POST_USER,
+        payload: response.data,
+      });
+    } catch (error) {
+      return {
+        error
+      }
+    }
+  };
+};
