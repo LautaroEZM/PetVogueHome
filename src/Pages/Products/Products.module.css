@@ -4,7 +4,6 @@
     gap: 50px;
     justify-content: center;
     padding: 40px;
-    cursor: pointer;
   }
   
   .productCard {
@@ -16,6 +15,7 @@
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     height: 350px;
+    cursor: pointer;
   }
   
   .CardImg {
@@ -39,3 +39,9 @@
     font-size: 0.9em;
   }
   
+  .cartButtonContainer {
+    position: fixed;
+    top: 200px; /* Ajusta según tu diseño */
+    right: 10px; /* Ajusta según tu diseño */
+    z-index: 1000; /* Asegura que el botón esté sobre otros elementos si es necesario */
+  }
