@@ -17,7 +17,7 @@ const validation = (pet) => {
     if(pet.name && pet.name.length < 5) {
         error.name = "El mínimo son 5 caracteres🐾."
     }
-    if(pet.name.length === 0) {
+    if(!pet.name) {
         error.name = "Debe agregar un nombre 👀."
     }
 
@@ -46,7 +46,7 @@ const validation = (pet) => {
     if(pet.gender && pet.gender.length < 13) {
         error.email = "🐾El mínimo son 1 caracteres."
     }
-    if(pet.gender.length === 0) {
+    if(!pet.gender) {
         error.gender = "Debe agregar un Genero 👀👀👀."
     }
 

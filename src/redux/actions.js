@@ -20,8 +20,8 @@ export const USER_LOGIN = "USER_LOGIN";
 export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const SET_LOGGED_IN = "SET_LOGGED_IN";
-const URL = "https://petvogue.onrender.com";
-// const URL = "http://localhost:3001"
+//const URL = "https://petvogue.onrender.com";
+ const URL = "http://localhost:3001"
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,

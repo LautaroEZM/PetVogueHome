@@ -125,15 +125,10 @@ const CreatePet = () => {
                     value={formData.birth}
                     onChange={handleChange}
                     required
-<<<<<<< HEAD
                 />{error.birth && (
                     <p style={{ color: 'red' }}>{error.birth}</p>
                 )}
 
-=======
-            
-                />
->>>>>>> 5b50b24244076371c65a10b9066b7206bbb2071b
                 <FormControl>
                     <InputLabel id="select-pet-specie">Especie</InputLabel>
                     <Select
@@ -176,7 +171,7 @@ const CreatePet = () => {
                             labelId="select-pet-vacRecord"
                             name="vacRecord"
                             value={formData.vacRecord}
-                            onChange={(e) => handleVacRecordChange(e.target.value)}
+                            onChange={(e) => handleVacRecordChange(Array.isArray(e.target.value) ? e.target.value : [e.target.value])}
                             required
                             multiple
                             renderValue={(selected) => selected.join(', ')}
@@ -255,8 +250,8 @@ const CreatePet = () => {
                 )}
 
                 <PhotoUpload photo={photo} setPhoto={setPhoto} />
-                {error.photo && (
-                    <p style={{ color: 'red' }}>{error.photo}</p>
+                {error.image && (
+                    <p style={{ color: 'red' }}>{error.image}</p>
                 )}
 
                 <Button type="submit" variant="contained" color="primary">
