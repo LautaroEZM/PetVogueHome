@@ -12,7 +12,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { validateEmail, validateNonEmpty } from "./validations";
 import toast, { Toaster } from "react-hot-toast";
-import Perfil from "../Perfil/Perfil";
 
 function Login() {
   const navigate = useNavigate();
@@ -54,8 +53,8 @@ function Login() {
       if (response.error && response.error.response.status !== 200) {
         toast.error(response.error.response.data.error);
       } else {
-        console.log("inicio de sesion exitoso");
-        toast.success("inicio de sesion exitoso");
+        navigate("/");
+        setTimeout(() => toast.success("Inicio de sesión exitoso"), 200);
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -74,8 +73,7 @@ function Login() {
       };
       await dispatch(createUser(userData));
       navigate("/");
-      toast.success("Successfully toasted!");
-      console.log("Usuario creado:", userData);
+      setTimeout(() => toast.success("Inicio de sesión exitoso"), 200);
     } catch (error) {
       console.error(`Error dispatching user data: ${error}`);
     }
@@ -89,7 +87,10 @@ function Login() {
     <div className="App">
       <Toaster position="top-center" />
       {isLoggedIn ? (
-        <div>Ya has iniciado sesion</div>
+        <div>
+          <h3>Bienvenido a PetVogue!</h3>
+          <p>Estas siendo redirijido al inicio...</p>
+        </div>
       ) : (
         <form>
           <Box
@@ -161,7 +162,7 @@ function Login() {
             </Button>
           </Box>
           <Box mt={2} mb={2}>
-            <Link component={RouterLink} to="/register" variant="body2">
+            <Link component={RouterLink} to="/registrarse" variant="body2">
               ¿No estás registrado? Crea una cuenta
             </Link>
             <div className="btn">
