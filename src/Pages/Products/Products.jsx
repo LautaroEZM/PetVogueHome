@@ -15,7 +15,7 @@ const Products = () => {
 
   //🎀.rows
   const productss = Array.isArray(productsData.rows) ? productsData.rows : [];
-
+  
   return (
     <div className={styles.productCardsContainer}>
       {productss.map((product) => (
