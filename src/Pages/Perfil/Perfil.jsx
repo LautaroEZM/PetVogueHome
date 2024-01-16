@@ -5,6 +5,8 @@ import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import { LinkNoDeco, YellowButton } from "../../styledComponents";
 import toast, { Toaster } from "react-hot-toast";
+import OrdersUser from "../OrdersUser/OrdersUser";
+import styles from "./Perfil.module.css"
 
 const Perfil = () => {
   const dispatch = useDispatch();
@@ -22,20 +24,27 @@ const Perfil = () => {
   };
 
   return (
-    <div className="profile">
+    <div className={styles.container}>
       <Toaster position="top-center" />
       <div>
-        <img src={userData.photo} alt="" />
+      <div className={styles.info}>
+        <img src={userData.photo} alt="" className={styles.img} />
         <h3>{userData.firstName}</h3>
         <h3>{userData.lastName}</h3>
         <h3>{userData.email}</h3>
+        </div>
+       
+        <OrdersUser/>
+
         {isAdmin ? (
           <div>
             <LinkNoDeco to="/login">
               <YellowButton color="inherit" style={{ marginRight: "8px" }}>
                 Dashboard
               </YellowButton>
+
             </LinkNoDeco>
+            
             <Button
               variant="contained"
               color="secondary"
