@@ -125,17 +125,21 @@ export const getAllPets = () => {
 };
 
 //🎀Get All Products:
-export const getAllProducts = () => {
+export const getProducts = (productName, types, priceSort) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(`${URL}/products/get`, {
-        filters: {},
+        filters: {
+          name_filter: productName || undefined,
+          type_filter: types.length ? types : undefined,
+          price_order: priceSort !== 'none' ? priceSort : undefined,
+        },
         page: 1,
         itemsPerPage: 50,
       });
       return dispatch({
         type: GET_PRODUCTS,
-        payload: response.data,
+        payload: response.data.rows,
       });
     } catch (error) {
       console.error(`Error getting all products👀: ${error}`);
