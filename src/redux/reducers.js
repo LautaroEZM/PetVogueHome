@@ -15,6 +15,8 @@ import {
     RESET_DETAIL_PRODUCT,
     POST_USER,
     USER_LOGOUT,
+    ORDERS_BY_USER_ID,
+    RESET_DETAIL_ORDERS,
   } from './actions';
   
   const initialState = {
@@ -123,6 +125,19 @@ import {
         ...state,
         users: [],
       };
+
+      case ORDERS_BY_USER_ID:
+        return {
+          ...state,
+          ordersUser: action.payload,
+        }
+
+        case RESET_DETAIL_ORDERS:
+          return {
+            ...state,
+            ordersUser: initialState.ordersUser,
+          };
+
     default:
       return state;
   }

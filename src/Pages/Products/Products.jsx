@@ -99,7 +99,6 @@ const Products = () => {
     } else {
       newSelectedTypes.splice(typeIndex, 1);
     }
-
     setSelectedTypes(newSelectedTypes);
   };
 
