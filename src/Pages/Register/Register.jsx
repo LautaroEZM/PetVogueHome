@@ -47,23 +47,17 @@ function Register() {
   };
 
   const validateForm = () => {
-    const emailValid = touchedFields.email
-      ? validations.validateEmail(formData.email)
-      : true;
-
-    const isPasswordValid =
-      validations.validatePassword(formData.password) &&
-      formData.password === formData.confirmPassword;
-
+    const emailValidation = validations.validateEmail(formData.email);
+    const passwordValidation = validations.validatePassword(
+      formData.password,
+      formData.confirmPassword
+    );
     const firstNameValidation = validations.validateName(formData.firstName);
     const lastNameValidation = validations.validateName(formData.lastName);
 
     setErrors({
-      email: emailValid ? "" : "Formato de correo electrónico inválido",
-      password:
-        touchedFields.password && !isPasswordValid
-          ? "Las contraseñas deben coincidir, deben contener entre 8 y 16 caracteres, contener números y letras mayúsculas y minúsculas."
-          : "",
+      email: emailValidation.message,
+      password: passwordValidation.message,
       firstName: firstNameValidation.message,
       lastName: lastNameValidation.message,
     });
@@ -72,8 +66,8 @@ function Register() {
       !(
         firstNameValidation.isValid &&
         lastNameValidation.isValid &&
-        emailValid &&
-        isPasswordValid
+        emailValidation.isValid &&
+        passwordValidation.isValid
       )
     );
   };
@@ -204,7 +198,7 @@ function Register() {
         </Button>
         <Typography variant="body2">
           Ya tienes cuenta?{" "}
-          <Link component={RouterLink} to="/login" color="primary">
+          <Link component={RouterLink} to="/ingresar" color="primary">
             Inicia sesión
           </Link>
         </Typography>

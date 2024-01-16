@@ -66,23 +66,23 @@ const TopBarMenu = () => {
         {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
         <div style={{ display: "flex", alignItems: "center" }}>
           {isLoggedIn ? (
-            <LinkNoDeco to="/Perfil">
+            <LinkNoDeco to="/perfil">
               <YellowButton color="inherit" style={{ marginRight: "8px" }}>
                 Mi Perfil
               </YellowButton>
             </LinkNoDeco>
           ) : (
             <div>
-              <LinkNoDeco to="/login">
+              <LinkNoDeco to="/ingresar">
                 <YellowButton
                   color="inherit"
                   onClick={handleMenuOpen}
                   style={{ marginRight: "8px" }}
                 >
-                  Iniciar Sesión
+                  Ingresar
                 </YellowButton>
               </LinkNoDeco>
-              <LinkNoDeco to="/register">
+              {/* <LinkNoDeco to="/register">
                 <YellowButton
                   color="inherit"
                   onClick={handleMenuOpen}
@@ -90,7 +90,7 @@ const TopBarMenu = () => {
                 >
                   Registrarse
                 </YellowButton>
-              </LinkNoDeco>
+              </LinkNoDeco> */}
             </div>
           )}
         </div>

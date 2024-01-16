@@ -10,6 +10,7 @@ import vetCons from "../../media/vetCons.png";
 import vetFemale from "../../media/vetFemale.png";
 import vetMale from "../../media/vetMale.png";
 import { YellowButtonNoBorderRadius } from "../../styledComponents";
+import toast, { Toaster } from "react-hot-toast";
 
 function Home() {
   const navigationRef = useRef();
@@ -23,6 +24,7 @@ function Home() {
 
   return (
     <ParallaxProvider>
+      <Toaster position="top-center" />
       <Box sx={{
         display: "flex",
         flexDirection: "column",

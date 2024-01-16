@@ -39,11 +39,11 @@ function App() {
             <Route path="/Productos" element={<Products />} />
             <Route path="/detallesProductos/:id" element={<DetailProduct />} />
             <Route element={<LoggedInRoutes />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/ingresar" element={<Login />} />
+              <Route path="/registrarse" element={<Register />} />
             </Route>
             <Route element={<NotLoggedInRoutes />}>
-              <Route path="/Perfil" element={<Perfil />} />
+              <Route path="/perfil" element={<Perfil />} />
               <Route path="/MisMascotas" element={<MyPets />} />
             </Route>
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
