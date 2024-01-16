@@ -44,7 +44,7 @@ const validation = (pet) => {
         error.gender = "🐾Máximo de caracteres alcanzado."
     }
     if(pet.gender && pet.gender.length < 13) {
-        error.email = "🐾El mínimo son 1 caracteres."
+        error.gender = "🐾El mínimo son 13 caracteres."
     }
     if(!pet.gender) {
         error.gender = "Debe agregar un Genero 👀👀👀."

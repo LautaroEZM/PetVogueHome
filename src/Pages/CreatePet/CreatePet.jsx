@@ -45,21 +45,14 @@ const CreatePet = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        const parsedValue = name === 'weight' ? parseInt(value, 10) : value;
-        //🎀👀
-       // const currentDate = new Date().toISOString().split('T')[0];
+    const handleChange = (event) => {
+        const property = event.target.name;
+        const value = event.target.value;
 
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: parsedValue,
-        }));
+        setFormData({ ...formData, [property]: value });
 
-        setError((prevError) => ({
-            ...prevError,
-            [name]: validation(name, value)
-        }));
+        const errors = validation({...formData,[property]: value });
+        setError(errors);
     };
 
     const handleVacRecordChange = (selectedVacRecords) => {
