@@ -2,9 +2,8 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const NotLoggedInRoutes = () => {
-  const users = useSelector((state) => state.users);
-  const isLoggedIn = users.length > 0 ? true : false;
-  if (!isLoggedIn) {
+  const user = useSelector((state) => state.user);
+  if (!user) {
     return <Navigate to="/" replace />;
   }
   return <Outlet />;

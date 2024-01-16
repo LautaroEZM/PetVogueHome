@@ -16,9 +16,6 @@ import toast, { Toaster } from "react-hot-toast";
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const store = useSelector((state) => state.users);
-  console.log(store);
-
   const clientId =
     "1036674150575-20t738j12vau2ihteq06vv2r2s3e6p3t.apps.googleusercontent.com";
   const [email, setEmail] = useState("");
@@ -26,9 +23,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [emailValidation, setEmailValidation] = useState(true);
   const [passwordValidation, setPasswordValidation] = useState(true);
-  const users = useSelector((state) => state.users);
-  const isLoggedIn = users.length > 0 ? true : false;
-  console.log(isLoggedIn);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const start = () => {
@@ -86,7 +81,7 @@ function Login() {
   return (
     <div className="App">
       <Toaster position="top-center" />
-      {isLoggedIn ? (
+      {user ? (
         <div>
           <h3>Bienvenido a PetVogue!</h3>
           <p>Estas siendo redirijido al inicio...</p>

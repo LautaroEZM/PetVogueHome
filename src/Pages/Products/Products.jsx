@@ -33,40 +33,39 @@ import {
 const Products = () => {
   const dispatch = useDispatch();
   const productsData = useSelector((state) => state.products);
-  const loggedUser = useSelector((state) => state.users[0].user);
+  const user = useSelector((state) => state.user);
   const [sortPrice, setSortPrice] = useState('none');
   const [searchText, setSearchText] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
   useEffect(() => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
-
   }, [dispatch, searchText, selectedTypes, sortPrice]);
 
-  useEffect(() => {
+  const productsMap = productsData.length ? productsData.reduce((a, product) => ({ ...a, [product.productID]: product }), {}) : {};
 
-  }, [productsData]);
-
-  const productsMap = productsData.reduce((a, product) => ({ ...a, [product.productID]: product }), {})
-  console.log('productsMap', productsMap);
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = productsData.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(productsData.length / itemsPerPage);
 
   const handleProductClick = async (product) => {
     try {
+      console.log('Adding to cart');
       await axios.put('https://petvogue.onrender.com/users/addcart', {
-        userID: loggedUser.userID,
-        productID: product.productID,
+        userID: user?.userID,
+        productID: product?.productID,
         quantity: 1,
       });
-      dispatch(getUser(loggedUser.userID))
-
+      dispatch(getUser(user?.userID))
     } catch (error) {
       console.error('Error al agregar el producto al carrito', error);
     }
   };
-
-
 
   const toggleCart = () => {
     setCartOpen(!cartOpen);
@@ -119,12 +118,11 @@ const Products = () => {
   };
 
   const calculateTotal = () => {
-    // const total = loggedUser.cart.reduce((total, itemID) => {
-    //   const product = productsMap[itemID]
-    //   console.log('asdasdasd', product);
-    //   return total + product.price * product.quantity
-    // }, 0);
-    // return total.toFixed(2);
+    const total = user?.cart.reduce((acc, itemID) => {
+      const product = productsMap[itemID]
+      return acc + (product ? product.price * (product.quantity || 1) : 0)
+    }, 0);
+    return total.toFixed(2);
   };
 
   return (
@@ -163,7 +161,7 @@ const Products = () => {
         </Box>
       </Box>
       <Box className={styles.productCardsContainer}>
-        {productsData?.length && productsData.map((product) => (
+        {currentProducts?.length && currentProducts.map((product) => (
           <div key={product.productID} className={`${styles.productCard} ${styles.stickyButtonContainer}`}>
             <CardHeader title={product.name} sx={{
               background: '#ffbb00',
@@ -184,6 +182,17 @@ const Products = () => {
           </div>
         ))}
 
+        {totalPages > 1 && (
+            <div>
+              <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+                Previous
+              </button>
+              <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
+                Next
+              </button>
+            </div>
+        )}
+
         <div className={`${styles.cartButtonContainer} ${styles.fixedCartButton}`}>
           <IconButton
             edge="end"
@@ -192,7 +201,7 @@ const Products = () => {
             onClick={toggleCart}
             className={styles.cartButton}
           >
-            <Badge badgeContent={loggedUser.cart.length} color="error">
+            <Badge badgeContent={user?.cart?.length} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
@@ -200,7 +209,7 @@ const Products = () => {
 
         <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
           <List>
-            {loggedUser?.cart?.length && loggedUser.cart.map((cartItemID) => (
+            {user?.cart?.length && user.cart.map((cartItemID) => (
               productsMap[cartItemID] && <ListItem key={cartItemID}>
                 <img src={productsMap[cartItemID].image} alt={productsMap[cartItemID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
                 <div>
@@ -238,7 +247,7 @@ const Products = () => {
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
           <List>
             {[
-              { group: "TIPO", options: ['Medicamentos', 'Juguetes'] },
+              { group: "TIPO", options: ['Medicamento', 'Juguete'] },
             ].map(({ group, options }) => (
               <div key={group}>
                 <ListItem>

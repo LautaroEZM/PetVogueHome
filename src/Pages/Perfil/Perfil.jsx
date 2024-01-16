@@ -11,10 +11,8 @@ import styles from "./Perfil.module.css"
 const Perfil = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const users = useSelector((state) => state.users);
-  const isLoggedIn = users.length > 0 ? true : false;
-  const userData = users[0].user;
-  const isAdmin = userData.systemRole.includes("admin");
+  const user = useSelector((state) => state.user);
+  const isAdmin = user?.systemRole?.includes("admin");
   console.log(isAdmin, "isAdmin");
 
   const handleLogout = () => {
@@ -28,10 +26,10 @@ const Perfil = () => {
       <Toaster position="top-center" />
       <div>
       <div className={styles.info}>
-        <img src={userData.photo} alt="" className={styles.img} />
-        <h3>{userData.firstName}</h3>
-        <h3>{userData.lastName}</h3>
-        <h3>{userData.email}</h3>
+        <img src={user.photo} alt="" className={styles.img} />
+        <h3>{user.firstName}</h3>
+        <h3>{user.lastName}</h3>
+        <h3>{user.email}</h3>
         </div>
        
         <OrdersUser/>
