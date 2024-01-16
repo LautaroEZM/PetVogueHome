@@ -16,6 +16,10 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
 export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
+
+export const ORDERS_BY_USER_ID = "ORDERS_BY_USER_ID";
+export const RESET_DETAIL_ORDERS = "RESET_DETAIL_ORDERS";
+
 const URL = "https://petvogue.onrender.com";
 // const URL = "http://localhost:3001";
 
@@ -121,17 +125,21 @@ export const getAllPets = () => {
 };
 
 //🎀Get All Products:
-export const getAllProducts = () => {
+export const getProducts = (productName, types, priceSort) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(`${URL}/products/get`, {
-        filters: {},
+        filters: {
+          name_filter: productName || undefined,
+          type_filter: types.length ? types : undefined,
+          price_order: priceSort !== 'none' ? priceSort : undefined,
+        },
         page: 1,
         itemsPerPage: 50,
       });
       return dispatch({
         type: GET_PRODUCTS,
-        payload: response.data,
+        payload: response.data.rows,
       });
     } catch (error) {
       console.error(`Error getting all products👀: ${error}`);
@@ -243,4 +251,31 @@ export const registerUser = (userData) => {
       }
     }
   };
+};
+
+//🎀Get orders by user:
+export const OrdersByUserId = (userId) => {
+  return async (dispatch) =>{
+  try {
+  const response = await axios.post('https://petvogue.onrender.com/orders/get', {
+    filters: {
+      userID_filter: userId,
+    },
+    page: 1,
+    itemsPerPage: 10,
+  });
+ // console.log(response.data.rows);
+  return dispatch({
+    type: ORDERS_BY_USER_ID,
+    payload: response.data,
+  });
+} catch (error) {
+  console.error(`Error al obtener ordenes: ${error}`);
+}
+};
+}
+
+//🎀Reset detail:
+export const resetDetailOrders = () => {
+  return { type: RESET_DETAIL_ORDERS, payload: [] };
 };
