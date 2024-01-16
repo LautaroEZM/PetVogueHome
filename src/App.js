@@ -16,6 +16,8 @@ import DetailService from "./Pages/DetailService/DetailService";
 import Perfil from "./Pages/Perfil/Perfil";
 import Products from "./Pages/Products/Products";
 import DetailProduct from "./Pages/DetailProduct/DetailProduct";
+import NotLoggedInRoutes from "./utils/NotLoggedInRoutes";
+import LoggedInRoutes from "./utils/LoggedInRoutes";
 
 // import Login from "./Pages/LoginGoogle/LoginGoogle";
 
@@ -32,15 +34,18 @@ function App() {
             <Route path="/crearServicio" element={<CreateService />} />
             <Route path="/editarServicio/:id" element={<EditService />} />
             <Route path="/servicios" element={<Services />} />
-            <Route path="/MisMascotas" element={<MyPets />} />
-            {/* <Route path="/login" element={<Login />} /> */}
-            <Route path="/register" element={<Register />} />
             <Route path="/detallesMascotas/:id" element={<DetailPet />} />
             <Route path="/detallesServicios/:id" element={<DetailService />} />
-            <Route path="/Productos" element={<Products/>}/>
-            <Route path="/detallesProductos/:id" element={<DetailProduct/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/Perfil" element={<Perfil/>}/>
+            <Route path="/Productos" element={<Products />} />
+            <Route path="/detallesProductos/:id" element={<DetailProduct />} />
+            <Route element={<LoggedInRoutes />}>
+              <Route path="/ingresar" element={<Login />} />
+              <Route path="/registrarse" element={<Register />} />
+            </Route>
+            <Route element={<NotLoggedInRoutes />}>
+              <Route path="/perfil" element={<Perfil />} />
+              <Route path="/MisMascotas" element={<MyPets />} />
+            </Route>
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
         </div>
