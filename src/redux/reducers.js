@@ -1,61 +1,67 @@
 // reducers.js
 import {
-    FETCH_SERVICES_REQUEST,
-    FETCH_SERVICES_SUCCESS,
-    FETCH_SERVICES_FAILURE,
-    POST_SERVICE,
-    POST_PET,
-    GET_SERVICE_DETAIL,
-    RESET_DETAIL_SERVICE,
-    GET_ALL_PETS,
-    GET_PET_DETAIL,
-    RESET_DETAIL_PET,
-    GET_PRODUCTS,
-    GET_PRODUCT_DETAIL,
-    RESET_DETAIL_PRODUCT,
-    POST_USER,
-    USER_LOGIN,
-    USER_LOGIN_FAILURE,
-    USER_LOGOUT,
-    SET_LOGGED_IN,
-  } from './actions';
-  
-  const initialState = {
-    services: [],
-    detailServices: {},
-    pets: [],
-    petDetail: {},
-    products: [],
-    productDetail: {},
-    users: [],
-    token: localStorage.getItem("token") || null,
-    user: null,
-    isLoggedIn: localStorage.getItem("user") !== null,
-    loading: false,
-    error: null,
-  };
-  
-  const rootReducer = (state = initialState, action) => {
-    switch (action.type) {
-      case FETCH_SERVICES_REQUEST:
-        return {
-          ...state,
-          loading: true,
-          error: null,
-        };
-      case FETCH_SERVICES_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          services: action.payload,
-        };
-      case FETCH_SERVICES_FAILURE:
-        return {
-          ...state,
-          loading: false,
-          error: action.payload,
-        };
-        
+  FETCH_SERVICES_REQUEST,
+  FETCH_SERVICES_SUCCESS,
+  FETCH_SERVICES_FAILURE,
+  POST_SERVICE,
+  POST_PET,
+  GET_SERVICE_DETAIL,
+  RESET_DETAIL_SERVICE,
+  GET_ALL_PETS,
+  GET_PET_DETAIL,
+  RESET_DETAIL_PET,
+  GET_PRODUCTS,
+  GET_PRODUCT_DETAIL,
+  RESET_DETAIL_PRODUCT,
+  POST_USER,
+  USER_LOGOUT,
+  ORDERS_BY_USER_ID,
+  RESET_DETAIL_ORDERS,
+  GET_USER,
+  ORDER_DETAIL_REQUEST,
+  ORDER_DETAIL_SUCCESS,
+  ORDER_DETAIL_FAILURE,
+} from "./actions";
+
+const initialState = {
+  services: [],
+  detailServices: {},
+  pets: [],
+  petDetail: {},
+  products: [],
+  productDetail: {},
+  users: [],
+  loading: false,
+  error: null,
+  orderDetail: {
+    order: {}, // Mantén los detalles de la orden
+    reviews: [], // Agrega un array para las reseñas
+  },
+  loadingOrderDetail: false,
+  errorOrderDetail: null,
+};
+
+const rootReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_SERVICES_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case FETCH_SERVICES_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        services: action.payload,
+      };
+    case FETCH_SERVICES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
     //🎀Agregado post:
     case POST_SERVICE:
       return {
@@ -93,62 +99,83 @@ import {
         petDetail: action.payload,
       };
 
-      case RESET_DETAIL_PET:
-        return {
-          ...state,
-          petDetail: initialState.petDetail,
-        };
+    case RESET_DETAIL_PET:
+      return {
+        ...state,
+        petDetail: initialState.petDetail,
+      };
 
-      case GET_PRODUCTS:
-        return {
-          ...state,
-          products: action.payload,
-        };
-      
-      case GET_PRODUCT_DETAIL:
-        return {
-          ...state,
-          productDetail: action.payload,
-        }; 
-        
-      case RESET_DETAIL_PRODUCT:
-          return {
-            ...state,
-            productDetail: initialState.productDetail,
-          };
-  
-     case POST_USER:
+    case GET_PRODUCTS:
+      return {
+        ...state,
+        products: action.payload,
+      };
+
+    case GET_PRODUCT_DETAIL:
+      return {
+        ...state,
+        productDetail: action.payload,
+      };
+
+    case RESET_DETAIL_PRODUCT:
+      return {
+        ...state,
+        productDetail: initialState.productDetail,
+      };
+
+    case POST_USER:
       return {
         ...state,
         users: [...state.users, action.payload],
       };
-    case USER_LOGIN:
+
+    case GET_USER:
       return {
         ...state,
-        token: action.payload.token,
-        user: action.payload.user,
-        isLoggedIn: true,
-        error: null,
+        users: [...state.users, action.payload],
       };
-    case USER_LOGIN_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-      };
+
     case USER_LOGOUT:
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       return {
         ...state,
-        token: null,
-        user: null,
-        isLoggedIn: false,
+        users: [],
       };
-    case SET_LOGGED_IN:
+
+    case ORDERS_BY_USER_ID:
       return {
         ...state,
-        isLoggedIn: action.payload,
+        ordersUser: action.payload,
       };
+
+    case RESET_DETAIL_ORDERS:
+      return {
+        ...state,
+        ordersUser: initialState.ordersUser,
+      };
+
+    case ORDER_DETAIL_REQUEST:
+      return { ...state, loadingOrderDetail: true, errorOrderDetail: null };
+      
+    case ORDER_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loadingOrderDetail: false,
+        orderDetail: {
+          order: action.payload.order,
+          reviews: action.payload.reviews,
+        },
+        errorOrderDetail: null,
+      };
+      
+    case ORDER_DETAIL_FAILURE:
+      return {
+        ...state,
+        loadingOrderDetail: false,
+        errorOrderDetail: action.payload,
+      };
+
     default:
       return state;
   }

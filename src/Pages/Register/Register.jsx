@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography, Link } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { createUser } from "../../redux/actions";
+import { createUser, registerUser } from "../../redux/actions";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import validations from "./validations";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import toast, { Toaster } from "react-hot-toast";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -46,23 +47,17 @@ function Register() {
   };
 
   const validateForm = () => {
-    const emailValid = touchedFields.email
-      ? validations.validateEmail(formData.email)
-      : true;
-
-    const isPasswordValid =
-      validations.validatePassword(formData.password) &&
-      formData.password === formData.confirmPassword;
-
+    const emailValidation = validations.validateEmail(formData.email);
+    const passwordValidation = validations.validatePassword(
+      formData.password,
+      formData.confirmPassword
+    );
     const firstNameValidation = validations.validateName(formData.firstName);
     const lastNameValidation = validations.validateName(formData.lastName);
 
     setErrors({
-      email: emailValid ? "" : "Formato de correo electrónico inválido",
-      password:
-        touchedFields.password && !isPasswordValid
-          ? "Las contraseñas deben coincidir, deben contener entre 8 y 16 caracteres, contener números y letras mayúsculas y minúsculas."
-          : "",
+      email: emailValidation.message,
+      password: passwordValidation.message,
       firstName: firstNameValidation.message,
       lastName: lastNameValidation.message,
     });
@@ -71,8 +66,8 @@ function Register() {
       !(
         firstNameValidation.isValid &&
         lastNameValidation.isValid &&
-        emailValid &&
-        isPasswordValid
+        emailValidation.isValid &&
+        passwordValidation.isValid
       )
     );
   };
@@ -85,11 +80,14 @@ function Register() {
     e.preventDefault();
 
     if (!isSubmitDisabled) {
+      const response = await dispatch(registerUser(formData));
       try {
-        const newUser = await dispatch(createUser(formData));
-        console.log("Registro exitoso:", newUser);
-        navigate("/");
-        window.location.reload();
+        if (response.error && response.error.response.status !== 200) {
+          toast.error(response.error.response.data.error);
+        } else {
+          toast.success("Registro de usuario exitoso");
+          navigate("/");
+        }
       } catch (error) {
         console.error("Error al registrar usuario:", error.message);
       }
@@ -98,6 +96,7 @@ function Register() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Toaster position="top-center" />
       <Box
         sx={{
           display: "flex",
@@ -199,7 +198,7 @@ function Register() {
         </Button>
         <Typography variant="body2">
           Ya tienes cuenta?{" "}
-          <Link component={RouterLink} to="/login" color="primary">
+          <Link component={RouterLink} to="/ingresar" color="primary">
             Inicia sesión
           </Link>
         </Typography>
