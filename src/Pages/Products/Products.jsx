@@ -17,7 +17,8 @@ import {
   Container,
   TextField,
   Toolbar,
-  Checkbox
+  Checkbox,
+  Pagination
 } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp, AttachMoney } from '@mui/icons-material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -55,13 +56,13 @@ const Products = () => {
   const currentProducts = productsData.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(productsData.length / itemsPerPage);
 
-  const handleAddItem = async (product, quantity = 1) => {
+  const handleAddItem = async (product) => {
     try {
 
       await axios.put('https://petvogue.onrender.com/users/addcart', {
         userID: user?.userID,
         productID: product?.productID,
-        qty: quantity,
+        qty: 1,
       });
 
       dispatch(getUser(user?.userID))
@@ -89,8 +90,17 @@ const Products = () => {
     setCartOpen(!cartOpen);
   };
 
-  const handleClearCart = () => {
-    // Lógica para limpiar el carrito
+  const handleClearCart = async () => {
+    try {
+
+      await axios.put('https://petvogue.onrender.com/users/emptycart', {
+        userID: user?.userID,
+      });
+
+      dispatch(getUser(user?.userID))
+    } catch (error) {
+      console.error('Error al limpiar el carrito', error);
+    }
   };
 
   const handleCheckout = () => {
@@ -123,16 +133,16 @@ const Products = () => {
     setSelectedTypes(newSelectedTypes);
   };
 
-  const removeFromCart = (productId) => {
-    //   const updatedCart = cartItems.filter((item) => item.product.productID !== productId);
-    //   setCartItems(updatedCart);
+  const removeFromCart = (cartItem) => {
+    const product = productsMap[cartItem.productID];
+    handleRemoveItem(product, cartItem.quantity)
   };
 
-  const updateQuantity = (cartItem, newQuantity) => {
-    if (newQuantity > cartItem.quantity) {
-      handleAddItem(productsMap[cartItem.productID], newQuantity);
+  const updateQuantity = (cartItem, action) => {
+    if (action === 'add') {
+      handleAddItem(productsMap[cartItem.productID]);
     } else {
-      handleRemoveItem(productsMap[cartItem.productID], newQuantity);
+      handleRemoveItem(productsMap[cartItem.productID]);
     }
   };
 
@@ -200,17 +210,13 @@ const Products = () => {
             </YellowButtonCart>
           </div>
         ))}
-
-        {totalPages > 1 && (
-          <div>
-            <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
-              Previous
-            </button>
-            <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
-              Next
-            </button>
-          </div>
+        <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+          {totalPages > 1 && (
+          <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} variant="outlined" primary />
         )}
+        </Container>
+
+
 
         <div className={`${styles.cartButtonContainer} ${styles.fixedCartButton}`}>
           <IconButton
@@ -227,41 +233,45 @@ const Products = () => {
         </div>
 
         <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
-          <List>
-            {user?.cart2?.length && user.cart2.map((cartItem) => (
-              productsMap[cartItem.productID] && <ListItem key={cartItem.productID}>
-                <img src={productsMap[cartItem.productID].image} alt={productsMap[cartItem.productID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
-                <div>
-                  <Typography variant="subtitle1"><strong>{productsMap[cartItem.productID].name}</strong></Typography>
-                  <Typography variant="body2"><strong>Tipo:</strong> {productsMap[cartItem.productID].type}</Typography>
-                  <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItem.productID].price}</Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <IconButton onClick={() => updateQuantity(cartItem, cartItem.quantity - 1)}>
-                      <RemoveIcon />
-                    </IconButton>
-                    <Typography variant="body2">{cartItem.quantity}</Typography>
-                    <IconButton onClick={() => updateQuantity(cartItem, cartItem.quantity + 1)}>
-                      <AddIcon />
-                    </IconButton>
-                  </Box>
-                  <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(productsMap[cartItem].productID)}>
-                    Eliminar
-                  </YellowButtonSmall>
-                </div>
+          {user?.cart2?.length ? (
+            <List>
+              {user?.cart2?.length && user.cart2.map((cartItem) => (
+                productsMap[cartItem.productID] && <ListItem key={cartItem.productID}>
+                  <img src={productsMap[cartItem.productID].image} alt={productsMap[cartItem.productID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
+                  <div>
+                    <Typography variant="subtitle1"><strong>{productsMap[cartItem.productID].name}</strong></Typography>
+                    <Typography variant="body2"><strong>Tipo:</strong> {productsMap[cartItem.productID].type}</Typography>
+                    <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItem.productID].price}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <IconButton onClick={() => updateQuantity(cartItem, 'remove')}>
+                        <RemoveIcon />
+                      </IconButton>
+                      <Typography variant="body2">{cartItem.quantity}</Typography>
+                      <IconButton onClick={() => updateQuantity(cartItem, 'add')}>
+                        <AddIcon />
+                      </IconButton>
+                    </Box>
+                    <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(cartItem)}>
+                      Eliminar
+                    </YellowButtonSmall>
+                  </div>
+                </ListItem>
+              ))}
+              <ListItem>
+                <ListItemText primary={`Total: $${calculateTotal()}`} />
               </ListItem>
-            ))}
-            <ListItem>
-              <ListItemText primary={`Total: $${calculateTotal()}`} />
-            </ListItem>
-            <ListItem>
-              <YellowButtonNoBorderRadiusEmpty variant="outlined" onClick={handleClearCart}>
-                Limpiar Carrito
-              </YellowButtonNoBorderRadiusEmpty>
-              <YellowButtonNoBorderRadius variant="contained" color="primary" onClick={handleCheckout}>
-                Realizar Compra
-              </YellowButtonNoBorderRadius>
-            </ListItem>
-          </List>
+              <ListItem>
+                <YellowButtonNoBorderRadiusEmpty variant="outlined" onClick={handleClearCart}>
+                  Limpiar Carrito
+                </YellowButtonNoBorderRadiusEmpty>
+                <YellowButtonNoBorderRadius variant="contained" color="primary" onClick={handleCheckout}>
+                  Realizar Compra
+                </YellowButtonNoBorderRadius>
+              </ListItem>
+            </List>
+          ) : (
+            <Typography><strong>El carrito esta vacio.</strong></Typography>
+          )}
         </Drawer>
 
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
