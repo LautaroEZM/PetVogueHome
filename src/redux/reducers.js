@@ -13,11 +13,10 @@ import {
   GET_PRODUCTS,
   GET_PRODUCT_DETAIL,
   RESET_DETAIL_PRODUCT,
-  POST_USER,
+  SET_USER,
   USER_LOGOUT,
   ORDERS_BY_USER_ID,
   RESET_DETAIL_ORDERS,
-  GET_USER
 } from "./actions";
 
 const initialState = {
@@ -27,7 +26,7 @@ const initialState = {
   petDetail: {},
   products: [],
   productDetail: {},
-  users: [],
+  user: null,
   loading: false,
   error: null,
 };
@@ -114,16 +113,10 @@ const rootReducer = (state = initialState, action) => {
         productDetail: initialState.productDetail,
       };
 
-    case POST_USER:
+    case SET_USER:
       return {
         ...state,
-        users: [...state.users, action.payload],
-      };
-
-    case GET_USER:
-      return {
-        ...state,
-        users: [...state.users, action.payload],
+        user: action.payload,
       };
 
     case USER_LOGOUT:
@@ -131,7 +124,7 @@ const rootReducer = (state = initialState, action) => {
       localStorage.removeItem("token");
       return {
         ...state,
-        users: [],
+        user: null,
       };
 
     case ORDERS_BY_USER_ID:
