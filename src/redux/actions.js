@@ -19,6 +19,8 @@ export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
 
 export const ORDERS_BY_USER_ID = "ORDERS_BY_USER_ID";
 export const RESET_DETAIL_ORDERS = "RESET_DETAIL_ORDERS";
+export const UPDATE_USER = "UPDATE_USER";
+export const SET_USER = "SET_USER";
 
 const URL = "https://petvogue.onrender.com";
 // const URL = "http://localhost:3001";
@@ -274,4 +276,38 @@ export const OrdersByUserId = (userId) => {
 //🎀Reset detail:
 export const resetDetailOrders = () => {
   return { type: RESET_DETAIL_ORDERS, payload: [] };
+};
+
+//🎀Update User:
+export const updateUser = (userID, userData) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put(`${URL}/users/update/${userID}`, userData);
+      console.log(response.data, "action⭐⭐");
+      return dispatch({
+        type: UPDATE_USER,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(`Error updating user: ${error}`);
+    }
+  };
+ };
+
+ export const getUser = (userID) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(`${URL}/users/get`,{
+        filters:{
+          userID_filter: userID,
+        }
+      });
+      return dispatch({
+        type: SET_USER,
+        payload: data?.rows?.length ? data.rows[0] : null,
+      });
+    } catch (error) {
+      console.error(`Error getting user: ${error}`);
+    }
+  };
 };

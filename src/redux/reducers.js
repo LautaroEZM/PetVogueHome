@@ -17,6 +17,8 @@ import {
     USER_LOGOUT,
     ORDERS_BY_USER_ID,
     RESET_DETAIL_ORDERS,
+    UPDATE_USER,
+    SET_USER,
   } from './actions';
   
   const initialState = {
@@ -27,6 +29,8 @@ import {
     products: [],
     productDetail: {},
     users: [],
+    ordersUser: [], 
+    //editUserForm: {},
     loading: false,
     error: null,
   };
@@ -128,7 +132,7 @@ import {
 
       case ORDERS_BY_USER_ID:
         return {
-          ...state,
+          ...state, 
           ordersUser: action.payload,
         }
 
@@ -137,6 +141,28 @@ import {
             ...state,
             ordersUser: initialState.ordersUser,
           };
+
+          case SET_USER:
+            return {
+              ...state,
+              user: action.payload,
+            };
+
+          case UPDATE_USER://en revision
+            return {
+             ...state,
+          // users: state.users.map(user => 
+          // user.id === action.payload.id ? action.payload : user
+   //),   
+              users: [
+                {
+                 ...state.users[0],
+                 user: action.payload,
+                }
+              ]
+ 
+
+ };
 
     default:
       return state;

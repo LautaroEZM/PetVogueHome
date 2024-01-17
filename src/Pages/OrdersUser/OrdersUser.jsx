@@ -12,7 +12,7 @@ const OrdersUser = () => {
    
     useEffect(() => {
         if (userData) {
-          dispatch(OrdersByUserId(userData.id));
+          dispatch(OrdersByUserId(userData.userID));
         }
    
       return () => {
