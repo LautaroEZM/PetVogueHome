@@ -22,6 +22,8 @@ import {
 import { ArrowDropDown, ArrowDropUp, AttachMoney } from '@mui/icons-material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 import {
   YellowButtonCart,
   YellowButton,
@@ -40,7 +42,7 @@ const Products = () => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(8);
 
   useEffect(() => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
@@ -53,14 +55,30 @@ const Products = () => {
   const currentProducts = productsData.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(productsData.length / itemsPerPage);
 
-  const handleProductClick = async (product) => {
+  const handleAddItem = async (product, quantity = 1) => {
     try {
-      console.log('Adding to cart');
+
       await axios.put('https://petvogue.onrender.com/users/addcart', {
         userID: user?.userID,
         productID: product?.productID,
-        quantity: 1,
+        qty: quantity,
       });
+
+      dispatch(getUser(user?.userID))
+    } catch (error) {
+      console.error('Error al agregar el producto al carrito', error);
+    }
+  };
+
+  const handleRemoveItem = async (product, quantity = 1) => {
+    try {
+
+      await axios.put('https://petvogue.onrender.com/users/removecart', {
+        userID: user?.userID,
+        productID: product?.productID,
+        qty: quantity,
+      });
+
       dispatch(getUser(user?.userID))
     } catch (error) {
       console.error('Error al agregar el producto al carrito', error);
@@ -110,19 +128,20 @@ const Products = () => {
     //   setCartItems(updatedCart);
   };
 
-  const updateQuantity = (productId, newQuantity) => {
-    //   const updatedCart = cartItems.map((item) =>
-    //     item.product.productID === productId ? { ...item, quantity: newQuantity } : item
-    //   );
-    //   setCartItems(updatedCart);
+  const updateQuantity = (cartItem, newQuantity) => {
+    if (newQuantity > cartItem.quantity) {
+      handleAddItem(productsMap[cartItem.productID], newQuantity);
+    } else {
+      handleRemoveItem(productsMap[cartItem.productID], newQuantity);
+    }
   };
 
   const calculateTotal = () => {
-    const total = user?.cart.reduce((acc, itemID) => {
-      const product = productsMap[itemID]
-      return acc + (product ? product.price * (product.quantity || 1) : 0)
+    const total = user?.cart2.reduce((acc, item) => {
+      const product = productsMap[item.productID]
+      return acc + (product ? product.price * (item.quantity || 1) : 0)
     }, 0);
-    return total.toFixed(2);
+    return total ? total.toFixed(2) : 0;
   };
 
   return (
@@ -176,21 +195,21 @@ const Products = () => {
             <Typography>
               <strong>Precio: </strong>${product.price}
             </Typography>
-            <YellowButtonCart onClick={() => handleProductClick(product)}>
+            <YellowButtonCart onClick={() => handleAddItem(product)}>
               <AddShoppingCartIcon style={{ marginRight: '5px' }} />
             </YellowButtonCart>
           </div>
         ))}
 
         {totalPages > 1 && (
-            <div>
-              <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
-                Previous
-              </button>
-              <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
-                Next
-              </button>
-            </div>
+          <div>
+            <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+              Previous
+            </button>
+            <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
+              Next
+            </button>
+          </div>
         )}
 
         <div className={`${styles.cartButtonContainer} ${styles.fixedCartButton}`}>
@@ -201,7 +220,7 @@ const Products = () => {
             onClick={toggleCart}
             className={styles.cartButton}
           >
-            <Badge badgeContent={user?.cart?.length} color="error">
+            <Badge badgeContent={user?.cart2?.length} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
@@ -209,22 +228,23 @@ const Products = () => {
 
         <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
           <List>
-            {user?.cart?.length && user.cart.map((cartItemID) => (
-              productsMap[cartItemID] && <ListItem key={cartItemID}>
-                <img src={productsMap[cartItemID].image} alt={productsMap[cartItemID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
+            {user?.cart2?.length && user.cart2.map((cartItem) => (
+              productsMap[cartItem.productID] && <ListItem key={cartItem.productID}>
+                <img src={productsMap[cartItem.productID].image} alt={productsMap[cartItem.productID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
                 <div>
-                  <Typography variant="subtitle1"><strong>{productsMap[cartItemID].name}</strong></Typography>
-                  <Typography variant="body2"><strong>Tipo:</strong> {productsMap[cartItemID].type}</Typography>
-                  <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItemID].price}</Typography>
-                  <TextField
-                    type="number"
-                    label="Cantidad"
-                    value={productsMap[cartItemID].quantity || 1}
-                    sx={{ margin: '10px' }}
-                    inputProps={{ min: 1, max: productsMap[cartItemID].stock }}
-                    onChange={(e) => updateQuantity(productsMap[cartItemID].productID, parseInt(e.target.value, 10))}
-                  />
-                  <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(productsMap[cartItemID].productID)}>
+                  <Typography variant="subtitle1"><strong>{productsMap[cartItem.productID].name}</strong></Typography>
+                  <Typography variant="body2"><strong>Tipo:</strong> {productsMap[cartItem.productID].type}</Typography>
+                  <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItem.productID].price}</Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <IconButton onClick={() => updateQuantity(cartItem, cartItem.quantity - 1)}>
+                      <RemoveIcon />
+                    </IconButton>
+                    <Typography variant="body2">{cartItem.quantity}</Typography>
+                    <IconButton onClick={() => updateQuantity(cartItem, cartItem.quantity + 1)}>
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
+                  <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(productsMap[cartItem].productID)}>
                     Eliminar
                   </YellowButtonSmall>
                 </div>
