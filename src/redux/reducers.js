@@ -33,10 +33,7 @@ const initialState = {
   users: [],
   loading: false,
   error: null,
-  orderDetail: {
-    order: {}, // Mantén los detalles de la orden
-    reviews: [], // Agrega un array para las reseñas
-  },
+  orderDetail: {},
   loadingOrderDetail: false,
   errorOrderDetail: null,
 };
@@ -162,10 +159,7 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingOrderDetail: false,
-        orderDetail: {
-          order: action.payload.order,
-          reviews: action.payload.reviews,
-        },
+        orderDetail: action.payload,
         errorOrderDetail: null,
       };
       

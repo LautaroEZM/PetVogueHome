@@ -38,25 +38,18 @@ export const getOrderDetail = (orderId) => {
     dispatch({ type: ORDER_DETAIL_REQUEST });
 
     try {
-      const response = await axios.post(`${URL}/orders/get`, { 
+      const response = await axios.post(`${URL}/orders/get`, { //REVISAR URL
         filters: {
           orderID_filter: orderId,
         },
       });
-      
- // Desestructura la respuesta para obtener tanto los detalles de la orden como las reseñas
-      const { order, reviews } = response.data;
-      
-      if (!order || !reviews) {
-        throw new Error('Formato de respuesta inesperado');
-      }
 
-     dispatch({
+      dispatch({
         type: ORDER_DETAIL_SUCCESS,
-        payload: { order, reviews }, // Envía tanto los detalles de la orden como las reseñas como parte del payload
-     });
+        payload: response.data,
+      });
     } catch (error) {
-      console.error(`Error al obtener los detalles del pedido👀: ${error}`);
+      console.error(`Error getting order detail👀: ${error}`);
       dispatch({
         type: ORDER_DETAIL_FAILURE,
         payload: error.message,
