@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 
 const TopBarMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const users = useSelector((state) => state.users);
+  const user = useSelector((state) => state.user);
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -25,8 +25,6 @@ const TopBarMenu = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
-  const isLoggedIn = users.length > 0 ? true : false;
 
   return (
     <AppBar
@@ -65,7 +63,7 @@ const TopBarMenu = () => {
 
         {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
         <div style={{ display: "flex", alignItems: "center" }}>
-          {isLoggedIn ? (
+          {user ? (
             <LinkNoDeco to="/perfil">
               <YellowButton color="inherit" style={{ marginRight: "8px" }}>
                 Mi Perfil

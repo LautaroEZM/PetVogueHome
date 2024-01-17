@@ -63,6 +63,7 @@
   "devDependencies": {
     "@babel/core": "^7.23.6",
     "@babel/preset-env": "^7.23.6",
-    "@babel/preset-react": "^7.23.3"
+    "@babel/preset-react": "^7.23.3",
+    "react-scripts-plugin-no-minify": "^0.4.0"
   }
 }
