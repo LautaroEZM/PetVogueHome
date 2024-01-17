@@ -64,9 +64,9 @@ const Products = () => {
 
   const productsMap = productsData.length
     ? productsData.reduce(
-      (a, product) => ({ ...a, [product.productID]: product }),
-      {}
-    )
+        (a, product) => ({ ...a, [product.productID]: product }),
+        {}
+      )
     : {};
   useEffect(() => {
     validateStock();
@@ -84,31 +84,42 @@ const Products = () => {
   );
   const totalPages = Math.ceil(productsData.length / itemsPerPage);
 
-
   const validateStock = () => {
-    user?.cart2?.forEach(item => {
+    user?.cart2?.forEach((item) => {
       const product = productsMap[item.productID];
-      if (item.quantity > product.stock && !itemsOutOfStock.includes(item.productID)) {
+      if (
+        item.quantity > product.stock &&
+        !itemsOutOfStock.includes(item.productID)
+      ) {
         setItemsOutOfStock([...itemsOutOfStock, item.productID]);
-      } else if (item.quantity <= product.stock && itemsOutOfStock.includes(item.productID)) {
-        setItemsOutOfStock(itemsOutOfStock.filter(itemOutOfStock => itemOutOfStock !== item.productID));
+      } else if (
+        item.quantity <= product.stock &&
+        itemsOutOfStock.includes(item.productID)
+      ) {
+        setItemsOutOfStock(
+          itemsOutOfStock.filter(
+            (itemOutOfStock) => itemOutOfStock !== item.productID
+          )
+        );
       }
-    })
-  }
+    });
+  };
 
   const isDisabled = (product) => {
-    const cartItem = user?.cart2?.find(item => item.productID === product.productID);
+    const cartItem = user?.cart2?.find(
+      (item) => item.productID === product.productID
+    );
     if (loading || cartItem?.quantity + 1 > product.stock) {
       return true;
     } else {
       return false;
     }
-  }
+  };
 
   const handleAddItem = async (product) => {
     try {
       dispatch(setLoading(true));
-      await axios.put('https://petvogue.onrender.com/users/addcart', {
+      await axios.put("https://petvogue.onrender.com/users/addcart", {
         userID: user?.userID,
         productID: product?.productID,
         qty: 1,
@@ -122,7 +133,7 @@ const Products = () => {
   const handleRemoveItem = async (product, quantity = 1) => {
     try {
       dispatch(setLoading(true));
-      await axios.put('https://petvogue.onrender.com/users/removecart', {
+      await axios.put("https://petvogue.onrender.com/users/removecart", {
         userID: user?.userID,
         productID: product?.productID,
         qty: quantity,
@@ -140,7 +151,7 @@ const Products = () => {
   const handleClearCart = async () => {
     try {
       dispatch(setLoading(true));
-      await axios.put('https://petvogue.onrender.com/users/emptycart', {
+      await axios.put("https://petvogue.onrender.com/users/emptycart", {
         userID: user?.userID,
       });
       dispatch(getUser(user?.userID));
@@ -185,7 +196,7 @@ const Products = () => {
 
   const applyFilters = async () => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
-    setFiltersActive(selectedTypes.length > 0 || sortPrice !== 'none');
+    setFiltersActive(selectedTypes.length > 0 || sortPrice !== "none");
   };
 
   const handleTypeCheckboxChange = (type) => {
@@ -223,12 +234,12 @@ const Products = () => {
 
   const handleClearFilters = () => {
     setSelectedTypes([]);
-    setSortPrice('none');
+    setSortPrice("none");
     setFiltersActive(false);
     applyFilters();
   };
 
-  console.log({ itemsOutOfStock, loading })
+  console.log({ itemsOutOfStock, loading });
 
   return (
     <div className={styles.productCardsContainer}>
@@ -265,80 +276,182 @@ const Products = () => {
           </YellowButtonSmall>
         </Box>
       </Box>
-      <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+      <Container
+        sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
+      >
         {totalPages > 1 && (
-          <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} variant="outlined" primary />
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(e, page) => setCurrentPage(page)}
+            variant="outlined"
+            primary
+          />
         )}
       </Container>
       <Box className={styles.productCardsContainer}>
-        {currentProducts?.length && currentProducts.map((product) => (
-          <div key={product.productID} className={`${styles.productCard} ${styles.stickyButtonContainer}`}>
-            <CardHeader title={product.name} sx={{
-              background: '#ffbb00',
-              borderRadius: '50px',
-              minHeight: '70px'
-            }} />
-            <div>
-              <Link key={product.productID} to={`/detallesProductos/${product.productID}`}>
-                <img src={product.image} alt={product.name} className={styles.CardImg} />
-              </Link>
+        {currentProducts?.length &&
+          currentProducts.map((product) => (
+            <div
+              key={product.productID}
+              className={`${styles.productCard} ${styles.stickyButtonContainer}`}
+            >
+              <CardHeader
+                title={product.name}
+                sx={{
+                  background: "#ffbb00",
+                  borderRadius: "50px",
+                  minHeight: "70px",
+                }}
+              />
+              <div>
+                <Link
+                  key={product.productID}
+                  to={`/detallesProductos/${product.productID}`}
+                >
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className={styles.CardImg}
+                  />
+                </Link>
+              </div>
+              <Typography>
+                <strong>Precio: </strong>${product.price}
+              </Typography>
+              {user ? (
+                <YellowButtonCart
+                  onClick={() => handleAddItem(product)}
+                  disabled={isDisabled(product)}
+                >
+                  <AddShoppingCartIcon style={{ marginRight: "5px" }} />
+                </YellowButtonCart>
+              ) : (
+                <YellowButtonCart
+                  onClick={() => handleAddItem(product)}
+                  disabled
+                >
+                  <AddShoppingCartIcon style={{ marginRight: "5px" }} />
+                </YellowButtonCart>
+              )}
             </div>
-            <Typography>
-              <strong>Precio: </strong>${product.price}
-            </Typography>
-
-            <YellowButtonCart onClick={() => handleAddItem(product)} disabled={isDisabled(product)}>
-              <AddShoppingCartIcon style={{ marginRight: '5px' }} />
-            </YellowButtonCart>
-          </div>
-        ))}
-        <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+          ))}
+        <Container
+          sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
+        >
           {totalPages > 1 && (
-            <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} variant="outlined" primary />
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(e, page) => setCurrentPage(page)}
+              variant="outlined"
+              primary
+            />
           )}
         </Container>
 
-        <div className={`${styles.cartButtonContainer} ${styles.fixedCartButton}`}>
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="carrito"
-            onClick={toggleCart}
-            className={styles.cartButton}
-          >
-            <Badge badgeContent={user?.cart2?.length} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>
+        <div
+          className={`${styles.cartButtonContainer} ${styles.fixedCartButton}`}
+        >
+          {user ? (
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="carrito"
+              onClick={toggleCart}
+              className={styles.cartButton}
+            >
+              <Badge badgeContent={user?.cart2?.length} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+          ) : (
+            <div>
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="carrito"
+                onClick={toggleCart}
+                className={styles.cartButton}
+                disabled
+              >
+                <Badge badgeContent={user?.cart2?.length} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </div>
+          )}
         </div>
 
         <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
           {user?.cart2?.length ? (
             <List>
-              {user?.cart2?.length && user.cart2.map((cartItem) => (
-                productsMap[cartItem.productID] && <ListItem key={cartItem.productID}>
-                  <img src={productsMap[cartItem.productID].image} alt={productsMap[cartItem.productID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
-                  <div>
-                    <Typography variant="subtitle1"><strong>{productsMap[cartItem.productID].name}</strong></Typography>
-                    <Typography variant="body2"><strong>Tipo:</strong> {productsMap[cartItem.productID].type}</Typography>
-                    <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItem.productID].price}</Typography>
-                    <Typography variant="body2"><strong>Stock disponible: </strong>{productsMap[cartItem.productID].stock}</Typography>
-                    <Container sx={{ display: 'flex', alignItems: 'center' }}>
-                      <IconButton onClick={() => updateQuantity(cartItem, 'remove')} disabled={loading || cartItem.quantity === 1}>
-                        <RemoveIcon />
-                      </IconButton>
-                      <Typography variant="body2">{cartItem.quantity}</Typography>
-                      <IconButton onClick={() => updateQuantity(cartItem, 'add')} disabled={loading || cartItem.quantity === productsMap[cartItem.productID].stock}>
-                        <AddIcon />
-                      </IconButton>
-                    </Container>
-                    <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(cartItem)}>
-                      Eliminar
-                    </YellowButtonSmall>
-                    {itemsOutOfStock.includes(cartItem.productID) && <Typography sx={{ color: "red" }}>Item sin stock.</Typography>}
-                  </div>
-                </ListItem>
-              ))}
+              {user?.cart2?.length &&
+                user.cart2.map(
+                  (cartItem) =>
+                    productsMap[cartItem.productID] && (
+                      <ListItem key={cartItem.productID}>
+                        <img
+                          src={productsMap[cartItem.productID].image}
+                          alt={productsMap[cartItem.productID].name}
+                          style={{ marginRight: "10px", maxWidth: "50px" }}
+                        />
+                        <div>
+                          <Typography variant="subtitle1">
+                            <strong>
+                              {productsMap[cartItem.productID].name}
+                            </strong>
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>Tipo:</strong>{" "}
+                            {productsMap[cartItem.productID].type}
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>Precio: </strong>$
+                            {productsMap[cartItem.productID].price}
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>Stock disponible: </strong>
+                            {productsMap[cartItem.productID].stock}
+                          </Typography>
+                          <Container
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <IconButton
+                              onClick={() => updateQuantity(cartItem, "remove")}
+                              disabled={loading || cartItem.quantity === 1}
+                            >
+                              <RemoveIcon />
+                            </IconButton>
+                            <Typography variant="body2">
+                              {cartItem.quantity}
+                            </Typography>
+                            <IconButton
+                              onClick={() => updateQuantity(cartItem, "add")}
+                              disabled={
+                                loading ||
+                                cartItem.quantity ===
+                                  productsMap[cartItem.productID].stock
+                              }
+                            >
+                              <AddIcon />
+                            </IconButton>
+                          </Container>
+                          <YellowButtonSmall
+                            sx={{ margin: "5px" }}
+                            onClick={() => removeFromCart(cartItem)}
+                          >
+                            Eliminar
+                          </YellowButtonSmall>
+                          {itemsOutOfStock.includes(cartItem.productID) && (
+                            <Typography sx={{ color: "red" }}>
+                              Item sin stock.
+                            </Typography>
+                          )}
+                        </div>
+                      </ListItem>
+                    )
+                )}
               <ListItem>
                 <ListItemText primary={`Total: $${calculateTotal()}`} />
               </ListItem>
@@ -369,16 +482,23 @@ const Products = () => {
               </ListItem>
             </List>
           ) : (
-            <Typography sx={{
-              padding: "50px",
-            }}><strong>El carrito esta vacio.</strong></Typography>
+            <Typography
+              sx={{
+                padding: "50px",
+              }}
+            >
+              <strong>El carrito esta vacio.</strong>
+            </Typography>
           )}
         </Drawer>
 
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
           <List>
             {[
-              { group: "TIPO", options: ['Medicamento', 'Juguete', 'Alimento', 'Accesorio'] },
+              {
+                group: "TIPO",
+                options: ["Medicamento", "Juguete", "Alimento", "Accesorio"],
+              },
             ].map(({ group, options }) => (
               <div key={group}>
                 <ListItem>
@@ -396,7 +516,10 @@ const Products = () => {
               </div>
             ))}
             <ListItem>
-              <YellowButtonNoBorderRadiusEmpty onClick={handleClearFilters} variant="outlined">
+              <YellowButtonNoBorderRadiusEmpty
+                onClick={handleClearFilters}
+                variant="outlined"
+              >
                 Limpiar Filtros
               </YellowButtonNoBorderRadiusEmpty>
             </ListItem>
