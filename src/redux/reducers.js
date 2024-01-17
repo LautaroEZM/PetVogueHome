@@ -17,6 +17,7 @@ import {
   USER_LOGOUT,
   ORDERS_BY_USER_ID,
   RESET_DETAIL_ORDERS,
+  UPDATE_USER,
 } from "./actions";
 
 const initialState = {
@@ -127,11 +128,11 @@ const rootReducer = (state = initialState, action) => {
         user: null,
       };
 
-    case ORDERS_BY_USER_ID:
-      return {
-        ...state,
-        ordersUser: action.payload,
-      };
+      case ORDERS_BY_USER_ID:
+        return {
+          ...state, 
+          ordersUser: action.payload,
+        }
 
     case RESET_DETAIL_ORDERS:
       return {
@@ -139,8 +140,21 @@ const rootReducer = (state = initialState, action) => {
         ordersUser: initialState.ordersUser,
       };
 
-    default:
-      return state;
+          case SET_USER:
+            return {
+              ...state,
+              user: action.payload,
+            };
+
+          case UPDATE_USER://en revision
+            return {
+             ...state,
+                user: action.payload,
+                
+              };
+
+           default:
+            return state;
   }
 };
 
