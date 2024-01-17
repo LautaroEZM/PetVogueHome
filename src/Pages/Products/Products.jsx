@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "./Products.module.css";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getProducts, getUser } from "../../redux/actions";
+import { getProducts, getUser, setLoading } from "../../redux/actions";
 import {
   Typography,
   CardHeader,
@@ -42,17 +42,20 @@ const Products = () => {
   const user = useSelector((state) => state.user);
   const [sortPrice, setSortPrice] = useState("none");
   const [searchText, setSearchText] = useState("");
+  const loading = useSelector((state) => state.loading);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState([]);
+  const [itemsOutOfStock, setItemsOutOfStock] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
+  const [filtersActive, setFiltersActive] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const [preferenceId, setPreferenceId] = useState(null);
-  const userID = useSelector((state) => state.users[0].user.userID);
 
   useEffect(() => {
+    dispatch(setLoading(true));
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
 
     // Actualizar el estado de isSubmitDisabled en función de la autenticación del usuario
@@ -65,6 +68,13 @@ const Products = () => {
         {}
       )
     : {};
+  useEffect(() => {
+    validateStock();
+  }, [user]);
+
+  useEffect(() => {
+    dispatch(getProducts(searchText, selectedTypes, sortPrice));
+  }, []);
 
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
@@ -74,14 +84,46 @@ const Products = () => {
   );
   const totalPages = Math.ceil(productsData.length / itemsPerPage);
 
+  const validateStock = () => {
+    user?.cart2?.forEach((item) => {
+      const product = productsMap[item.productID];
+      if (
+        item.quantity > product.stock &&
+        !itemsOutOfStock.includes(item.productID)
+      ) {
+        setItemsOutOfStock([...itemsOutOfStock, item.productID]);
+      } else if (
+        item.quantity <= product.stock &&
+        itemsOutOfStock.includes(item.productID)
+      ) {
+        setItemsOutOfStock(
+          itemsOutOfStock.filter(
+            (itemOutOfStock) => itemOutOfStock !== item.productID
+          )
+        );
+      }
+    });
+  };
+
+  const isDisabled = (product) => {
+    const cartItem = user?.cart2?.find(
+      (item) => item.productID === product.productID
+    );
+    if (loading || cartItem?.quantity + 1 > product.stock) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const handleAddItem = async (product) => {
     try {
+      dispatch(setLoading(true));
       await axios.put("https://petvogue.onrender.com/users/addcart", {
         userID: user?.userID,
         productID: product?.productID,
         qty: 1,
       });
-
       dispatch(getUser(user?.userID));
     } catch (error) {
       console.error("Error al agregar el producto al carrito", error);
@@ -90,12 +132,12 @@ const Products = () => {
 
   const handleRemoveItem = async (product, quantity = 1) => {
     try {
+      dispatch(setLoading(true));
       await axios.put("https://petvogue.onrender.com/users/removecart", {
         userID: user?.userID,
         productID: product?.productID,
         qty: quantity,
       });
-
       dispatch(getUser(user?.userID));
     } catch (error) {
       console.error("Error al agregar el producto al carrito", error);
@@ -108,16 +150,15 @@ const Products = () => {
 
   const handleClearCart = async () => {
     try {
+      dispatch(setLoading(true));
       await axios.put("https://petvogue.onrender.com/users/emptycart", {
         userID: user?.userID,
       });
-
       dispatch(getUser(user?.userID));
     } catch (error) {
-      console.error("Error al limpiar el carrito", error);
+      console.error("Error al enviar el producto ", error);
     }
   };
-
   const createPreference = async () => {
     try {
       const response = await axios.post(
@@ -134,6 +175,8 @@ const Products = () => {
   };
 
   const handleBuy = async (products) => {
+    dispatch(setLoading(true));
+    dispatch(getUser(user?.userID));
     const id = await createPreference(products);
     if (id) {
       setPreferenceId(id);
@@ -153,6 +196,7 @@ const Products = () => {
 
   const applyFilters = async () => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
+    setFiltersActive(selectedTypes.length > 0 || sortPrice !== "none");
   };
 
   const handleTypeCheckboxChange = (type) => {
@@ -187,6 +231,15 @@ const Products = () => {
     }, 0);
     return total ? total.toFixed(2) : 0;
   };
+
+  const handleClearFilters = () => {
+    setSelectedTypes([]);
+    setSortPrice("none");
+    setFiltersActive(false);
+    applyFilters();
+  };
+
+  console.log({ itemsOutOfStock, loading });
 
   return (
     <div className={styles.productCardsContainer}>
@@ -223,6 +276,19 @@ const Products = () => {
           </YellowButtonSmall>
         </Box>
       </Box>
+      <Container
+        sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
+      >
+        {totalPages > 1 && (
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(e, page) => setCurrentPage(page)}
+            variant="outlined"
+            primary
+          />
+        )}
+      </Container>
       <Box className={styles.productCardsContainer}>
         {currentProducts?.length &&
           currentProducts.map((product) => (
@@ -254,7 +320,10 @@ const Products = () => {
                 <strong>Precio: </strong>${product.price}
               </Typography>
               {user ? (
-                <YellowButtonCart onClick={() => handleAddItem(product)}>
+                <YellowButtonCart
+                  onClick={() => handleAddItem(product)}
+                  disabled={isDisabled(product)}
+                >
                   <AddShoppingCartIcon style={{ marginRight: "5px" }} />
                 </YellowButtonCart>
               ) : (
@@ -278,7 +347,6 @@ const Products = () => {
               variant="outlined"
               primary
             />
-            //posible error el primary que esta agregado al final
           )}
         </Container>
 
@@ -298,18 +366,20 @@ const Products = () => {
               </Badge>
             </IconButton>
           ) : (
-            <div><IconButton
-            edge="end"
-            color="inherit"
-            aria-label="carrito"
-            onClick={toggleCart}
-            className={styles.cartButton}
-            disabled
-          >
-            <Badge badgeContent={user?.cart2?.length} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton></div>
+            <div>
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="carrito"
+                onClick={toggleCart}
+                className={styles.cartButton}
+                disabled
+              >
+                <Badge badgeContent={user?.cart2?.length} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </div>
           )}
         </div>
 
@@ -340,9 +410,16 @@ const Products = () => {
                             <strong>Precio: </strong>$
                             {productsMap[cartItem.productID].price}
                           </Typography>
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Typography variant="body2">
+                            <strong>Stock disponible: </strong>
+                            {productsMap[cartItem.productID].stock}
+                          </Typography>
+                          <Container
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
                             <IconButton
                               onClick={() => updateQuantity(cartItem, "remove")}
+                              disabled={loading || cartItem.quantity === 1}
                             >
                               <RemoveIcon />
                             </IconButton>
@@ -351,16 +428,26 @@ const Products = () => {
                             </Typography>
                             <IconButton
                               onClick={() => updateQuantity(cartItem, "add")}
+                              disabled={
+                                loading ||
+                                cartItem.quantity ===
+                                  productsMap[cartItem.productID].stock
+                              }
                             >
                               <AddIcon />
                             </IconButton>
-                          </Box>
+                          </Container>
                           <YellowButtonSmall
                             sx={{ margin: "5px" }}
                             onClick={() => removeFromCart(cartItem)}
                           >
                             Eliminar
                           </YellowButtonSmall>
+                          {itemsOutOfStock.includes(cartItem.productID) && (
+                            <Typography sx={{ color: "red" }}>
+                              Item sin stock.
+                            </Typography>
+                          )}
                         </div>
                       </ListItem>
                     )
@@ -379,6 +466,7 @@ const Products = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleBuy(productsMap)}
+                  disabled={itemsOutOfStock.length}
                 >
                   Realizar Compra
                 </YellowButtonNoBorderRadius>
@@ -394,7 +482,11 @@ const Products = () => {
               </ListItem>
             </List>
           ) : (
-            <Typography>
+            <Typography
+              sx={{
+                padding: "50px",
+              }}
+            >
               <strong>El carrito esta vacio.</strong>
             </Typography>
           )}
@@ -402,24 +494,35 @@ const Products = () => {
 
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
           <List>
-            {[{ group: "TIPO", options: ["Medicamento", "Juguete"] }].map(
-              ({ group, options }) => (
-                <div key={group}>
-                  <ListItem>
-                    <ListItemText primary={group} />
+            {[
+              {
+                group: "TIPO",
+                options: ["Medicamento", "Juguete", "Alimento", "Accesorio"],
+              },
+            ].map(({ group, options }) => (
+              <div key={group}>
+                <ListItem>
+                  <ListItemText primary={group} />
+                </ListItem>
+                {options.map((option, index) => (
+                  <ListItem key={index}>
+                    <Checkbox
+                      checked={selectedTypes.includes(option)}
+                      onChange={() => handleTypeCheckboxChange(option)}
+                    />
+                    <ListItemText primary={option} />
                   </ListItem>
-                  {options.map((option, index) => (
-                    <ListItem key={index}>
-                      <Checkbox
-                        checked={selectedTypes.includes(option)}
-                        onChange={() => handleTypeCheckboxChange(option)}
-                      />
-                      <ListItemText primary={option} />
-                    </ListItem>
-                  ))}
-                </div>
-              )
-            )}
+                ))}
+              </div>
+            ))}
+            <ListItem>
+              <YellowButtonNoBorderRadiusEmpty
+                onClick={handleClearFilters}
+                variant="outlined"
+              >
+                Limpiar Filtros
+              </YellowButtonNoBorderRadiusEmpty>
+            </ListItem>
           </List>
         </Drawer>
       </Box>

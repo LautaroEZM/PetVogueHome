@@ -11,18 +11,22 @@ export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
 export const RESET_DETAIL_PET = "RESET_DETAIL_PET";
-
 export const USER_LOGOUT = "USER_LOGOUT";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
 export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
 export const ORDERS_BY_USER_ID = "ORDERS_BY_USER_ID";
 export const RESET_DETAIL_ORDERS = "RESET_DETAIL_ORDERS";
+export const SET_LOADING = "SET_LOADING";
 export const UPDATE_USER = "UPDATE_USER";
 export const SET_USER = "SET_USER";
 
 const URL = "https://petvogue.onrender.com";
 // const URL = "http://localhost:3001";
+
+export const setLoading = (isLoading) => {
+  return { type: SET_LOADING, payload: isLoading };
+};
 
 export const fetchServicesRequest = () => ({
   type: FETCH_SERVICES_REQUEST,
