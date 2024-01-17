@@ -47,6 +47,7 @@ const Products = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
+  const [filtersActive, setFiltersActive] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const [preferenceId, setPreferenceId] = useState(null);
@@ -76,12 +77,11 @@ const Products = () => {
 
   const handleAddItem = async (product) => {
     try {
-      await axios.put("https://petvogue.onrender.com/users/addcart", {
+      await axios.put('https://petvogue.onrender.com/users/addcart', {
         userID: user?.userID,
         productID: product?.productID,
         qty: 1,
       });
-
       dispatch(getUser(user?.userID));
     } catch (error) {
       console.error("Error al agregar el producto al carrito", error);
@@ -95,7 +95,6 @@ const Products = () => {
         productID: product?.productID,
         qty: quantity,
       });
-
       dispatch(getUser(user?.userID));
     } catch (error) {
       console.error("Error al agregar el producto al carrito", error);
@@ -111,27 +110,25 @@ const Products = () => {
       await axios.put("https://petvogue.onrender.com/users/emptycart", {
         userID: user?.userID,
       });
-
       dispatch(getUser(user?.userID));
-    } catch (error) {
-      console.error("Error al limpiar el carrito", error);
-    }
-  };
-
-  const createPreference = async () => {
-    try {
-      const response = await axios.post(
-        "https://petvogue.onrender.com/mercadopago/redir",
-        {
-          userID: user?.userID,
-          items: user.cart2,
-        }
-      );
-      return response.data;
     } catch (error) {
       console.error("Error al enviar el producto ", error);
     }
   };
+    const createPreference = async () => {
+        try {
+            const response = await axios.post(
+                "https://petvogue.onrender.com/mercadopago/redir",
+                {
+                    userID: user?.userID,
+                    items: user.cart2,
+                }
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error al enviar el producto ", error);
+        }
+    };
 
   const handleBuy = async (products) => {
     const id = await createPreference(products);
@@ -153,6 +150,7 @@ const Products = () => {
 
   const applyFilters = async () => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
+    setFiltersActive(selectedTypes.length > 0 || sortPrice !== 'none');
   };
 
   const handleTypeCheckboxChange = (type) => {
@@ -186,6 +184,13 @@ const Products = () => {
       return acc + (product ? product.price * (item.quantity || 1) : 0);
     }, 0);
     return total ? total.toFixed(2) : 0;
+  };
+
+  const handleClearFilters = () => {
+    setSelectedTypes([]);
+    setSortPrice('none');
+    setFiltersActive(false);
+    applyFilters();
   };
 
   return (
@@ -223,6 +228,11 @@ const Products = () => {
           </YellowButtonSmall>
         </Box>
       </Box>
+      <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+        {totalPages > 1 && (
+          <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} variant="outlined" primary />
+        )}
+      </Container>
       <Box className={styles.productCardsContainer}>
         {currentProducts?.length &&
           currentProducts.map((product) => (
@@ -271,35 +281,22 @@ const Products = () => {
           sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
         >
           {totalPages > 1 && (
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={(e, page) => setCurrentPage(page)}
-              variant="outlined"
-              primary
-            />
-            //posible error el primary que esta agregado al final
+            <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} variant="outlined" primary />
           )}
         </Container>
 
-        <div
-          className={`${styles.cartButtonContainer} ${styles.fixedCartButton}`}
-        >
-          {user ? (
-            <IconButton
-              edge="end"
-              color="inherit"
-              aria-label="carrito"
-              onClick={toggleCart}
-              className={styles.cartButton}
-            >
-              <Badge badgeContent={user?.cart2?.length} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-          ) : (
-            <div></div>
-          )}
+        <div className={`${styles.cartButtonContainer} ${styles.fixedCartButton}`}>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="carrito"
+            onClick={toggleCart}
+            className={styles.cartButton}
+          >
+            <Badge badgeContent={user?.cart2?.length} color="error">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
         </div>
 
         <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
@@ -391,24 +388,29 @@ const Products = () => {
 
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
           <List>
-            {[{ group: "TIPO", options: ["Medicamento", "Juguete"] }].map(
-              ({ group, options }) => (
-                <div key={group}>
-                  <ListItem>
-                    <ListItemText primary={group} />
+            {[
+              { group: "TIPO", options: ['Medicamento', 'Juguete', 'Alimento', 'Accesorio'] },
+            ].map(({ group, options }) => (
+              <div key={group}>
+                <ListItem>
+                  <ListItemText primary={group} />
+                </ListItem>
+                {options.map((option, index) => (
+                  <ListItem key={index}>
+                    <Checkbox
+                      checked={selectedTypes.includes(option)}
+                      onChange={() => handleTypeCheckboxChange(option)}
+                    />
+                    <ListItemText primary={option} />
                   </ListItem>
-                  {options.map((option, index) => (
-                    <ListItem key={index}>
-                      <Checkbox
-                        checked={selectedTypes.includes(option)}
-                        onChange={() => handleTypeCheckboxChange(option)}
-                      />
-                      <ListItemText primary={option} />
-                    </ListItem>
-                  ))}
-                </div>
-              )
-            )}
+                ))}
+              </div>
+            ))}
+            <ListItem>
+              <YellowButtonNoBorderRadiusEmpty onClick={handleClearFilters} variant="outlined">
+                Limpiar Filtros
+              </YellowButtonNoBorderRadiusEmpty>
+            </ListItem>
           </List>
         </Drawer>
       </Box>
