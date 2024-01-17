@@ -119,12 +119,12 @@ const Products = () => {
   };
 
   const calculateTotal = () => {
-    const total = loggedUser.cart.reduce((total, itemID) => {
-      const product = productsMap[itemID]
-      console.log('asdasdasd', product);
-      return total + product.price * product.quantity
-    }, 0);
-    return total.toFixed(2);
+    // const total = loggedUser.cart.reduce((total, itemID) => {
+    //   const product = productsMap[itemID]
+    //   console.log('asdasdasd', product);
+    //   return total + product.price * product.quantity
+    // }, 0);
+    // return total.toFixed(2);
   };
 
   return (
@@ -210,7 +210,7 @@ const Products = () => {
                   <TextField
                     type="number"
                     label="Cantidad"
-                    value={productsMap[cartItemID].quantity}
+                    value={productsMap[cartItemID].quantity || 1}
                     sx={{ margin: '10px' }}
                     inputProps={{ min: 1, max: productsMap[cartItemID].stock }}
                     onChange={(e) => updateQuantity(productsMap[cartItemID].productID, parseInt(e.target.value, 10))}
