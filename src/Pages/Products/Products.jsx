@@ -72,7 +72,11 @@ const Products = () => {
   useEffect(() => {
     validateStock();
   }, [user]);
-  
+
+  useEffect(() => {
+    dispatch(getProducts(searchText, selectedTypes, sortPrice));
+  }, []);
+
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
   const currentProducts = productsData.slice(
@@ -83,7 +87,6 @@ const Products = () => {
 
 
   const validateStock = () => {
-    console.log('validando');
     user?.cart2?.forEach(item => {
       const product = productsMap[item.productID];
       if (item.quantity > product.stock && !itemsOutOfStock.includes(item.productID)) {
@@ -92,6 +95,15 @@ const Products = () => {
         setItemsOutOfStock(itemsOutOfStock.filter(itemOutOfStock => itemOutOfStock !== item.productID));
       }
     })
+  }
+
+  const isDisabled = (product) => {
+    const cartItem = user?.cart2?.find(item => item.productID === product.productID);
+    if (loading || cartItem?.quantity + 1 > product.stock) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   const handleAddItem = async (product) => {
@@ -152,14 +164,9 @@ const Products = () => {
         }
     };
 
-  const handleCheckout = () => {
-    console.log(1)
-    dispatch(setLoading(true));
-    dispatch(getUser(user?.userID));
-    console.log(3);
-  };
-
     const handleBuy = async (products) => {
+        dispatch(setLoading(true));
+        dispatch(getUser(user?.userID));
         const id = await createPreference(products);
         if (id) {
             setPreferenceId(id);
@@ -222,6 +229,8 @@ const Products = () => {
     applyFilters();
   };
 
+  console.log({ itemsOutOfStock, loading })
+
   return (
     <div className={styles.productCardsContainer}>
       <Box
@@ -263,52 +272,28 @@ const Products = () => {
         )}
       </Container>
       <Box className={styles.productCardsContainer}>
-        {currentProducts?.length &&
-          currentProducts.map((product) => (
-            <div
-              key={product.productID}
-              className={`${styles.productCard} ${styles.stickyButtonContainer}`}
-            >
-              <CardHeader
-                title={product.name}
-                sx={{
-                  background: "#ffbb00",
-                  borderRadius: "50px",
-                  minHeight: "70px",
-                }}
-              />
-              <div>
-                <Link
-                  key={product.productID}
-                  to={`/detallesProductos/${product.productID}`}
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className={styles.CardImg}
-                  />
-                </Link>
-              </div>
-              <Typography>
-                <strong>Precio: </strong>${product.price}
-              </Typography>
-              {user ? (
-                <YellowButtonCart onClick={() => handleAddItem(product)}>
-                  <AddShoppingCartIcon style={{ marginRight: "5px" }} />
-                </YellowButtonCart>
-              ) : (
-                <YellowButtonCart
-                  onClick={() => handleAddItem(product)}
-                  disabled
-                >
-                  <AddShoppingCartIcon style={{ marginRight: "5px" }} />
-                </YellowButtonCart>
-              )}
+        {currentProducts?.length && currentProducts.map((product) => (
+          <div key={product.productID} className={`${styles.productCard} ${styles.stickyButtonContainer}`}>
+            <CardHeader title={product.name} sx={{
+              background: '#ffbb00',
+              borderRadius: '50px',
+              minHeight: '70px'
+            }} />
+            <div>
+              <Link key={product.productID} to={`/detallesProductos/${product.productID}`}>
+                <img src={product.image} alt={product.name} className={styles.CardImg} />
+              </Link>
             </div>
-          ))}
-        <Container
-          sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
-        >
+            <Typography>
+              <strong>Precio: </strong>${product.price}
+            </Typography>
+
+            <YellowButtonCart onClick={() => handleAddItem(product)} disabled={isDisabled(product)}>
+              <AddShoppingCartIcon style={{ marginRight: '5px' }} />
+            </YellowButtonCart>
+          </div>
+        ))}
+        <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
           {totalPages > 1 && (
             <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} variant="outlined" primary />
           )}
@@ -340,11 +325,11 @@ const Products = () => {
                     <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItem.productID].price}</Typography>
                     <Typography variant="body2"><strong>Stock disponible: </strong>{productsMap[cartItem.productID].stock}</Typography>
                     <Container sx={{ display: 'flex', alignItems: 'center' }}>
-                      <IconButton onClick={() => updateQuantity(cartItem, 'remove')} disabled={ cartItem.quantity === 1}>
+                      <IconButton onClick={() => updateQuantity(cartItem, 'remove')} disabled={loading || cartItem.quantity === 1}>
                         <RemoveIcon />
                       </IconButton>
                       <Typography variant="body2">{cartItem.quantity}</Typography>
-                      <IconButton onClick={() => updateQuantity(cartItem, 'add')} disabled={cartItem.quantity === productsMap[cartItem.productID].stock}>
+                      <IconButton onClick={() => updateQuantity(cartItem, 'add')} disabled={loading || cartItem.quantity === productsMap[cartItem.productID].stock}>
                         <AddIcon />
                       </IconButton>
                     </Container>
@@ -369,6 +354,7 @@ const Products = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleBuy(productsMap)}
+                  disabled={itemsOutOfStock.length}
                 >
                   Realizar Compra
                 </YellowButtonNoBorderRadius>

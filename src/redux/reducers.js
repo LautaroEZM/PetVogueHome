@@ -106,12 +106,14 @@ const rootReducer = (state = initialState, action) => {
     case GET_PRODUCTS:
       return {
         ...state,
+        loading: false,
         products: action.payload,
       };
 
     case GET_PRODUCT_DETAIL:
       return {
         ...state,
+        loading: false,
         productDetail: action.payload,
       };
 
@@ -124,8 +126,8 @@ const rootReducer = (state = initialState, action) => {
     case SET_USER:
       return {
         ...state,
-        user: action.payload,
         loading: false,
+        user: action.payload,
       };
 
     case USER_LOGOUT:
