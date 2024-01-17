@@ -16,6 +16,7 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
 export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
+export const GET_USER = "GET_USER";
 
 export const ORDERS_BY_USER_ID = "ORDERS_BY_USER_ID";
 export const RESET_DETAIL_ORDERS = "RESET_DETAIL_ORDERS";
@@ -213,6 +214,25 @@ export const createUser = (userData) => {
       });
     } catch (error) {
       console.error(`Error creating user: ${error}`);
+    }
+  };
+};
+
+export const getUser = (userID) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/users/get`,{
+        filters:{
+          userID_filter: userID,
+        }
+      });
+      console.log(response.data, "action");
+      return dispatch({
+        type: GET_USER,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(`Error getting user: ${error}`);
     }
   };
 };

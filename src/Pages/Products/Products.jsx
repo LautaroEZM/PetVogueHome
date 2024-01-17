@@ -3,7 +3,7 @@ import axios from 'axios';
 import styles from './Products.module.css';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getProducts } from '../../redux/actions';
+import { getProducts, getUser } from '../../redux/actions';
 import {
   Typography,
   CardHeader,
@@ -12,7 +12,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Button,
   Badge,
   Box,
   Container,
@@ -34,21 +33,24 @@ import {
 const Products = () => {
   const dispatch = useDispatch();
   const productsData = useSelector((state) => state.products);
-  const loggedUser = useSelector((state) => state.users);
-  console.log(loggedUser)
-
+  const loggedUser = useSelector((state) => state.users[0].user);
   const [sortPrice, setSortPrice] = useState('none');
   const [searchText, setSearchText] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
-    
+
   }, [dispatch, searchText, selectedTypes, sortPrice]);
 
+  useEffect(() => {
+
+  }, [productsData]);
+
+  const productsMap = productsData.reduce((a, product) => ({ ...a, [product.productID]: product }), {})
+  console.log('productsMap', productsMap);
 
   const handleProductClick = async (product) => {
     try {
@@ -57,13 +59,15 @@ const Products = () => {
         productID: product.productID,
         quantity: 1,
       });
+      dispatch(getUser(loggedUser.userID))
 
-      
     } catch (error) {
       console.error('Error al agregar el producto al carrito', error);
     }
   };
-  
+
+
+
   const toggleCart = () => {
     setCartOpen(!cartOpen);
   };
@@ -102,32 +106,25 @@ const Products = () => {
     setSelectedTypes(newSelectedTypes);
   };
 
-  const addToCart = (product, quantity) => {
-    const existingItemIndex = cartItems.findIndex((item) => item.product.productID === product.productID);
-
-    if (existingItemIndex !== -1) {
-      const updatedCart = [...cartItems];
-      updatedCart[existingItemIndex].quantity += quantity;
-      setCartItems(updatedCart);
-    } else {
-      setCartItems((prevCart) => [...prevCart, { product, quantity }]);
-    }
-  };
-
   const removeFromCart = (productId) => {
-    const updatedCart = cartItems.filter((item) => item.product.productID !== productId);
-    setCartItems(updatedCart);
+    //   const updatedCart = cartItems.filter((item) => item.product.productID !== productId);
+    //   setCartItems(updatedCart);
   };
 
   const updateQuantity = (productId, newQuantity) => {
-    const updatedCart = cartItems.map((item) =>
-      item.product.productID === productId ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedCart);
+    //   const updatedCart = cartItems.map((item) =>
+    //     item.product.productID === productId ? { ...item, quantity: newQuantity } : item
+    //   );
+    //   setCartItems(updatedCart);
   };
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
+    // const total = loggedUser.cart.reduce((total, itemID) => {
+    //   const product = productsMap[itemID]
+    //   console.log('asdasdasd', product);
+    //   return total + product.price * product.quantity
+    // }, 0);
+    // return total.toFixed(2);
   };
 
   return (
@@ -195,7 +192,7 @@ const Products = () => {
             onClick={toggleCart}
             className={styles.cartButton}
           >
-            <Badge badgeContent={cartItems.length} color="error">
+            <Badge badgeContent={loggedUser.cart.length} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
@@ -203,29 +200,29 @@ const Products = () => {
 
         <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
           <List>
-            {cartItems.map((cartItem) => (
-              <ListItem key={cartItem.product.productID}>
-                <img src={cartItem.product.image} alt={cartItem.product.name} style={{ marginRight: '10px', maxWidth: '50px' }} />
+            {loggedUser?.cart?.length && loggedUser.cart.map((cartItemID) => (
+              productsMap[cartItemID] && <ListItem key={cartItemID}>
+                <img src={productsMap[cartItemID].image} alt={productsMap[cartItemID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
                 <div>
-                  <Typography variant="subtitle1"><strong>{cartItem.product.name}</strong></Typography>
-                  <Typography variant="body2"><strong>Tipo:</strong> {cartItem.product.type}</Typography>
-                  <Typography variant="body2"><strong>Precio: </strong>${cartItem.product.price}</Typography>
+                  <Typography variant="subtitle1"><strong>{productsMap[cartItemID].name}</strong></Typography>
+                  <Typography variant="body2"><strong>Tipo:</strong> {productsMap[cartItemID].type}</Typography>
+                  <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItemID].price}</Typography>
                   <TextField
                     type="number"
                     label="Cantidad"
-                    value={cartItem.quantity}
+                    value={productsMap[cartItemID].quantity || 1}
                     sx={{ margin: '10px' }}
-                    inputProps={{ min: 1, max: cartItem.product.stock }}
-                    onChange={(e) => updateQuantity(cartItem.product.productID, parseInt(e.target.value, 10))}
+                    inputProps={{ min: 1, max: productsMap[cartItemID].stock }}
+                    onChange={(e) => updateQuantity(productsMap[cartItemID].productID, parseInt(e.target.value, 10))}
                   />
-                  <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(cartItem.product.productID)}>
+                  <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(productsMap[cartItemID].productID)}>
                     Eliminar
                   </YellowButtonSmall>
                 </div>
               </ListItem>
             ))}
             <ListItem>
-              <ListItemText primary={`Total: $${calculateTotal().toFixed(2)}`} />
+              <ListItemText primary={`Total: $${calculateTotal()}`} />
             </ListItem>
             <ListItem>
               <YellowButtonNoBorderRadiusEmpty variant="outlined" onClick={handleClearCart}>
