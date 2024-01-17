@@ -33,6 +33,9 @@ import {
   YellowButtonNoBorderRadiusEmpty
 } from '../../styledComponents';
 
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+initMercadoPago('TEST-89a38254-b75b-4862-a892-a12f6f2b67fc');
+
 const Products = () => {
   const dispatch = useDispatch();
   const productsData = useSelector((state) => state.products);
@@ -45,6 +48,12 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
 
+  const [preferenceId, setPreferenceId] = useState(null)
+  const userID = useSelector((state) => state.users[0].user.userID);
+  
+ 
+
+  
   useEffect(() => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
   }, [dispatch, searchText, selectedTypes, sortPrice]);
@@ -103,8 +112,26 @@ const Products = () => {
     }
   };
 
-  const handleCheckout = () => {
-    // Lógica para realizar la compra
+  const createPreference = async () => {
+    try {
+      const response = await axios.post('https://petvogue.onrender.com/mercadopago/redir', {
+        userID: user?.userID,
+        items: user.cart2
+      });
+      return response.data; 
+    } catch (error) {
+      console.error('Error al enviar el producto ', error);
+    }
+    
+  };
+  
+
+  const handleBuy = async (products) => {
+    const id = await createPreference(products);
+       if(id){
+    setPreferenceId(id);
+}
+
   };
 
   const toggleDrawer = () => {
@@ -213,6 +240,7 @@ const Products = () => {
         <Container sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
           {totalPages > 1 && (
           <Pagination count={totalPages} page={currentPage} onChange={(e, page) => setCurrentPage(page)} variant="outlined" primary />
+          //posible error el primary que esta agregado al final
         )}
         </Container>
 
@@ -264,9 +292,14 @@ const Products = () => {
                 <YellowButtonNoBorderRadiusEmpty variant="outlined" onClick={handleClearCart}>
                   Limpiar Carrito
                 </YellowButtonNoBorderRadiusEmpty>
-                <YellowButtonNoBorderRadius variant="contained" color="primary" onClick={handleCheckout}>
-                  Realizar Compra
+                <YellowButtonNoBorderRadius variant="contained" color="primary" onClick={() => handleBuy(productsMap)}>
+                    Realizar Compra
+                  </YellowButtonNoBorderRadius>
+                        {preferenceId && preferenceId !== 'undefined' && (
+                <YellowButtonNoBorderRadius variant="contained" color="primary" onClick={() => window.location.href = preferenceId}>
+                   MERCADOPAGO
                 </YellowButtonNoBorderRadius>
+)}
               </ListItem>
             </List>
           ) : (
