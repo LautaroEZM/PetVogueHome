@@ -17,6 +17,7 @@ import {
   USER_LOGOUT,
   ORDERS_BY_USER_ID,
   RESET_DETAIL_ORDERS,
+  SET_LOADING,
   UPDATE_USER,
 } from "./actions";
 
@@ -64,6 +65,12 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         detailServices: action.payload,
+      };
+
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
       };
 
     case RESET_DETAIL_SERVICE:
@@ -118,6 +125,7 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload,
+        loading: false,
       };
 
     case USER_LOGOUT:
@@ -130,7 +138,7 @@ const rootReducer = (state = initialState, action) => {
 
       case ORDERS_BY_USER_ID:
         return {
-          ...state, 
+          ...state,
           ordersUser: action.payload,
         }
 
@@ -150,7 +158,7 @@ const rootReducer = (state = initialState, action) => {
             return {
              ...state,
                 user: action.payload,
-                
+
               };
 
            default:

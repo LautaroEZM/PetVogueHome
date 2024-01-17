@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "./Products.module.css";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getProducts, getUser } from "../../redux/actions";
+import { getProducts, getUser, setLoading } from "../../redux/actions";
 import {
   Typography,
   CardHeader,
@@ -42,8 +42,10 @@ const Products = () => {
   const user = useSelector((state) => state.user);
   const [sortPrice, setSortPrice] = useState("none");
   const [searchText, setSearchText] = useState("");
+  const loading = useSelector((state) => state.loading);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState([]);
+  const [itemsOutOfStock, setItemsOutOfStock] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
@@ -54,6 +56,7 @@ const Products = () => {
   const userID = useSelector((state) => state.users[0].user.userID);
 
   useEffect(() => {
+    dispatch(setLoading(true));
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
 
     // Actualizar el estado de isSubmitDisabled en función de la autenticación del usuario
@@ -66,7 +69,10 @@ const Products = () => {
         {}
       )
     : {};
-
+  useEffect(() => {
+    validateStock();
+  }, [user]);
+  
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
   const currentProducts = productsData.slice(
@@ -75,8 +81,22 @@ const Products = () => {
   );
   const totalPages = Math.ceil(productsData.length / itemsPerPage);
 
+
+  const validateStock = () => {
+    console.log('validando');
+    user?.cart2?.forEach(item => {
+      const product = productsMap[item.productID];
+      if (item.quantity > product.stock && !itemsOutOfStock.includes(item.productID)) {
+        setItemsOutOfStock([...itemsOutOfStock, item.productID]);
+      } else if (item.quantity <= product.stock && itemsOutOfStock.includes(item.productID)) {
+        setItemsOutOfStock(itemsOutOfStock.filter(itemOutOfStock => itemOutOfStock !== item.productID));
+      }
+    })
+  }
+
   const handleAddItem = async (product) => {
     try {
+      dispatch(setLoading(true));
       await axios.put('https://petvogue.onrender.com/users/addcart', {
         userID: user?.userID,
         productID: product?.productID,
@@ -90,7 +110,8 @@ const Products = () => {
 
   const handleRemoveItem = async (product, quantity = 1) => {
     try {
-      await axios.put("https://petvogue.onrender.com/users/removecart", {
+      dispatch(setLoading(true));
+      await axios.put('https://petvogue.onrender.com/users/removecart', {
         userID: user?.userID,
         productID: product?.productID,
         qty: quantity,
@@ -107,7 +128,8 @@ const Products = () => {
 
   const handleClearCart = async () => {
     try {
-      await axios.put("https://petvogue.onrender.com/users/emptycart", {
+      dispatch(setLoading(true));
+      await axios.put('https://petvogue.onrender.com/users/emptycart', {
         userID: user?.userID,
       });
       dispatch(getUser(user?.userID));
@@ -130,12 +152,19 @@ const Products = () => {
         }
     };
 
-  const handleBuy = async (products) => {
-    const id = await createPreference(products);
-    if (id) {
-      setPreferenceId(id);
-    }
+  const handleCheckout = () => {
+    console.log(1)
+    dispatch(setLoading(true));
+    dispatch(getUser(user?.userID));
+    console.log(3);
   };
+
+    const handleBuy = async (products) => {
+        const id = await createPreference(products);
+        if (id) {
+            setPreferenceId(id);
+        }
+    };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -302,55 +331,30 @@ const Products = () => {
         <Drawer anchor="right" open={cartOpen} onClose={toggleCart}>
           {user?.cart2?.length ? (
             <List>
-              {user?.cart2?.length &&
-                user.cart2.map(
-                  (cartItem) =>
-                    productsMap[cartItem.productID] && (
-                      <ListItem key={cartItem.productID}>
-                        <img
-                          src={productsMap[cartItem.productID].image}
-                          alt={productsMap[cartItem.productID].name}
-                          style={{ marginRight: "10px", maxWidth: "50px" }}
-                        />
-                        <div>
-                          <Typography variant="subtitle1">
-                            <strong>
-                              {productsMap[cartItem.productID].name}
-                            </strong>
-                          </Typography>
-                          <Typography variant="body2">
-                            <strong>Tipo:</strong>{" "}
-                            {productsMap[cartItem.productID].type}
-                          </Typography>
-                          <Typography variant="body2">
-                            <strong>Precio: </strong>$
-                            {productsMap[cartItem.productID].price}
-                          </Typography>
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <IconButton
-                              onClick={() => updateQuantity(cartItem, "remove")}
-                            >
-                              <RemoveIcon />
-                            </IconButton>
-                            <Typography variant="body2">
-                              {cartItem.quantity}
-                            </Typography>
-                            <IconButton
-                              onClick={() => updateQuantity(cartItem, "add")}
-                            >
-                              <AddIcon />
-                            </IconButton>
-                          </Box>
-                          <YellowButtonSmall
-                            sx={{ margin: "5px" }}
-                            onClick={() => removeFromCart(cartItem)}
-                          >
-                            Eliminar
-                          </YellowButtonSmall>
-                        </div>
-                      </ListItem>
-                    )
-                )}
+              {user?.cart2?.length && user.cart2.map((cartItem) => (
+                productsMap[cartItem.productID] && <ListItem key={cartItem.productID}>
+                  <img src={productsMap[cartItem.productID].image} alt={productsMap[cartItem.productID].name} style={{ marginRight: '10px', maxWidth: '50px' }} />
+                  <div>
+                    <Typography variant="subtitle1"><strong>{productsMap[cartItem.productID].name}</strong></Typography>
+                    <Typography variant="body2"><strong>Tipo:</strong> {productsMap[cartItem.productID].type}</Typography>
+                    <Typography variant="body2"><strong>Precio: </strong>${productsMap[cartItem.productID].price}</Typography>
+                    <Typography variant="body2"><strong>Stock disponible: </strong>{productsMap[cartItem.productID].stock}</Typography>
+                    <Container sx={{ display: 'flex', alignItems: 'center' }}>
+                      <IconButton onClick={() => updateQuantity(cartItem, 'remove')} disabled={ cartItem.quantity === 1}>
+                        <RemoveIcon />
+                      </IconButton>
+                      <Typography variant="body2">{cartItem.quantity}</Typography>
+                      <IconButton onClick={() => updateQuantity(cartItem, 'add')} disabled={cartItem.quantity === productsMap[cartItem.productID].stock}>
+                        <AddIcon />
+                      </IconButton>
+                    </Container>
+                    <YellowButtonSmall sx={{ margin: "5px" }} onClick={() => removeFromCart(cartItem)}>
+                      Eliminar
+                    </YellowButtonSmall>
+                    {itemsOutOfStock.includes(cartItem.productID) && <Typography sx={{ color: "red" }}>Item sin stock.</Typography>}
+                  </div>
+                </ListItem>
+              ))}
               <ListItem>
                 <ListItemText primary={`Total: $${calculateTotal()}`} />
               </ListItem>
@@ -380,9 +384,9 @@ const Products = () => {
               </ListItem>
             </List>
           ) : (
-            <Typography>
-              <strong>El carrito esta vacio.</strong>
-            </Typography>
+            <Typography sx={{
+              padding: "50px",
+            }}><strong>El carrito esta vacio.</strong></Typography>
           )}
         </Drawer>
 
