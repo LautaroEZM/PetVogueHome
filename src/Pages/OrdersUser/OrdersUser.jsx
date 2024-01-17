@@ -8,7 +8,7 @@ import  styles from './OrdersUser.module.css';
 const OrdersUser = () => {
     const dispatch = useDispatch();
     const ordersUser = useSelector(state => state.ordersUser);
-    const userData = useSelector(state => state.users[0].user);
+    const userData = useSelector(state => state.user);
    
     useEffect(() => {
         if (userData) {

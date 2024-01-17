@@ -7,7 +7,7 @@ import { TextField, Button, Box,  } from '@mui/material';
 const EditUser = ({ closeDialog }) => {
  const dispatch = useDispatch();
 
- const currentUser = useSelector((state) => state.users[0]?.user);
+ const currentUser = useSelector((state) => state.user);
 //const users = useSelector((state)=> state.users[0].user)
 
  console.log(currentUser, "currentUser💚");
@@ -39,10 +39,10 @@ const EditUser = ({ closeDialog }) => {
     event.preventDefault();
     const userData = { firstName, lastName, phone, address, photo, dni };
     dispatch(updateUser(currentUser.userID, userData))
-    .then(() => {
+   // .then(() => {
       // Despacho la acción getUser para obtener el usuario actualizado
-      dispatch(getUser(currentUser.userID));
-    })
+    //  dispatch(getUser(currentUser.userID));
+   // })
     .catch((error) => {
       console.error('Failed to update user: ', error);
     });

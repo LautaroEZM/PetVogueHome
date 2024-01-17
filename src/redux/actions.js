@@ -11,12 +11,11 @@ export const POST_PET = "POST_PET";
 export const GET_ALL_PETS = "GET_ALL_PETS";
 export const GET_PET_DETAIL = "GET_PET_DETAIL";
 export const RESET_DETAIL_PET = "RESET_DETAIL_PET";
-export const POST_USER = "POST_USER";
+
 export const USER_LOGOUT = "USER_LOGOUT";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const GET_PRODUCT_DETAIL = "GET_PRODUCT_DETAIL";
 export const RESET_DETAIL_PRODUCT = "RESET_DETAIL_PRODUCT";
-
 export const ORDERS_BY_USER_ID = "ORDERS_BY_USER_ID";
 export const RESET_DETAIL_ORDERS = "RESET_DETAIL_ORDERS";
 export const UPDATE_USER = "UPDATE_USER";
@@ -127,17 +126,21 @@ export const getAllPets = () => {
 };
 
 //🎀Get All Products:
-export const getAllProducts = () => {
+export const getProducts = (productName, types, priceSort) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(`${URL}/products/get`, {
-        filters: {},
+        filters: {
+          name_filter: productName || undefined,
+          type_filter: types.length ? types : undefined,
+          price_order: priceSort !== 'none' ? priceSort : undefined,
+        },
         page: 1,
-        itemsPerPage: 50,
+        itemsPerPage: 100,
       });
       return dispatch({
         type: GET_PRODUCTS,
-        payload: response.data,
+        payload: response.data.rows,
       });
     } catch (error) {
       console.error(`Error getting all products👀: ${error}`);
@@ -203,11 +206,10 @@ export const resetDetailPet = () => {
 export const createUser = (userData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post(`${URL}/users/create`, userData);
-      console.log(response.data, "action");
+      const { data } = await axios.post(`${URL}/users/create`, userData);
       return dispatch({
-        type: POST_USER,
-        payload: response.data,
+        type: SET_USER,
+        payload: data?.user ?? null,
       });
     } catch (error) {
       console.error(`Error creating user: ${error}`);
@@ -215,13 +217,31 @@ export const createUser = (userData) => {
   };
 };
 
+export const getUser = (userID) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(`${URL}/users/get`,{
+        filters:{
+          userID_filter: userID,
+        }
+      });
+      return dispatch({
+        type: SET_USER,
+        payload: data?.rows?.length ? data.rows[0] : null,
+      });
+    } catch (error) {
+      console.error(`Error getting user: ${error}`);
+    }
+  };
+};
+
 export const loginUser = (userData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post(`${URL}/users/login`, userData);
+      const { data } = await axios.post(`${URL}/users/login`, userData);
       return dispatch({
-        type: POST_USER,
-        payload: response.data,
+        type: SET_USER,
+        payload: data?.user ?? null,
       });
     } catch (error) {
       return {
@@ -238,10 +258,10 @@ export const logoutUser = () => ({
 export const registerUser = (userData) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post(`${URL}/users/register`, userData);
+      const { data } = await axios.post(`${URL}/users/register`, userData);
       return dispatch({
-        type: POST_USER,
-        payload: response.data,
+        type: SET_USER,
+        payload: data?.user ?? null,
       });
     } catch (error) {
       return {
@@ -294,20 +314,3 @@ export const updateUser = (userID, userData) => {
   };
  };
 
- export const getUser = (userID) => {
-  return async (dispatch) => {
-    try {
-      const { data } = await axios.post(`${URL}/users/get`,{
-        filters:{
-          userID_filter: userID,
-        }
-      });
-      return dispatch({
-        type: SET_USER,
-        payload: data?.rows?.length ? data.rows[0] : null,
-      });
-    } catch (error) {
-      console.error(`Error getting user: ${error}`);
-    }
-  };
-};
