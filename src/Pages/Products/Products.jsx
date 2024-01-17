@@ -53,7 +53,6 @@ const Products = () => {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const [preferenceId, setPreferenceId] = useState(null);
-  const userID = useSelector((state) => state.users[0].user.userID);
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -65,9 +64,9 @@ const Products = () => {
 
   const productsMap = productsData.length
     ? productsData.reduce(
-        (a, product) => ({ ...a, [product.productID]: product }),
-        {}
-      )
+      (a, product) => ({ ...a, [product.productID]: product }),
+      {}
+    )
     : {};
   useEffect(() => {
     validateStock();
@@ -149,29 +148,29 @@ const Products = () => {
       console.error("Error al enviar el producto ", error);
     }
   };
-    const createPreference = async () => {
-        try {
-            const response = await axios.post(
-                "https://petvogue.onrender.com/mercadopago/redir",
-                {
-                    userID: user?.userID,
-                    items: user.cart2,
-                }
-            );
-            return response.data;
-        } catch (error) {
-            console.error("Error al enviar el producto ", error);
+  const createPreference = async () => {
+    try {
+      const response = await axios.post(
+        "https://petvogue.onrender.com/mercadopago/redir",
+        {
+          userID: user?.userID,
+          items: user.cart2,
         }
-    };
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error al enviar el producto ", error);
+    }
+  };
 
-    const handleBuy = async (products) => {
-        dispatch(setLoading(true));
-        dispatch(getUser(user?.userID));
-        const id = await createPreference(products);
-        if (id) {
-            setPreferenceId(id);
-        }
-    };
+  const handleBuy = async (products) => {
+    dispatch(setLoading(true));
+    dispatch(getUser(user?.userID));
+    const id = await createPreference(products);
+    if (id) {
+      setPreferenceId(id);
+    }
+  };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
