@@ -298,7 +298,18 @@ const Products = () => {
               </Badge>
             </IconButton>
           ) : (
-            <div></div>
+            <div><IconButton
+            edge="end"
+            color="inherit"
+            aria-label="carrito"
+            onClick={toggleCart}
+            className={styles.cartButton}
+            disabled
+          >
+            <Badge badgeContent={user?.cart2?.length} color="error">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton></div>
           )}
         </div>
 
