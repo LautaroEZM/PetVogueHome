@@ -68,14 +68,17 @@ const Products = () => {
     )
     : {};
   useEffect(() => {
-    
+
     validateStock();
   }, [user]);
 
   useEffect(() => {
-    
+    if (user) {
+      dispatch(getUser(user.userID));
+    }
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
   }, []);
+
   
 
   const indexOfLastProduct = currentPage * itemsPerPage;
@@ -94,7 +97,7 @@ const Products = () => {
   const validateStock = () => {
     user?.cart2?.forEach((item) => {
       const product = productsMap[item.productID];
-  
+
       if (product) {
         if (
           item.quantity > product.stock &&
@@ -187,9 +190,26 @@ const Products = () => {
   const handleBuy = async (products) => {
     dispatch(setLoading(true));
     dispatch(getUser(user?.userID));
-    const id = await createPreference(products);
-    if (id) {
-      setPreferenceId(id);
+
+    try {
+      const response = await axios.post(
+        "https://petvogue.onrender.com/mercadopago/redir",
+        {
+          userID: user?.userID,
+          items: user.cart2,
+        }
+      );
+
+      const id = response.data;
+
+      if (id) {
+        setPreferenceId(id);
+
+        // Redirigir a MercadoPago
+        window.location.href = id;
+      }
+    } catch (error) {
+      console.error("Error al enviar el producto ", error);
     }
   };
 
@@ -248,8 +268,6 @@ const Products = () => {
     setFiltersActive(false);
     applyFilters();
   };
-
-  console.log({ itemsOutOfStock, loading });
 
   return (
     <div className={styles.productCardsContainer}>
@@ -379,11 +397,11 @@ const Products = () => {
                 </YellowButtonCart>
               )}
             </div>
-             ))
-             ) : (
-               <Typography variant="body2">No hay elementos disponibles.</Typography>
-             )}
-          
+          ))
+        ) : (
+          <Typography variant="body2">No hay elementos disponibles.</Typography>
+        )}
+
         <Container
           sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
         >
@@ -518,15 +536,6 @@ const Products = () => {
                 >
                   Realizar Compra
                 </YellowButtonNoBorderRadius>
-                {preferenceId && preferenceId !== "undefined" && (
-                  <YellowButtonNoBorderRadius
-                    variant="contained"
-                    color="primary"
-                    onClick={() => (window.location.href = preferenceId)}
-                  >
-                    MERCADOPAGO
-                  </YellowButtonNoBorderRadius>
-                )}
               </ListItem>
             </List>
           ) : (

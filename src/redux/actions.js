@@ -144,6 +144,7 @@ export const getProducts = (productName, types, priceSort) => {
           name_filter: productName || undefined,
           type_filter: types.length ? types : undefined,
           price_order: priceSort !== 'none' ? priceSort : undefined,
+          status_filter: 'enabled',
         },
         page: 1,
         itemsPerPage: 100,
