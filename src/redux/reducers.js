@@ -19,6 +19,11 @@ import {
   RESET_DETAIL_ORDERS,
   SET_LOADING,
   UPDATE_USER,
+  GET_ORDER_DETAIL,
+  RESET_ORDERS,
+  POST_REVIEWS,
+  REVIEWS_BY_PRODUCT_ID,
+  RESET_REVIEWS,
 } from "./actions";
 
 const initialState = {
@@ -28,6 +33,9 @@ const initialState = {
   petDetail: {},
   products: [],
   productDetail: {},
+  orderDetail: {},
+  reviews: [],
+  reviewsProductId: {},
   user: null,
   loading: false,
   error: null,
@@ -162,6 +170,36 @@ const rootReducer = (state = initialState, action) => {
                 user: action.payload,
 
               };
+
+              case GET_ORDER_DETAIL:
+                return {
+                  ...state,
+                  orderDetail: action.payload,
+                };
+
+                case RESET_ORDERS: 
+                return {
+                  ...state,
+                  orderDetail: initialState.ordersUser,
+                };
+
+                case POST_REVIEWS:
+                  return {
+                    ...state,
+                    reviews: [...state.reviews, action.payload],
+                  };
+                
+                case REVIEWS_BY_PRODUCT_ID:
+                  return {
+                    ...state,
+                    reviewsProductId: action.payload,
+                  };
+
+                  case RESET_REVIEWS:
+                    return {
+                      ...state,
+                      reviewsProductId: initialState.reviewsProductId,
+                    };
 
            default:
             return state;
