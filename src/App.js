@@ -18,6 +18,7 @@ import Products from "./Pages/Products/Products";
 import DetailProduct from "./Pages/DetailProduct/DetailProduct";
 import NotLoggedInRoutes from "./utils/NotLoggedInRoutes";
 import LoggedInRoutes from "./utils/LoggedInRoutes";
+import DetailOrder from "./Pages/DetailOrder/DetailOrder";
 
 // import Login from "./Pages/LoginGoogle/LoginGoogle";
 
@@ -45,6 +46,7 @@ function App() {
             <Route element={<NotLoggedInRoutes />}>
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/MisMascotas" element={<MyPets />} />
+              <Route path="/detallesOrden/:id" element={<DetailOrder/>} />
             </Route>
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>

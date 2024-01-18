@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getProductDetail, resetDetailProduct } from '../../redux/actions';
 import { useParams } from 'react-router-dom';
 import styles from './DetailProduct.module.css';
+import ReviewsProduct from '../ReviewsProduct/ReviewsProduct';
 
 const DetailProduct = () => {
  const { id } = useParams();
@@ -39,6 +40,7 @@ const productDetails = productDetail.rows[0];
   <p className={styles.description}>Tipo: {productDetails.type}</p>
   <p className={styles.price}>Precio: ${productDetails.price}</p>
   <p className={styles.category}>Stock: {productDetails.stock} unidades</p>
+  <ReviewsProduct productID={productDetails.id} />
 </div>
  );}
 

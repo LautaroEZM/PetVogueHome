@@ -21,6 +21,11 @@ export const RESET_DETAIL_ORDERS = "RESET_DETAIL_ORDERS";
 export const UPDATE_USER = "UPDATE_USER";
 export const SET_USER = "SET_USER";
 
+export const GET_ORDER_DETAIL = "GET_ORDER_DETAIL";
+export const RESET_ORDERS = "RESET_ORDERS";
+export const POST_REVIEWS = "POST_REVIEWS";
+export const REVIEWS_BY_PRODUCT_ID = "REVIEWS_BY_PRODUCT_ID";
+
 const URL = "https://petvogue.onrender.com";
 // const URL = "http://localhost:3001";
 
@@ -314,3 +319,70 @@ export const updateUser = (userID, userData) => {
   };
  };
 
+
+ //Order detail 🟢
+ export const getOrderDetail = (orderID) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post(`${URL}/orders/get`, {
+        filters: {
+          orderID_filter: orderID,
+        },
+        page: 1,
+        itemsPerPage: 50,
+      });
+      console.log(response.data);
+      return dispatch({
+        type: GET_ORDER_DETAIL,
+        payload: response.data,
+      });
+    } catch (error) {
+      console.error(`Error getting pet detail👀: ${error}`);
+    }
+  };
+};
+
+//🎀Reset detail:
+export const resetOrders = () => {
+  return { type: RESET_ORDERS, payload: [] };
+};
+
+//🎀Post reviews:
+export const createReviews = (orderID, productID) => {
+  return async (dispatch) => {
+    try {
+      console.log(orderID, productID);
+      const response = await axios.post(`${URL}/reviews/create`, orderID, productID);
+      window.alert("Reseña creada con exito!");
+      return dispatch({
+        type: POST_REVIEWS,
+        payload: response.data,
+      });
+    } catch (error) {
+      window.alert(error?.response?.data?.error);
+      console.error(`Error creating reviews👀: ${error}`);
+    }
+  };
+};
+
+//🎀 Review by product ID:
+export const ReviewsByProductId = (productID) => {
+  return async (dispatch) =>{
+  try {
+  const response = await axios.post('https://petvogue.onrender.com/orders/get', {
+    filters: {
+      productID_filter: productID,
+    },
+    page: 1,
+    itemsPerPage: 10,
+  });
+ // console.log(response.data.rows);
+  return dispatch({
+    type: REVIEWS_BY_PRODUCT_ID,
+    payload: response.data,
+  });
+} catch (error) {
+  console.error(`Error al obtener ordenes: ${error}`);
+}
+};
+}
