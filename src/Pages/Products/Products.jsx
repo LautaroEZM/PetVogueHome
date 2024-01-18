@@ -79,8 +79,7 @@ const Products = () => {
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
   }, []);
 
-
-  console.log(user);
+  
 
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
@@ -269,8 +268,6 @@ const Products = () => {
     setFiltersActive(false);
     applyFilters();
   };
-
-  console.log({ itemsOutOfStock, loading });
 
   return (
     <div className={styles.productCardsContainer}>

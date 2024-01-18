@@ -58,7 +58,6 @@ function Login() {
 
   const onSuccess = async (response) => {
     const decoded = jwtDecode(response.credential);
-    console.log(decoded);
     try {
       const userData = {
         email: decoded.email,
