@@ -1,9 +1,11 @@
 import React, { useEffect, } from 'react';
+import { Link } from 'react-router-dom';
 import { OrdersByUserId, resetDetailOrders  } from "../../redux/actions";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { Typography , CardHeader,} from '@mui/material';
 import  styles from './OrdersUser.module.css';
+import DetailOrder from '../DetailOrder/DetailOrder';
 
 const OrdersUser = () => {
     const dispatch = useDispatch();
@@ -55,9 +57,9 @@ const OrdersUser = () => {
         {/* <Typography>
          <strong>Product Price:</strong> {order.Product.price}
         </Typography>
-        */}   
+        */}    <Link key={order.orderID} to={`/detallesOrden/${order.orderID}`} >
          <img src={order.Product.image} alt={order.Product.name} className={styles.CardImg} />     
-           
+         </Link>
              </div> 
             </div>
             ))}
