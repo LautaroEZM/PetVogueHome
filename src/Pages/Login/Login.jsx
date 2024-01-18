@@ -162,10 +162,13 @@ function Login() {
             </Link>
             <div className="btn">
               O bien, inicia sesion con tu cuenta de Google
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
               <GoogleLogin
-                onSuccess={onSuccess}
-                onError={() => console.log("Login Failed")}
-              />
+    onSuccess={onSuccess}
+    onError={() => console.log("Login Failed")}
+  />
+</div>
+
             </div>
           </Box>
         </form>
