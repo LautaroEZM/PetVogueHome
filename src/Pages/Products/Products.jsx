@@ -73,9 +73,10 @@ const Products = () => {
   }, [user]);
 
   useEffect(() => {
-    dispatch(getUser(user?.userID));
+    
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
   }, []);
+  
 
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
