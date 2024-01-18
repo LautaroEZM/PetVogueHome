@@ -76,6 +76,7 @@ const Products = () => {
     
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
   }, []);
+  
 
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
