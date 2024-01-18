@@ -68,10 +68,12 @@ const Products = () => {
     )
     : {};
   useEffect(() => {
+    
     validateStock();
   }, [user]);
 
   useEffect(() => {
+    dispatch(getUser(user?.userID));
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
   }, []);
 
