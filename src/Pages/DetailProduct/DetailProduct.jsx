@@ -44,9 +44,9 @@ console.log("productDetails🟣:", productDetail[0]);
       <p className={styles.description}>Tipo: {productDetails.type}</p>
       <p className={styles.price}>Precio: ${productDetails.price}</p>
       <p className={styles.category}>Stock: {productDetails.stock} unidades</p>
-      <LinkNoDeco to={'/Productos'}><YellowButton>Volver atras</YellowButton></LinkNoDeco>
+      <LinkNoDeco to={'/'}><YellowButton>Volver atras</YellowButton></LinkNoDeco>
     </div>
-    <ReviewsProduct productID={productDetails.id} />
+    <ReviewsProduct productID={productDetails.productID} />
     </div>
   );
 };

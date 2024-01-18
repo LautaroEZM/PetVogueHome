@@ -2,7 +2,8 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { ReviewsByProductId } from '../../redux/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux'
+import styles from './ReviewsProduct.module.css'
 
 const ReviewsProduct = ( {productID} ) => {
  const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const ReviewsProduct = ( {productID} ) => {
  return (
  <div>
   {reviews.rows.map((review) => (
-    <div key={review.reviewID} >
+    <div key={review.reviewID} className={styles.Rev} >
       <p> Reseñas: {review.review}
         </p>
     </div>

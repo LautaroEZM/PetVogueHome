@@ -34,6 +34,8 @@ const orderDetails = orderDetail.rows[0];
 console.log(orderDetails, "Detalles de orden🎀");
 
  return (
+  <div>
+
   <div className={styles.container}>
   <h1 className={styles.title}> {orderDetails.Product.name}</h1>
   <img src={orderDetails.Product.image} alt={orderDetails.name} style={{ width: '45%' }} />
@@ -42,8 +44,9 @@ console.log(orderDetails, "Detalles de orden🎀");
   <p className={styles.price}>Precio: ${orderDetails.Product.price}</p>
   <p className={styles.category}>Stock: {orderDetails.Product.stock} unidades</p>
   <div>
-  <Reviews orderID={id} productID={orderDetails.productID} />
   </div>
+  </div>
+  <Reviews orderID={id} productID={orderDetails.productID} />
 </div>
  );}
 

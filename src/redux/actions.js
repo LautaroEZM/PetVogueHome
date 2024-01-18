@@ -336,7 +336,7 @@ export const updateUser = (userID, userData) => {
         page: 1,
         itemsPerPage: 50,
       });
-      console.log(response.data);
+    //  console.log(response.data);
       return dispatch({
         type: GET_ORDER_DETAIL,
         payload: response.data,
@@ -356,7 +356,7 @@ export const resetOrders = () => {
 export const createReviews = (orderID, productID) => {
   return async (dispatch) => {
     try {
-      console.log(orderID, productID);
+     // console.log(orderID, productID);
       const response = await axios.post(`${URL}/reviews/create`, orderID, productID);
       window.alert("Reseña creada con exito!");
       return dispatch({
@@ -381,7 +381,7 @@ export const ReviewsByProductId = (productID) => {
     page: 1,
     itemsPerPage: 10,
   });
- console.log(response.data.rows, "ACTION🟢🟢🟢");
+ //console.log(response.data.rows, "ACTION🟢🟢🟢");
   return dispatch({
     type: REVIEWS_BY_PRODUCT_ID,
     payload: response.data,

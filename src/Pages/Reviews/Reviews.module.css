@@ -1,0 +1,19 @@
+.Rev{
+    position:relative;
+    
+   
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    width: 550px;
+    margin-left: 3rem;
+    border-radius: 15px;
+    
+    align-items: center;
+    justify-content: center;
+}
+
+.container{
+    display: flex;
+    margin-bottom: 4rem;
+}
