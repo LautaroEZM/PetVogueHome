@@ -73,10 +73,13 @@ const Products = () => {
   }, [user]);
 
   useEffect(() => {
-
+    if (user) {
+      dispatch(getUser(user.userID));
+    }
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
   }, []);
 
+  
 
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
@@ -265,8 +268,6 @@ const Products = () => {
     setFiltersActive(false);
     applyFilters();
   };
-
-  console.log({ itemsOutOfStock, loading });
 
   return (
     <div className={styles.productCardsContainer}>
