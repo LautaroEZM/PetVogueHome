@@ -288,6 +288,13 @@ const Products = () => {
             primary
           />
         )}
+        {user ? (
+          <div></div>
+        ) : (
+          <Typography>
+            Debe <Link to="/ingresar">iniciar sesion</Link> para cargar productos al carrito
+          </Typography>
+        )}
       </Container>
       <Box className={styles.productCardsContainer}>
         {currentProducts?.length &&
