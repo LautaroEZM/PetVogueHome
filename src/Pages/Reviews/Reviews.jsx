@@ -22,26 +22,27 @@ const Reviews = ({ orderID, productID }) => {
   return (
     <div className={styles.container}>
 
-      <form onSubmit={handleSubmit}>
-        <div className={styles.Rev}>
-          <TextField
-            label="Deja un comentario⭐"
-            value={reviewContent}
-            inputProps={{
-              maxLength: 40
-            }}
-            onChange={(e) => setReviewContent(e.target.value)}
-          />
-        </div>
+  <form onSubmit={handleSubmit}>
+<div className={styles.Rev}>
+    <TextField
+      label="Deja un comentario⭐"
+      value={reviewContent}
+      inputProps={{
+        maxLength:40
+    }}
+      onChange={(e) => setReviewContent(e.target.value)}
+      />
+      </div>
+      
+    <Button type="submit" variant="contained" color="primary">
 
-        <Button type="submit" variant="contained" color="primary">
-
-          Enviar Reseña⭐
-
-        </Button>
-      </form>
-    </div>
-  );
+      Enviar Reseña⭐
+        
+    </Button>
+    
+  </form>
+      </div>
+ );
 };
 
 export default Reviews;
