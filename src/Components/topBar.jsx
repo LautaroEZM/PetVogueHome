@@ -39,26 +39,10 @@ const TopBarMenu = () => {
         <Typography variant="h6" component="div" sx={{ marginRight: "auto" }}>
           Pet Vogue
         </Typography>
-
-        {/* Botones centrados */}
         <Container>
-          <LinkNoDeco to="/">
-            <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
-          </LinkNoDeco>
-          {/* <LinkNoDeco to="/Servicios">
-            <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
-          </LinkNoDeco>
-          <LinkNoDeco to="/">
-            <ButtonTransparentMenu>Turnos</ButtonTransparentMenu>
-          </LinkNoDeco> */}
-          <LinkNoDeco to={"/Productos"}>
+          <LinkNoDeco to={"/"}>
             <ButtonTransparentMenu>Productos</ButtonTransparentMenu>
           </LinkNoDeco>
-          {/* {isLoggedIn && (
-            <LinkNoDeco to="/MisMascotas">
-              <ButtonTransparentMenu>Mis Mascotas</ButtonTransparentMenu>
-            </LinkNoDeco>
-          )} */}
         </Container>
 
         {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
@@ -80,15 +64,6 @@ const TopBarMenu = () => {
                   Ingresar
                 </YellowButton>
               </LinkNoDeco>
-              {/* <LinkNoDeco to="/register">
-                <YellowButton
-                  color="inherit"
-                  onClick={handleMenuOpen}
-                  style={{ marginRight: "8px" }}
-                >
-                  Registrarse
-                </YellowButton>
-              </LinkNoDeco> */}
             </div>
           )}
         </div>
