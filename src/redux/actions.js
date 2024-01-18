@@ -25,6 +25,7 @@ export const GET_ORDER_DETAIL = "GET_ORDER_DETAIL";
 export const RESET_ORDERS = "RESET_ORDERS";
 export const POST_REVIEWS = "POST_REVIEWS";
 export const REVIEWS_BY_PRODUCT_ID = "REVIEWS_BY_PRODUCT_ID";
+export const RESET_REVIEWS = "RESET_REVIEWS";
 
 const URL = "https://petvogue.onrender.com";
 // const URL = "http://localhost:3001";
@@ -71,7 +72,7 @@ export const getServiceDetail = (serviceID) => {
     try {
       //dispatch(loading(true));
       const response = await axios.post(
-        "https://petvogue.onrender.com/services/get",
+        `${URL}/services/get`,
         {
           filters: {
             serviceID_filter: serviceID,
@@ -284,7 +285,7 @@ export const registerUser = (userData) => {
 export const OrdersByUserId = (userId) => {
   return async (dispatch) =>{
   try {
-  const response = await axios.post('https://petvogue.onrender.com/orders/get', {
+  const response = await axios.post(`${URL}/orders/get`, {
     filters: {
       userID_filter: userId,
     },
@@ -373,14 +374,14 @@ export const createReviews = (orderID, productID) => {
 export const ReviewsByProductId = (productID) => {
   return async (dispatch) =>{
   try {
-  const response = await axios.post('https://petvogue.onrender.com/orders/get', {
+  const response = await axios.post(`${URL}/reviews/all`, {
     filters: {
       productID_filter: productID,
     },
     page: 1,
     itemsPerPage: 10,
   });
- // console.log(response.data.rows);
+ console.log(response.data.rows, "ACTION🟢🟢🟢");
   return dispatch({
     type: REVIEWS_BY_PRODUCT_ID,
     payload: response.data,
@@ -389,4 +390,9 @@ export const ReviewsByProductId = (productID) => {
   console.error(`Error al obtener ordenes: ${error}`);
   }
  };
+};
+
+//🎀Reset detail:
+export const resetReviews = () => {
+  return { type: RESET_REVIEWS, payload: [] };
 };

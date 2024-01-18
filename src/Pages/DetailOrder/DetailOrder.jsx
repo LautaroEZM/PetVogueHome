@@ -41,7 +41,9 @@ console.log(orderDetails, "Detalles de orden🎀");
   <p className={styles.description}>Tipo: {orderDetails.Product.type}</p>
   <p className={styles.price}>Precio: ${orderDetails.Product.price}</p>
   <p className={styles.category}>Stock: {orderDetails.Product.stock} unidades</p>
+  <div>
   <Reviews orderID={id} productID={orderDetails.productID} />
+  </div>
 </div>
  );}
 

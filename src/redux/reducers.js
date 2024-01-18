@@ -23,6 +23,7 @@ import {
   RESET_ORDERS,
   POST_REVIEWS,
   REVIEWS_BY_PRODUCT_ID,
+  RESET_REVIEWS,
 } from "./actions";
 
 const initialState = {
@@ -34,7 +35,7 @@ const initialState = {
   productDetail: {},
   orderDetail: {},
   reviews: [],
-  reviewsProductId: [],
+  reviewsProductId: {},
   user: null,
   loading: false,
   error: null,
@@ -193,6 +194,12 @@ const rootReducer = (state = initialState, action) => {
                     ...state,
                     reviewsProductId: action.payload,
                   };
+
+                  case RESET_REVIEWS:
+                    return {
+                      ...state,
+                      reviewsProductId: initialState.reviewsProductId,
+                    };
 
            default:
             return state;

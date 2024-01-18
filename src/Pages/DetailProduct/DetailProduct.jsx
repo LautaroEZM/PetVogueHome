@@ -32,8 +32,11 @@ const DetailProduct = () => {
   //.rows🎀🎀
   const productDetails = productDetail.rows[0];
 
+console.log("productDetails🟣:", productDetail[0]);
 
   return (
+    <div>
+    
     <div className={styles.container}>
       <h1 className={styles.title}> {productDetails.name}</h1>
       <img src={productDetails.image} alt={productDetails.name} style={{ width: '45%' }} />
@@ -42,7 +45,8 @@ const DetailProduct = () => {
       <p className={styles.price}>Precio: ${productDetails.price}</p>
       <p className={styles.category}>Stock: {productDetails.stock} unidades</p>
       <LinkNoDeco to={'/Productos'}><YellowButton>Volver atras</YellowButton></LinkNoDeco>
-      <ReviewsProduct productID={productDetails.id} />
+    </div>
+    <ReviewsProduct productID={productDetails.id} />
     </div>
   );
 };
