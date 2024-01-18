@@ -24,6 +24,7 @@ import { ArrowDropDown, ArrowDropUp, AttachMoney } from "@mui/icons-material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import RemoveIcon from "@mui/icons-material/Remove";
+import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
 import {
   YellowButtonCart,
@@ -41,7 +42,6 @@ const Products = () => {
   const productsData = useSelector((state) => state.products);
   const user = useSelector((state) => state.user);
   const [sortPrice, setSortPrice] = useState("none");
-  const [searchText, setSearchText] = useState("");
   const loading = useSelector((state) => state.loading);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -51,7 +51,7 @@ const Products = () => {
   const [itemsPerPage] = useState(8);
   const [filtersActive, setFiltersActive] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
+  const [searchText, setSearchText] = useState("");
   const [preferenceId, setPreferenceId] = useState(null);
 
   useEffect(() => {
@@ -83,23 +83,31 @@ const Products = () => {
   );
   const totalPages = Math.ceil(productsData.length / itemsPerPage);
 
+
+  const handleClearSearch = () => {
+    setSearchText("");
+  };
+
   const validateStock = () => {
     user?.cart2?.forEach((item) => {
       const product = productsMap[item.productID];
-      if (
-        item.quantity > product.stock &&
-        !itemsOutOfStock.includes(item.productID)
-      ) {
-        setItemsOutOfStock([...itemsOutOfStock, item.productID]);
-      } else if (
-        item.quantity <= product.stock &&
-        itemsOutOfStock.includes(item.productID)
-      ) {
-        setItemsOutOfStock(
-          itemsOutOfStock.filter(
-            (itemOutOfStock) => itemOutOfStock !== item.productID
-          )
-        );
+  
+      if (product) {
+        if (
+          item.quantity > product.stock &&
+          !itemsOutOfStock.includes(item.productID)
+        ) {
+          setItemsOutOfStock([...itemsOutOfStock, item.productID]);
+        } else if (
+          item.quantity <= product.stock &&
+          itemsOutOfStock.includes(item.productID)
+        ) {
+          setItemsOutOfStock(
+            itemsOutOfStock.filter(
+              (itemOutOfStock) => itemOutOfStock !== item.productID
+            )
+          );
+        }
       }
     });
   };
@@ -265,6 +273,12 @@ const Products = () => {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
+          {/* Botón para limpiar el campo de búsqueda */}
+          {searchText && (
+            <IconButton onClick={handleClearSearch}>
+              <ClearIcon />
+            </IconButton>
+          )}
         </Container>
 
         <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
@@ -317,7 +331,7 @@ const Products = () => {
 
 
       <Box className={styles.productCardsContainer}>
-        {currentProducts?.length &&
+        {currentProducts?.length ? (
           currentProducts.map((product) => (
             <div
               key={product.productID}
@@ -362,7 +376,11 @@ const Products = () => {
                 </YellowButtonCart>
               )}
             </div>
-          ))}
+             ))
+             ) : (
+               <Typography variant="body2">No hay elementos disponibles.</Typography>
+             )}
+          
         <Container
           sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
         >
