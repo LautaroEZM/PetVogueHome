@@ -34,13 +34,13 @@ const Reviews = ({ orderID, productID }) => {
       onChange={(e) => setReviewContent(e.target.value)}
       />
       </div>
-      <Link to={`/detallesProductos/${productID}`} style={{ textDecoration: 'none' }}>
+      
     <Button type="submit" variant="contained" color="primary">
 
       Enviar Reseña⭐
         
     </Button>
-    </Link>
+    
   </form>
       </div>
  );
