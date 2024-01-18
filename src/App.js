@@ -32,6 +32,7 @@ function App() {
             <Route path="/" element={<Products />} />
             <Route path="*" element={<>NOT FOUND</>} />
             <Route path="/crearMascota" element={<CreatePet />} />
+            <Route path="/compraFallida" element={<Failed />} />
             <Route path="/crearServicio" element={<CreateService />} />
             <Route path="/editarServicio/:id" element={<EditService />} />
             <Route path="/servicios" element={<Services />} />
