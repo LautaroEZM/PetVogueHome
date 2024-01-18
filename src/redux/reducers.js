@@ -17,6 +17,7 @@ import {
   USER_LOGOUT,
   ORDERS_BY_USER_ID,
   RESET_DETAIL_ORDERS,
+  SET_LOADING,
   UPDATE_USER,
   GET_ORDER_DETAIL,
   RESET_ORDERS,
@@ -73,6 +74,12 @@ const rootReducer = (state = initialState, action) => {
         detailServices: action.payload,
       };
 
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
+      };
+
     case RESET_DETAIL_SERVICE:
       return {
         ...state,
@@ -106,12 +113,14 @@ const rootReducer = (state = initialState, action) => {
     case GET_PRODUCTS:
       return {
         ...state,
+        loading: false,
         products: action.payload,
       };
 
     case GET_PRODUCT_DETAIL:
       return {
         ...state,
+        loading: false,
         productDetail: action.payload,
       };
 
@@ -124,6 +133,7 @@ const rootReducer = (state = initialState, action) => {
     case SET_USER:
       return {
         ...state,
+        loading: false,
         user: action.payload,
       };
 
@@ -137,7 +147,7 @@ const rootReducer = (state = initialState, action) => {
 
       case ORDERS_BY_USER_ID:
         return {
-          ...state, 
+          ...state,
           ordersUser: action.payload,
         }
 
@@ -157,7 +167,7 @@ const rootReducer = (state = initialState, action) => {
             return {
              ...state,
                 user: action.payload,
-                
+
               };
 
               case GET_ORDER_DETAIL:
