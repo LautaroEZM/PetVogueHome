@@ -48,74 +48,67 @@ const TopBarMenu = () => {
   };
 
   return (
-    <>
-      <AppBar
-        position="static"
-        sx={{
-          backgroundColor: "transparent",
-          boxShadow: "none",
-        }}
-      >
-        <Toolbar>
-          {/* Pet Vogue a la izquierda */}
-          <Typography variant="h6" component="div" sx={{ marginRight: "auto" }}>
-            Pet Vogue
-          </Typography>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "transparent",
+        boxShadow: "none",
+      }}
+    >
+      <Toolbar>
+        {/* Pet Vogue a la izquierda */}
+        <Typography variant="h6" component="div" sx={{ marginRight: "auto" }}>
+          Pet Vogue
+        </Typography>
+        <Container>
+          <LinkNoDeco to={"/"}>
+            <ButtonTransparentMenu>Productos</ButtonTransparentMenu>
+          </LinkNoDeco>
+        </Container>
 
-          {/* Botones centrados */}
-          <Container>
-            <LinkNoDeco to="/">
-              <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
-            </LinkNoDeco>
-            <LinkNoDeco to={"/Productos"}>
-              <ButtonTransparentMenu>Productos</ButtonTransparentMenu>
-            </LinkNoDeco>
-          </Container>
-
-          {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {user ? (
-              <>
-                <YellowButton
-                  onClick={handleMenuOpen}
-                  color="inherit"
-                  style={{ marginRight: "8px" }}
-                >
-                  <Avatar
-                    alt={`${user.firstName} Avatar`}
-                    src={user.photo}
-                    sx={{ width: 24, height: 24, marginRight: 1 }}
-                  />
-                  {user.firstName}
+        {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {user ? (
+            <>
+              <YellowButton
+                onClick={handleMenuOpen}
+                color="inherit"
+                style={{ marginRight: "8px" }}
+              >
+                <Avatar
+                  alt={`${user.firstName} Avatar`}
+                  src={user.photo}
+                  sx={{ width: 24, height: 24, marginRight: 1 }}
+                />
+                {user.firstName}
+              </YellowButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              >
+                <StyledMenuItem component={RouterLink} to="/perfil">
+                  Mi Perfil
+                </StyledMenuItem>
+                <StyledMenuItem component={RouterLink} onClick={handleLogout}>
+                  Cerrar sesion
+                </StyledMenuItem>
+              </Menu>
+            </>
+          ) : (
+            <div>
+              <LinkNoDeco to="/ingresar">
+                <YellowButton color="inherit" style={{ marginRight: "8px" }}>
+                  Ingresar
                 </YellowButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleMenuClose}
-                  transformOrigin={{ vertical: "top", horizontal: "right" }}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                >
-                  <StyledMenuItem component={RouterLink} to="/perfil">
-                    Mi Perfil
-                  </StyledMenuItem>
-                  <StyledMenuItem component={RouterLink} onClick={handleLogout}>
-                    Cerrar sesion
-                  </StyledMenuItem>
-                </Menu>
-              </>
-            ) : (
-              <div>
-                <LinkNoDeco to="/ingresar">
-                  <YellowButton color="inherit" style={{ marginRight: "8px" }}>
-                    Ingresar
-                  </YellowButton>
-                </LinkNoDeco>
-              </div>
-            )}
-          </div>
-        </Toolbar>
-      </AppBar>
-    </>
+              </LinkNoDeco>
+            </div>
+          )}
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 };
 

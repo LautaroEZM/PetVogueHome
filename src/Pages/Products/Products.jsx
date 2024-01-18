@@ -58,15 +58,14 @@ const Products = () => {
     dispatch(setLoading(true));
     dispatch(getProducts(searchText, selectedTypes, sortPrice));
 
-    // Actualizar el estado de isSubmitDisabled en función de la autenticación del usuario
     setIsSubmitDisabled(!user);
   }, [dispatch, searchText, selectedTypes, sortPrice, user]);
 
   const productsMap = productsData.length
     ? productsData.reduce(
-        (a, product) => ({ ...a, [product.productID]: product }),
-        {}
-      )
+      (a, product) => ({ ...a, [product.productID]: product }),
+      {}
+    )
     : {};
   useEffect(() => {
     validateStock();
@@ -276,26 +275,47 @@ const Products = () => {
           </YellowButtonSmall>
         </Box>
       </Box>
-      <Container
-        sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
+      {/* Box para el mensaje de inicio de sesión */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        {totalPages > 1 && (
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={(e, page) => setCurrentPage(page)}
-            variant="outlined"
-            primary
-          />
-        )}
-        {user ? (
-          <div></div>
-        ) : (
-          <Typography>
-            Debe <Link to="/ingresar">iniciar sesion</Link> para cargar productos al carrito
-          </Typography>
-        )}
-      </Container>
+        {/* Box para el mensaje de inicio de sesión */}
+        <Box
+          sx={{
+            padding: "13px",
+            borderRadius: "50px",
+            margin: "8px 0",
+            textAlign: "center",
+          }}
+        >
+          {user ? (
+            <div></div>
+          ) : (
+            <Typography>
+              Debe <Link to="/ingresar">iniciar sesion</Link> para cargar productos al carrito
+            </Typography>
+          )}
+        </Box>
+
+        {/* Box para la paginación */}
+        <Box>
+          {totalPages > 1 && (
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(e, page) => setCurrentPage(page)}
+              variant="outlined"
+              primary
+            />
+          )}
+        </Box>
+      </div>
+
+
       <Box className={styles.productCardsContainer}>
         {currentProducts?.length &&
           currentProducts.map((product) => (
@@ -438,7 +458,7 @@ const Products = () => {
                               disabled={
                                 loading ||
                                 cartItem.quantity ===
-                                  productsMap[cartItem.productID].stock
+                                productsMap[cartItem.productID].stock
                               }
                             >
                               <AddIcon />
@@ -533,7 +553,7 @@ const Products = () => {
           </List>
         </Drawer>
       </Box>
-    </div>
+    </div >
   );
 };
 

@@ -28,7 +28,7 @@ function App() {
         <div className="contentContainer">
           <TopBarMenu />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Products />} />
             <Route path="*" element={<>NOT FOUND</>} />
             <Route path="/crearMascota" element={<CreatePet />} />
             <Route path="/crearServicio" element={<CreateService />} />
@@ -36,7 +36,6 @@ function App() {
             <Route path="/servicios" element={<Services />} />
             <Route path="/detallesMascotas/:id" element={<DetailPet />} />
             <Route path="/detallesServicios/:id" element={<DetailService />} />
-            <Route path="/Productos" element={<Products />} />
             <Route path="/detallesProductos/:id" element={<DetailProduct />} />
             <Route element={<LoggedInRoutes />}>
               <Route path="/ingresar" element={<Login />} />
