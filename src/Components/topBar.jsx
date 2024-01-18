@@ -4,8 +4,11 @@ import {
   Toolbar,
   Typography,
   Container,
-  Button,
   Link,
+  Menu,
+  MenuItem,
+  Avatar,
+  styled,
 } from "@mui/material";
 import {
   ButtonTransparentMenu,
@@ -13,11 +16,23 @@ import {
   YellowButton,
 } from "../styledComponents";
 import { Link as RouterLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../redux/actions";
+
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  "&:hover": {
+    backgroundColor: theme.palette.primary.light,
+  },
+}));
 
 const TopBarMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -26,74 +41,81 @@ const TopBarMenu = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate("/");
+    setTimeout(() => toast.success("Has cerrado sesion"), 200);
+  };
+
   return (
-    <AppBar
-      position="static"
-      sx={{
-        backgroundColor: "transparent",
-        boxShadow: "none",
-      }}
-    >
-      <Toolbar>
-        {/* Pet Vogue a la izquierda */}
-        <Typography variant="h6" component="div" sx={{ marginRight: "auto" }}>
-          Pet Vogue
-        </Typography>
+    <>
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: "transparent",
+          boxShadow: "none",
+        }}
+      >
+        <Toolbar>
+          {/* Pet Vogue a la izquierda */}
+          <Typography variant="h6" component="div" sx={{ marginRight: "auto" }}>
+            Pet Vogue
+          </Typography>
 
-        {/* Botones centrados */}
-        <Container>
-          <LinkNoDeco to="/">
-            <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
-          </LinkNoDeco>
-          {/* <LinkNoDeco to="/Servicios">
-            <ButtonTransparentMenu>Servicios</ButtonTransparentMenu>
-          </LinkNoDeco>
-          <LinkNoDeco to="/">
-            <ButtonTransparentMenu>Turnos</ButtonTransparentMenu>
-          </LinkNoDeco> */}
-          <LinkNoDeco to={"/Productos"}>
-            <ButtonTransparentMenu>Productos</ButtonTransparentMenu>
-          </LinkNoDeco>
-          {/* {isLoggedIn && (
-            <LinkNoDeco to="/MisMascotas">
-              <ButtonTransparentMenu>Mis Mascotas</ButtonTransparentMenu>
+          {/* Botones centrados */}
+          <Container>
+            <LinkNoDeco to="/">
+              <ButtonTransparentMenu>Inicio</ButtonTransparentMenu>
             </LinkNoDeco>
-          )} */}
-        </Container>
+            <LinkNoDeco to={"/Productos"}>
+              <ButtonTransparentMenu>Productos</ButtonTransparentMenu>
+            </LinkNoDeco>
+          </Container>
 
-        {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
-        <div style={{ display: "flex", alignItems: "center" }}>
-          {user ? (
-            <LinkNoDeco to="/perfil">
-              <YellowButton color="inherit" style={{ marginRight: "8px" }}>
-                Mi Perfil
-              </YellowButton>
-            </LinkNoDeco>
-          ) : (
-            <div>
-              <LinkNoDeco to="/ingresar">
+          {/* Avatar con botón "Iniciar Sesión" o "Mi Perfil" y menú desplegable para login/register */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {user ? (
+              <>
                 <YellowButton
-                  color="inherit"
                   onClick={handleMenuOpen}
+                  color="inherit"
                   style={{ marginRight: "8px" }}
                 >
-                  Ingresar
+                  <Avatar
+                    alt={`${user.firstName} Avatar`}
+                    src={user.photo}
+                    sx={{ width: 24, height: 24, marginRight: 1 }}
+                  />
+                  {user.firstName}
                 </YellowButton>
-              </LinkNoDeco>
-              {/* <LinkNoDeco to="/register">
-                <YellowButton
-                  color="inherit"
-                  onClick={handleMenuOpen}
-                  style={{ marginRight: "8px" }}
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 >
-                  Registrarse
-                </YellowButton>
-              </LinkNoDeco> */}
-            </div>
-          )}
-        </div>
-      </Toolbar>
-    </AppBar>
+                  <StyledMenuItem component={RouterLink} to="/perfil">
+                    Mi Perfil
+                  </StyledMenuItem>
+                  <StyledMenuItem component={RouterLink} onClick={handleLogout}>
+                    Cerrar sesion
+                  </StyledMenuItem>
+                </Menu>
+              </>
+            ) : (
+              <div>
+                <LinkNoDeco to="/ingresar">
+                  <YellowButton color="inherit" style={{ marginRight: "8px" }}>
+                    Ingresar
+                  </YellowButton>
+                </LinkNoDeco>
+              </div>
+            )}
+          </div>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 };
 
