@@ -1,14 +1,13 @@
 import React from 'react';
-import './Failed.module.css';  // Importa el archivo CSS
+import './Failed.module.css';
 
 const Failed = () => {
   const handleRedirect = () => {
-    // Redireccionar manualmente al hacer clic en el botón
     window.location.replace('https://petvoguehome-production.up.railway.app');
   };
 
   return (
-    <div className="failed-container"> {/* Agrega una clase contenedora */}
+    <div className="failed-container">
       <p className="failed-message">Su compra no se pudo concretar, inténtelo nuevamente.</p>
       <button className="retry-button" onClick={handleRedirect}>Volver a la página</button>
     </div>
