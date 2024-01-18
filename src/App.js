@@ -18,6 +18,7 @@ import Products from "./Pages/Products/Products";
 import DetailProduct from "./Pages/DetailProduct/DetailProduct";
 import NotLoggedInRoutes from "./utils/NotLoggedInRoutes";
 import LoggedInRoutes from "./utils/LoggedInRoutes";
+import Failed from './Pages/Failed/Failed';
 
 // import Login from "./Pages/LoginGoogle/LoginGoogle";
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/" element={<Products />} />
             <Route path="*" element={<>NOT FOUND</>} />
             <Route path="/crearMascota" element={<CreatePet />} />
+            <Route path="/compraFallida" element={<Failed />} />
             <Route path="/crearServicio" element={<CreateService />} />
             <Route path="/editarServicio/:id" element={<EditService />} />
             <Route path="/servicios" element={<Services />} />
@@ -45,6 +47,7 @@ function App() {
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/MisMascotas" element={<MyPets />} />
             </Route>
+            <Route path="/failed" element={<Failed />} />
             {/* Otras rutas pueden agregarse aquí según sea necesario */}
           </Routes>
         </div>
@@ -54,3 +57,5 @@ function App() {
 }
 
 export default App;
+
+
